@@ -181,8 +181,11 @@ export default function TeamPortal() {
 
         {/* Bottom */}
         <div className="px-4 py-4 border-t space-y-2" style={{ borderColor: border }}>
-          <Link to="/" className="flex items-center gap-2 text-xs text-white/30 hover:text-white/60 transition-colors px-2">
-            ← Back to KCF Website
+          <Link to="/"
+            className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-semibold text-white/70 hover:text-white transition-all w-full"
+            style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}>
+            <Globe className="w-4 h-4 text-rose-400 flex-shrink-0" />
+            Back to Website
           </Link>
           <button onClick={() => base44.auth.logout('/')} className="flex items-center gap-2 text-xs text-white/30 hover:text-rose-400 transition-colors px-2">
             <LogOut className="w-3.5 h-3.5" /> Sign Out
@@ -199,6 +202,12 @@ export default function TeamPortal() {
           </button>
           <h1 className="font-black text-white text-base flex-1" style={{ fontFamily: "'Syne', sans-serif" }}>{pageTitles[page]}</h1>
           <div className="flex items-center gap-2">
+            <Link to="/"
+              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-white/60 hover:text-white transition-all"
+              style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}>
+              <Globe className="w-3.5 h-3.5 text-rose-400" />
+              Website
+            </Link>
             <button onClick={() => setPage('notifications')} className="relative w-8 h-8 rounded-xl flex items-center justify-center text-white/40 hover:text-white hover:bg-white/5 transition-all">
               <Bell className="w-4 h-4" />
               {unreadCount > 0 && <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full text-white text-[9px] font-bold flex items-center justify-center" style={{ background: '#f43f5e' }}>{unreadCount}</span>}
