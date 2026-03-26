@@ -1,0 +1,84 @@
+import { Toaster } from "@/components/ui/toaster"
+import { QueryClientProvider } from '@tanstack/react-query'
+import { queryClientInstance } from '@/lib/query-client'
+import NavigationTracker from '@/lib/NavigationTracker'
+import ScrollToggleButton from '@/components/ScrollToggleButton'
+import { pagesConfig } from './pages.config'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import PageNotFound from './lib/PageNotFound';
+import { AuthProvider } from '@/lib/AuthContext';
+import VolunteerDashboard from './pages/VolunteerDashboard';
+import TeamPortal from './pages/TeamPortal';
+import TeamPortalLanding from './pages/TeamPortalLanding';
+import Analytics from './pages/Analytics';
+import KindnessConnect from './pages/KindnessConnect';
+import GivingDashboard from './pages/GivingDashboard';
+import Blog from './pages/Blog';
+import KindWaveApp from './pages/KindWave';
+import Login from './pages/Login';
+
+const { Pages, Layout, mainPage } = pagesConfig;
+const mainPageKey = mainPage ?? Object.keys(Pages)[0];
+const MainPage = mainPageKey ? Pages[mainPageKey] : <></>;
+
+const LayoutWrapper = ({ children, currentPageName }) => Layout ?
+  <Layout currentPageName={currentPageName}>{children}</Layout>
+  : <>{children}</>;
+
+function AppRoutes() {
+  return (
+    <Routes>
+      <Route path="/Login" element={<Login />} />
+      <Route path="/" element={
+        <LayoutWrapper currentPageName={mainPageKey}>
+          <MainPage />
+        </LayoutWrapper>
+      } />
+      {Object.entries(Pages).map(([path, Page]) => (
+        <Route
+          key={path}
+          path={`/${path}`}
+          element={
+            <LayoutWrapper currentPageName={path}>
+              <Page />
+            </LayoutWrapper>
+          }
+        />
+      ))}
+      <Route path="/VolunteerDashboard" element={
+        <LayoutWrapper currentPageName="VolunteerDashboard">
+          <VolunteerDashboard />
+        </LayoutWrapper>
+      } />
+      <Route path="/TeamPortalLanding" element={<TeamPortalLanding />} />
+      <Route path="/TeamPortal" element={<TeamPortal />} />
+      <Route path="/KindnessConnect" element={<KindnessConnect />} />
+      <Route path="/GivingDashboard" element={<GivingDashboard />} />
+      <Route path="/Blog" element={<Blog />} />
+      <Route path="/KindWaveApp" element={<KindWaveApp />} />
+      <Route path="/Analytics" element={
+        <LayoutWrapper currentPageName="Analytics">
+          <Analytics />
+        </LayoutWrapper>
+      } />
+      <Route path="*" element={<PageNotFound />} />
+    </Routes>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <QueryClientProvider client={queryClientInstance}>
+        <Router>
+          <NavigationTracker />
+          <AppRoutes />
+          <ScrollToggleButton />
+        </Router>
+        <Toaster />
+      </QueryClientProvider>
+    </AuthProvider>
+  );
+}
+
+export default App;
