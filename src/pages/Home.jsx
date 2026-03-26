@@ -66,18 +66,21 @@ export default function Home() {
           <HeroSection />
         </Suspense>
 
+        <div id="about" style={{ scrollMarginTop: "80px" }} />
         <LazySection rootMargin="300px">
           <AboutSection />
         </LazySection>
 
         <SectionDivider color="rose" />
 
+        <div id="vision" style={{ scrollMarginTop: "80px" }} />
         <LazySection rootMargin="200px">
           <VisionMission />
         </LazySection>
 
         <SectionDivider color="violet" />
 
+        <div id="initiatives" style={{ scrollMarginTop: "80px" }} />
         <LazySection rootMargin="200px">
           <InitiativesSection />
         </LazySection>
@@ -90,36 +93,42 @@ export default function Home() {
 
         <SectionDivider color="violet" />
 
+        <div id="evolution" style={{ scrollMarginTop: "80px" }} />
         <LazySection rootMargin="200px">
           <EvolutionSection />
         </LazySection>
 
         <SectionDivider color="blue" />
 
+        <div id="leadership" style={{ scrollMarginTop: "80px" }} />
         <LazySection rootMargin="200px">
           <LeadershipSection />
         </LazySection>
 
         <SectionDivider color="rose" />
 
+        <div id="partners" style={{ scrollMarginTop: "80px" }} />
         <LazySection rootMargin="200px">
           <PartnerSection />
         </LazySection>
 
         <SectionDivider color="violet" />
 
+        <div id="governance" style={{ scrollMarginTop: "80px" }} />
         <LazySection rootMargin="200px">
           <GovernanceSection />
         </LazySection>
 
         <SectionDivider color="rose" />
 
+        <div id="prospectus" style={{ scrollMarginTop: "80px" }} />
         <LazySection rootMargin="200px">
           <ProspectusSection />
         </LazySection>
 
         <SectionDivider color="blue" />
 
+        <div id="board" style={{ scrollMarginTop: "80px" }} />
         <LazySection rootMargin="200px">
           <BoardRecruitmentSection />
         </LazySection>

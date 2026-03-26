@@ -57,24 +57,15 @@ export default function Header() {
     }
   }, [isHome, location.state]);
 
-  // Scroll to a hash target, chasing the page bottom as lazy sections expand
+  // Scroll to a hash target — anchor divs are always in the DOM so this works instantly
   const scrollToLazy = (target) => {
     const el = document.querySelector(target);
     if (el) { el.scrollIntoView({ behavior: "smooth" }); return; }
-
-    // Keep scrolling to the current scrollHeight — it grows as lazy sections render
-    window.scrollTo({ top: document.body.scrollHeight, behavior: "instant" });
-    const interval = setInterval(() => {
-      const t = document.querySelector(target);
-      if (t) {
-        clearInterval(interval);
-        t.scrollIntoView({ behavior: "smooth" });
-        return;
-      }
-      // Chase the growing bottom so every new lazy section enters the viewport
-      window.scrollTo({ top: document.body.scrollHeight, behavior: "instant" });
-    }, 100);
-    setTimeout(() => clearInterval(interval), 8000);
+    // Fallback: retry once after a short delay (e.g. fresh page load)
+    setTimeout(() => {
+      const el2 = document.querySelector(target);
+      if (el2) el2.scrollIntoView({ behavior: "smooth" });
+    }, 400);
   };
 
   const scrollTo = (href) => {
