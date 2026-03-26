@@ -47,14 +47,21 @@ export default function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    if (isHome && location.state?.scrollTarget) {
+      const target = location.state.scrollTarget;
+      setTimeout(() => {
+        const el = document.querySelector(target);
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+      }, 150);
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [isHome, location.state]);
+
   const scrollTo = (href) => {
     setMobileOpen(false);
     if (!isHome) {
-      navigate("/" + href);
-      setTimeout(() => {
-        const el = document.querySelector(href);
-        if (el) el.scrollIntoView({ behavior: "smooth" });
-      }, 100);
+      navigate("/", { state: { scrollTarget: href } });
       return;
     }
     const el = document.querySelector(href);
