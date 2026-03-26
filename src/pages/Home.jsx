@@ -130,9 +130,9 @@ export default function Home() {
           <EngagementSection />
         </LazySection>
 
-        <LazySection rootMargin="200px">
+        <Suspense fallback={<SectionFallback />}>
           <Footer />
-        </LazySection>
+        </Suspense>
       </main>
     </div>
   );

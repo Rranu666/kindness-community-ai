@@ -321,7 +321,19 @@ export default function HeroSection() {
 
   const scrollTo = useCallback((href) => {
     const el = document.querySelector(href);
-    if (el) el.scrollIntoView({ behavior: "smooth" });
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+      return;
+    }
+    window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+    const interval = setInterval(() => {
+      const target = document.querySelector(href);
+      if (target) {
+        clearInterval(interval);
+        target.scrollIntoView({ behavior: "smooth" });
+      }
+    }, 100);
+    setTimeout(() => clearInterval(interval), 5000);
   }, []);
 
   return (

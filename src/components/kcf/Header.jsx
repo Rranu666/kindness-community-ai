@@ -65,7 +65,20 @@ export default function Header() {
       return;
     }
     const el = document.querySelector(href);
-    if (el) el.scrollIntoView({ behavior: "smooth" });
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+      return;
+    }
+    // Element not yet in DOM (lazy section) — scroll to bottom to trigger render, then retry
+    window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+    const interval = setInterval(() => {
+      const target = document.querySelector(href);
+      if (target) {
+        clearInterval(interval);
+        target.scrollIntoView({ behavior: "smooth" });
+      }
+    }, 100);
+    setTimeout(() => clearInterval(interval), 5000);
   };
 
   return (
