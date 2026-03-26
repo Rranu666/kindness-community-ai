@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '@/api/supabaseClient';
-import { Heart, Mail, Lock, Eye, EyeOff, Loader2 } from 'lucide-react';
+import { Heart, Mail, Lock, Eye, EyeOff, Loader2, ArrowLeft } from 'lucide-react';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -60,6 +60,16 @@ export default function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center px-4" style={{ background: '#030712' }}>
       <div className="w-full max-w-md">
+
+        {/* Back to Home */}
+        <Link
+          to="/"
+          className="inline-flex items-center gap-2 text-white/40 hover:text-white/80 text-sm font-medium transition-colors mb-8 group"
+        >
+          <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+          Back to Home
+        </Link>
+
         {/* Logo */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-4" style={{ background: 'linear-gradient(135deg, #f43f5e, #ec4899)' }}>
@@ -181,7 +191,8 @@ export default function Login() {
         </div>
 
         <p className="text-center text-white/20 text-xs mt-6">
-          © 2026 Kindness Community Foundation
+          © 2026 Kindness Community Foundation ·{' '}
+          <Link to="/" className="hover:text-white/50 transition-colors">kindness-community-ai.netlify.app</Link>
         </p>
       </div>
     </div>
