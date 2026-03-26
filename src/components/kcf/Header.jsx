@@ -19,7 +19,7 @@ const navLinks = [
     ],
   },
   { label: "Blog", href: "/Blog", external: true },
-  { label: "Contact", href: "#contact" },
+  { label: "Contact", href: "/Contact", external: true },
 ];
 
 export default function Header() {
@@ -50,11 +50,25 @@ export default function Header() {
   useEffect(() => {
     if (isHome && location.state?.scrollTarget) {
       const target = location.state.scrollTarget;
+      // Clear the state immediately so it doesn't re-trigger
+      navigate(location.pathname, { replace: true, state: {} });
       setTimeout(() => {
         const el = document.querySelector(target);
-        if (el) el.scrollIntoView({ behavior: "smooth" });
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth" });
+          return;
+        }
+        // Element not yet in DOM (lazy section) — scroll to bottom to trigger render, then retry
+        window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+        const interval = setInterval(() => {
+          const t = document.querySelector(target);
+          if (t) {
+            clearInterval(interval);
+            t.scrollIntoView({ behavior: "smooth" });
+          }
+        }, 100);
+        setTimeout(() => clearInterval(interval), 5000);
       }, 150);
-      navigate(location.pathname, { replace: true, state: {} });
     }
   }, [isHome, location.state]);
 

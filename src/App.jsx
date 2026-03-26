@@ -16,6 +16,7 @@ import GivingDashboard from './pages/GivingDashboard';
 import Blog from './pages/Blog';
 import KindWaveApp from './pages/KindWave';
 import Login from './pages/Login';
+import Contact from './pages/Contact';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -56,6 +57,7 @@ function AppRoutes() {
       <Route path="/GivingDashboard" element={<GivingDashboard />} />
       <Route path="/Blog" element={<Blog />} />
       <Route path="/KindWaveApp" element={<KindWaveApp />} />
+      <Route path="/Contact" element={<Contact />} />
       <Route path="/Analytics" element={
         <LayoutWrapper currentPageName="Analytics">
           <Analytics />
