@@ -99,12 +99,12 @@ export default function Home() {
 
     // Brief initial delay so NavigationTracker's scroll-to-top completes first
     const startId = setTimeout(() => { rafId = requestAnimationFrame(tick); }, 150);
-    // Hard stop after 3s in case sections never stabilise
+    // Hard stop after 10s in case sections never stabilise (page can take 5-6s on slow networks)
     safetyId = setTimeout(() => {
       cancelAnimationFrame(rafId);
       const el = document.querySelector(scrollTarget);
       if (el) window.scrollTo({ top: Math.max(0, el.getBoundingClientRect().top + window.scrollY - 80), behavior: "instant" });
-    }, 3000);
+    }, 10000);
 
     return () => { clearTimeout(startId); clearTimeout(safetyId); cancelAnimationFrame(rafId); };
   // eslint-disable-next-line react-hooks/exhaustive-deps
