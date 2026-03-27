@@ -55,18 +55,23 @@ export default function Home() {
     const target = location.state?.scrollTarget || window.location.hash;
     if (!target) return;
 
-    const scrollTo = () => {
+    // IMPORTANT: index.css sets `html { scroll-behavior: smooth }` globally.
+    // Using behavior:'smooth' here causes competing animations (NavigationTracker
+    // also scrolls, lazy sections keep changing heights) that cancel each other.
+    // behavior:'instant' explicitly overrides the CSS property, giving us a
+    // reliable one-shot synchronous scroll.
+    const snap = () => {
       const el = document.querySelector(target);
-      if (el) el.scrollIntoView({ behavior: "smooth" });
+      if (el) el.scrollIntoView({ behavior: "instant", block: "start" });
     };
 
-    // First pass: scroll after React has painted (catches sections already in DOM)
-    const t1 = setTimeout(scrollTo, 300);
-    // Correction pass: re-scroll after lazy sections above the target have loaded
-    // and expanded from their 80px placeholders to full height
-    const t2 = setTimeout(scrollTo, 1100);
-
-    return () => { clearTimeout(t1); clearTimeout(t2); };
+    // Three correction passes: lazy sections above the target expand from 80px
+    // placeholders to full height at different times (IntersectionObserver cascade).
+    // Each instant snap lands exactly at the element's current position.
+    const t1 = setTimeout(snap, 400);   // after first wave of lazy sections load
+    const t2 = setTimeout(snap, 1100);  // after second wave (sections nearer target)
+    const t3 = setTimeout(snap, 2200);  // final safety correction
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
   // Re-run whenever a new scroll target arrives via router state
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.state?.scrollTarget]);
