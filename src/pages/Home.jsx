@@ -62,18 +62,51 @@ export default function Home() {
   useEffect(() => {
     if (!scrollTarget) return;
 
-    // behavior:'instant' explicitly overrides the global `html { scroll-behavior:smooth }`
-    // from index.css, giving a reliable one-shot synchronous scroll with no animation
-    // conflicts from NavigationTracker or competing useEffect timers.
-    const snap = () => {
+    // behavior:'instant' overrides the global `html { scroll-behavior:smooth }` (index.css).
+    // We poll with rAF: each frame we read the element's current absolute top, scroll to it,
+    // and count how many consecutive frames it has been stable (≤ 2px change). Once stable
+    // for 8 frames (~133ms) we stop. This survives the Suspense-cascade where lazy sections
+    // above the target expand one-by-one AFTER our scroll fires, each time pushing the target
+    // further down. A safety timeout stops polling at 3s regardless.
+    let rafId;
+    let safetyId;
+    let lastTop = -1;
+    let stableCount = 0;
+
+    const tick = () => {
       const el = document.querySelector(scrollTarget);
-      if (el) el.scrollIntoView({ behavior: "instant", block: "start" });
+      if (!el) { rafId = requestAnimationFrame(tick); return; }
+
+      const absTop = el.getBoundingClientRect().top + window.scrollY;
+      const target80 = Math.max(0, absTop - 80); // subtract fixed header height
+
+      if (Math.abs(absTop - lastTop) < 2) {
+        stableCount++;
+      } else {
+        stableCount = 0;
+        lastTop = absTop;
+        // Element moved — snap to its new position immediately
+        window.scrollTo({ top: target80, behavior: "instant" });
+      }
+
+      if (stableCount >= 8) {
+        // Position has been stable for ~133ms — do a final precise snap and stop
+        window.scrollTo({ top: target80, behavior: "instant" });
+        return;
+      }
+      rafId = requestAnimationFrame(tick);
     };
 
-    // Two correction passes — enough once all sections are eagerly loaded via rm above.
-    const t1 = setTimeout(snap, 400);   // first pass after eager sections render
-    const t2 = setTimeout(snap, 1200);  // safety correction
-    return () => { clearTimeout(t1); clearTimeout(t2); };
+    // Brief initial delay so NavigationTracker's scroll-to-top completes first
+    const startId = setTimeout(() => { rafId = requestAnimationFrame(tick); }, 150);
+    // Hard stop after 3s in case sections never stabilise
+    safetyId = setTimeout(() => {
+      cancelAnimationFrame(rafId);
+      const el = document.querySelector(scrollTarget);
+      if (el) window.scrollTo({ top: Math.max(0, el.getBoundingClientRect().top + window.scrollY - 80), behavior: "instant" });
+    }, 3000);
+
+    return () => { clearTimeout(startId); clearTimeout(safetyId); cancelAnimationFrame(rafId); };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scrollTarget]);
 
