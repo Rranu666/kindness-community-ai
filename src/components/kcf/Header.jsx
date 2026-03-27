@@ -31,6 +31,7 @@ export default function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [activeLink, setActiveLink] = useState(null);
   const [openSubmenu, setOpenSubmenu] = useState(null);
+  const submenuRef = useRef(null);
 
   useEffect(() => {
     let ticking = false;
@@ -46,6 +47,16 @@ export default function Header() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Close dropdown when clicking outside the nav
+  useEffect(() => {
+    if (!openSubmenu) return;
+    const handler = (e) => {
+      if (!e.target.closest('nav')) setOpenSubmenu(null);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [openSubmenu]);
 
   useEffect(() => {
     if (isHome && location.state?.scrollTarget) {
@@ -170,9 +181,12 @@ export default function Header() {
                   onMouseEnter={() => setOpenSubmenu(link.label)}
                   onMouseLeave={() => setOpenSubmenu(null)}
                 >
-                  <button className="relative px-5 py-2 text-base font-semibold text-white/60 hover:text-white transition-colors duration-200 flex items-center gap-1.5">
+                  <button
+                    onClick={() => setOpenSubmenu(openSubmenu === link.label ? null : link.label)}
+                    className="relative px-5 py-2 text-base font-semibold text-white/60 hover:text-white transition-colors duration-200 flex items-center gap-1.5"
+                  >
                     {link.label}
-                    <ChevronDown className="w-4 h-4 transition-transform group-hover:rotate-180" />
+                    <ChevronDown className={`w-4 h-4 transition-transform ${openSubmenu === link.label ? "rotate-180" : "group-hover:rotate-180"}`} />
                   </button>
 
                   <AnimatePresence>
