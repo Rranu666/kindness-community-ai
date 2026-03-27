@@ -20,20 +20,25 @@ const Footer = lazy(() => import("@/components/kcf/Footer"));
 
 const SectionFallback = () => <div className="w-full h-20" />;
 
-// Renders children only once the sentinel div enters the viewport
+// Renders children only once the sentinel div enters the viewport.
+// When rootMargin is "eager" (set during cross-page hash-navigation) we skip the
+// IntersectionObserver entirely and start visible=true so ALL sections load their
+// JS chunks immediately — this lets the rAF scroll-tracker see the final page
+// height before it stops polling.
 function LazySection({ children, rootMargin = "200px" }) {
+  const eager = rootMargin === "eager";
   const ref = useRef(null);
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(eager);
 
   useEffect(() => {
-    if (!ref.current) return;
+    if (eager || visible || !ref.current) return;
     const observer = new IntersectionObserver(
       ([entry]) => { if (entry.isIntersecting) { setVisible(true); observer.disconnect(); } },
       { rootMargin }
     );
     observer.observe(ref.current);
     return () => observer.disconnect();
-  }, [rootMargin]);
+  }, [rootMargin, eager, visible]);
 
   return (
     <div ref={ref}>
@@ -56,8 +61,11 @@ export default function Home() {
   // position for every section anchor. Without this, the IntersectionObserver
   // cascade only loads sections near the top and #initiatives sits at the wrong
   // y-position in the partially-loaded page.
-  const rm = scrollTarget ? "100000px" : "200px";
-  const rmAbout = scrollTarget ? "100000px" : "300px";
+  // "eager" bypasses IntersectionObserver and renders immediately (see LazySection).
+  // Used when navigating from another page with a scroll target so all sections
+  // mount before the rAF tracker fires its final snap.
+  const rm = scrollTarget ? "eager" : "200px";
+  const rmAbout = scrollTarget ? "eager" : "300px";
 
   useEffect(() => {
     if (!scrollTarget) return;
