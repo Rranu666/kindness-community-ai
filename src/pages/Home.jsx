@@ -48,33 +48,34 @@ function LazySection({ children, rootMargin = "200px" }) {
 
 export default function Home() {
   const location = useLocation();
+  const scrollTarget = location.state?.scrollTarget || window.location.hash;
+
+  // When navigating to a specific section, use a huge rootMargin so ALL
+  // LazySection IntersectionObservers fire immediately — the full page height
+  // (14 000 px+) stabilises before our timed scroll fires, giving the correct
+  // position for every section anchor. Without this, the IntersectionObserver
+  // cascade only loads sections near the top and #initiatives sits at the wrong
+  // y-position in the partially-loaded page.
+  const rm = scrollTarget ? "100000px" : "200px";
+  const rmAbout = scrollTarget ? "100000px" : "300px";
 
   useEffect(() => {
-    // Prefer router state (set by Header when navigating from another page).
-    // Fall back to URL hash for direct deep-link visits (e.g. kindness.app/#initiatives).
-    const target = location.state?.scrollTarget || window.location.hash;
-    if (!target) return;
+    if (!scrollTarget) return;
 
-    // IMPORTANT: index.css sets `html { scroll-behavior: smooth }` globally.
-    // Using behavior:'smooth' here causes competing animations (NavigationTracker
-    // also scrolls, lazy sections keep changing heights) that cancel each other.
-    // behavior:'instant' explicitly overrides the CSS property, giving us a
-    // reliable one-shot synchronous scroll.
+    // behavior:'instant' explicitly overrides the global `html { scroll-behavior:smooth }`
+    // from index.css, giving a reliable one-shot synchronous scroll with no animation
+    // conflicts from NavigationTracker or competing useEffect timers.
     const snap = () => {
-      const el = document.querySelector(target);
+      const el = document.querySelector(scrollTarget);
       if (el) el.scrollIntoView({ behavior: "instant", block: "start" });
     };
 
-    // Three correction passes: lazy sections above the target expand from 80px
-    // placeholders to full height at different times (IntersectionObserver cascade).
-    // Each instant snap lands exactly at the element's current position.
-    const t1 = setTimeout(snap, 400);   // after first wave of lazy sections load
-    const t2 = setTimeout(snap, 1100);  // after second wave (sections nearer target)
-    const t3 = setTimeout(snap, 2200);  // final safety correction
-    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
-  // Re-run whenever a new scroll target arrives via router state
+    // Two correction passes — enough once all sections are eagerly loaded via rm above.
+    const t1 = setTimeout(snap, 400);   // first pass after eager sections render
+    const t2 = setTimeout(snap, 1200);  // safety correction
+    return () => { clearTimeout(t1); clearTimeout(t2); };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.state?.scrollTarget]);
+  }, [scrollTarget]);
 
   return (
     <div id="home" className="min-h-screen" style={{ background: "#030712", fontFamily: "'Inter', system-ui, sans-serif" }}>
@@ -86,75 +87,75 @@ export default function Home() {
         </Suspense>
 
         <div id="about" style={{ scrollMarginTop: "80px" }} />
-        <LazySection rootMargin="300px">
+        <LazySection rootMargin={rmAbout}>
           <AboutSection />
         </LazySection>
 
         <SectionDivider color="rose" />
 
         <div id="vision" style={{ scrollMarginTop: "80px" }} />
-        <LazySection rootMargin="200px">
+        <LazySection rootMargin={rm}>
           <VisionMission />
         </LazySection>
 
         <SectionDivider color="violet" />
 
         <div id="initiatives" style={{ scrollMarginTop: "80px" }} />
-        <LazySection rootMargin="200px">
+        <LazySection rootMargin={rm}>
           <InitiativesSection />
         </LazySection>
 
         <SectionDivider color="blue" />
 
-        <LazySection rootMargin="200px">
+        <LazySection rootMargin={rm}>
           <WhyDifferent />
         </LazySection>
 
         <SectionDivider color="violet" />
 
         <div id="evolution" style={{ scrollMarginTop: "80px" }} />
-        <LazySection rootMargin="200px">
+        <LazySection rootMargin={rm}>
           <EvolutionSection />
         </LazySection>
 
         <SectionDivider color="blue" />
 
         <div id="leadership" style={{ scrollMarginTop: "80px" }} />
-        <LazySection rootMargin="200px">
+        <LazySection rootMargin={rm}>
           <LeadershipSection />
         </LazySection>
 
         <SectionDivider color="rose" />
 
         <div id="partners" style={{ scrollMarginTop: "80px" }} />
-        <LazySection rootMargin="200px">
+        <LazySection rootMargin={rm}>
           <PartnerSection />
         </LazySection>
 
         <SectionDivider color="violet" />
 
         <div id="governance" style={{ scrollMarginTop: "80px" }} />
-        <LazySection rootMargin="200px">
+        <LazySection rootMargin={rm}>
           <GovernanceSection />
         </LazySection>
 
         <SectionDivider color="rose" />
 
         <div id="prospectus" style={{ scrollMarginTop: "80px" }} />
-        <LazySection rootMargin="200px">
+        <LazySection rootMargin={rm}>
           <ProspectusSection />
         </LazySection>
 
         <SectionDivider color="blue" />
 
         <div id="board" style={{ scrollMarginTop: "80px" }} />
-        <LazySection rootMargin="200px">
+        <LazySection rootMargin={rm}>
           <BoardRecruitmentSection />
         </LazySection>
 
         <SectionDivider color="violet" />
 
-        <LazySection rootMargin="200px">
+        <LazySection rootMargin={rm}>
           <EngagementSection />
         </LazySection>
 
