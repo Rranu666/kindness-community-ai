@@ -80,17 +80,13 @@ const DEFAULT_PINS = [
   { id:8, title:"Tutor for kids (Math)",       cat:"general",   urgency:"Flexible", x:17,y:44, user:"Priya T.",    time:"3h",  desc:"2 kids need help with Math & Science, Grade 7-8.",          verified:true  },
 ];
 
+// ── Module-level alias (used by catOf + sub-components) ─
+const CATS = DEFAULT_CATS;
+
 // ── Supabase data hook ──────────────────────────────────
 function useKindWaveData() {
-  const [cats, setCats] = useState(DEFAULT_CATS);
   const [pins, setPins] = useState(DEFAULT_PINS);
   useEffect(() => {
-    supabase.from('kindwave_categories').select('*').eq('is_active', true).order('sort_order')
-      .then(({ data }) => {
-        if (data && data.length > 0) {
-          setCats(data.map(c => ({ id: c.id, label: c.label, color: c.color, emoji: c.emoji, desc: c.description || '' })));
-        }
-      });
     supabase.from('kindwave_requests').select('*').eq('is_active', true).order('created_at')
       .then(({ data }) => {
         if (data && data.length > 0) {
@@ -98,7 +94,7 @@ function useKindWaveData() {
         }
       });
   }, []);
-  return { cats, pins };
+  return { pins };
 }
 
 const AVATARS = ["🌟","🌊","🌱","💚","🦋","☀️","🌙","⭐","🔮","🌸","🦄","🎯"];
@@ -1881,7 +1877,7 @@ function BottomNav({ active, setActive, isVol, streak }) {
 // ROOT APP
 // ══════════════════════════════════════════════════════
 export default function KindWaveApp() {
-  const { cats: CATS, pins: DB_PINS } = useKindWaveData();
+  const { pins: DB_PINS } = useKindWaveData();
   const [user, setUser]               = useState(null);
   const [xp, setXp]                   = useState(0);
   const [tab, setTab]                 = useState("map");
