@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /volunteer-dashboard
+Disallow: /team-portal
+Disallow: /team-portal-landing
+Disallow: /analytics
+Disallow: /giving
+Disallow: /login
+
+Sitemap: https://kindnesscommunityfoundation.com/sitemap.xml
