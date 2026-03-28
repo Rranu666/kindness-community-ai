@@ -1,34 +1,42 @@
 import { useLocation } from 'react-router-dom';
 import { NAV_ITEMS } from '@/lib/constants';
 import { useAuth } from '@/lib/AuthContext';
-import { LogOut, ExternalLink } from 'lucide-react';
+import { LogOut, ExternalLink, Menu } from 'lucide-react';
 
-export default function Topbar() {
+export default function Topbar({ onMenuClick }) {
   const { pathname } = useLocation();
   const { user, logout } = useAuth();
   const current = NAV_ITEMS.find(n => pathname.startsWith(n.href));
 
   return (
-    <header className="h-14 border-b border-gray-200 bg-white flex items-center justify-between px-6 shrink-0">
-      <div>
+    <header className="h-14 border-b border-gray-200 bg-white flex items-center justify-between px-4 sm:px-6 shrink-0">
+      <div className="flex items-center gap-3">
+        {/* Hamburger — mobile only */}
+        <button
+          onClick={onMenuClick}
+          className="lg:hidden p-2 -ml-1 rounded-md text-gray-500 hover:bg-gray-100 transition-colors"
+          aria-label="Open menu"
+        >
+          <Menu size={20} />
+        </button>
         <h1 className="text-base font-semibold text-gray-900">{current?.label || 'Dashboard'}</h1>
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 sm:gap-3">
         <a
           href="https://kindnesscommunityfoundation.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-blue-600 transition-colors"
+          className="hidden sm:flex items-center gap-1.5 text-xs text-gray-500 hover:text-blue-600 transition-colors"
         >
           <ExternalLink size={13} />
           View Site
         </a>
 
-        <div className="h-4 w-px bg-gray-200" />
+        <div className="hidden sm:block h-4 w-px bg-gray-200" />
 
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-full bg-blue-600 flex items-center justify-center">
+          <div className="w-7 h-7 rounded-full bg-blue-600 flex items-center justify-center shrink-0">
             <span className="text-white text-xs font-semibold">
               {user?.full_name?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase() || 'A'}
             </span>

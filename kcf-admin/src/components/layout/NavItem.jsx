@@ -1,10 +1,11 @@
 import { NavLink } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 
-export default function NavItem({ href, icon: Icon, label, collapsed }) {
+export default function NavItem({ href, icon: Icon, label, collapsed, onNavigate }) {
   return (
     <NavLink
       to={href}
+      onClick={onNavigate}
       className={({ isActive }) =>
         cn(
           'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors',
