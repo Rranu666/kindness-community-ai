@@ -100,7 +100,7 @@ function PagesVisibilityTab() {
                   onClick={e => e.stopPropagation()}
                   className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 font-mono text-xs group"
                 >
-                  {SLUG_TO_PATH[page.page_slug] ?? `/${page.page_slug}`}
+                  /{page.page_slug}
                   <ExternalLink size={11} className="opacity-0 group-hover:opacity-100 transition-opacity" />
                 </a>
               </td>
