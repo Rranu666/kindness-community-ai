@@ -1,144 +1,367 @@
 import { useState } from 'react';
-import { Plus, Edit2, Trash2, Check, X } from 'lucide-react';
+import { Eye, EyeOff, Globe, Plus, Trash2, Edit2, Check, X, ExternalLink } from 'lucide-react';
 import PageHeader from '@/components/shared/PageHeader';
 import StatusBadge from '@/components/shared/StatusBadge';
 import ConfirmDialog from '@/components/shared/ConfirmDialog';
 import LoadingSpinner from '@/components/shared/LoadingSpinner';
 import EmptyState from '@/components/shared/EmptyState';
-import { useSitePages, useCreatePage, useUpdatePage, useDeletePage } from '@/hooks/useSitePages';
+import { usePageVisibility, useUpdatePageVisibility } from '@/hooks/usePageVisibility';
+import { useContentBlocks, useUpsertContentBlock, useAddContentBlock, useDeleteContentBlock } from '@/hooks/useContentBlocks';
 import { useCommunityStories, useUpdateStory } from '@/hooks/useCommunityStories';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
 
-function PageEditor({ page, onClose }) {
-  const [title, setTitle] = useState(page?.title || '');
-  const [slug, setSlug] = useState(page?.slug || '');
-  const [body, setBody] = useState(page?.body || '');
-  const [status, setStatus] = useState(page?.status || 'draft');
-  const create = useCreatePage();
-  const update = useUpdatePage();
-  const isNew = !page?.id;
+// ─── Toggle Switch ───────────────────────────────────────────────────────────
+function Toggle({ checked, onChange, disabled }) {
+  return (
+    <button
+      type="button"
+      onClick={() => !disabled && onChange(!checked)}
+      disabled={disabled}
+      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 ${checked ? 'bg-green-500' : 'bg-gray-300'} ${disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
+    >
+      <span
+        className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform duration-200 ${checked ? 'translate-x-6' : 'translate-x-1'}`}
+      />
+    </button>
+  );
+}
 
-  const handleSave = async () => {
+// ─── Tab 1: Page Visibility ──────────────────────────────────────────────────
+function PagesVisibilityTab() {
+  const { data: pages = [], isLoading } = usePageVisibility();
+  const update = useUpdatePageVisibility();
+
+  const handleToggle = async (page, newVal) => {
     try {
-      if (isNew) {
-        await create.mutateAsync({ title, slug, body, status });
-        toast.success('Page created');
-      } else {
-        await update.mutateAsync({ id: page.id, updates: { title, slug, body, status } });
-        toast.success('Page saved');
-      }
+      await update.mutateAsync({ page_slug: page.page_slug, updates: { is_visible: newVal } });
+      toast.success(`"${page.page_name}" is now ${newVal ? 'visible' : 'hidden'}`);
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
+
+  if (isLoading) return <LoadingSpinner />;
+
+  if (pages.length === 0) {
+    return (
+      <EmptyState
+        icon="🌐"
+        title="No pages configured"
+        message="Add rows to the page_visibility table in Supabase to manage nav visibility."
+      />
+    );
+  }
+
+  return (
+    <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white">
+      <table className="w-full text-sm">
+        <thead>
+          <tr className="border-b border-gray-200 bg-gray-50">
+            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Page</th>
+            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Slug / URL</th>
+            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Nav Label</th>
+            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Status</th>
+            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Visible in Nav</th>
+          </tr>
+        </thead>
+        <tbody>
+          {pages.map((page) => (
+            <tr key={page.page_slug} className="border-b border-gray-100 last:border-0 hover:bg-gray-50/50">
+              <td className="px-4 py-3">
+                <div className="flex items-center gap-2">
+                  <Globe size={14} className="text-gray-400 shrink-0" />
+                  <span className="font-medium text-gray-900">{page.page_name || page.page_slug}</span>
+                </div>
+              </td>
+              <td className="px-4 py-3">
+                <a
+                  href={`https://kindnesscommununityfoundation.com/${page.page_slug}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1 text-blue-600 hover:text-blue-800 font-mono text-xs group"
+                >
+                  /{page.page_slug}
+                  <ExternalLink size={11} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                </a>
+              </td>
+              <td className="px-4 py-3 text-gray-500">{page.nav_label || '—'}</td>
+              <td className="px-4 py-3">
+                {page.is_visible ? (
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-green-50 text-green-700">
+                    <Eye size={11} /> Visible
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-600">
+                    <EyeOff size={11} /> Hidden
+                  </span>
+                )}
+              </td>
+              <td className="px-4 py-3">
+                <Toggle
+                  checked={!!page.is_visible}
+                  onChange={(val) => handleToggle(page, val)}
+                  disabled={update.isPending}
+                />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+// ─── Add Block Form ───────────────────────────────────────────────────────────
+function AddBlockForm({ pageSlug, onClose }) {
+  const [label, setLabel] = useState('');
+  const [blockKey, setBlockKey] = useState('');
+  const [content, setContent] = useState('');
+  const [contentType, setContentType] = useState('text');
+  const add = useAddContentBlock();
+
+  const autoKey = (val) => {
+    setLabel(val);
+    setBlockKey(val.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/(^_|_$)/g, ''));
+  };
+
+  const handleAdd = async () => {
+    if (!blockKey.trim()) { toast.error('Block key is required'); return; }
+    try {
+      await add.mutateAsync({
+        page_slug: pageSlug,
+        block_key: blockKey.trim(),
+        label: label.trim(),
+        content: content.trim(),
+        content_type: contentType,
+        updated_at: new Date().toISOString(),
+      });
+      toast.success('Block added');
       onClose();
     } catch (err) {
       toast.error(err.message);
     }
   };
 
-  const autoSlug = (val) => {
-    setTitle(val);
-    if (isNew) setSlug(val.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''));
-  };
-
-  const isPending = create.isPending || update.isPending;
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40">
-      <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col">
-        <div className="flex items-center justify-between p-6 border-b">
-          <h3 className="font-semibold text-gray-900">{isNew ? 'New Page' : 'Edit Page'}</h3>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">✕</button>
+    <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mt-4 space-y-3">
+      <h4 className="font-semibold text-blue-900 text-sm">Add Text Block</h4>
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label className="block text-xs font-medium text-gray-700 mb-1">Label</label>
+          <input
+            value={label}
+            onChange={(e) => autoKey(e.target.value)}
+            placeholder="Hero Heading"
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
         </div>
-        <div className="p-6 overflow-y-auto flex-1 space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
-              <input value={title} onChange={e => autoSlug(e.target.value)} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Page title" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Slug</label>
-              <input value={slug} onChange={e => setSlug(e.target.value)} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="page-slug" />
-            </div>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
-            <select value={status} onChange={e => setStatus(e.target.value)} className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none w-40">
-              <option value="draft">Draft</option>
-              <option value="published">Published</option>
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Content</label>
-            <ReactQuill value={body} onChange={setBody} theme="snow" />
-          </div>
+        <div>
+          <label className="block text-xs font-medium text-gray-700 mb-1">Block Key</label>
+          <input
+            value={blockKey}
+            onChange={(e) => setBlockKey(e.target.value)}
+            placeholder="hero_heading"
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
         </div>
-        <div className="flex gap-3 justify-end p-6 border-t">
-          <button onClick={onClose} className="px-4 py-2 text-sm rounded-lg border border-gray-300 hover:bg-gray-50">Cancel</button>
-          <button onClick={handleSave} disabled={isPending} className="px-4 py-2 text-sm rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-60">
-            {isPending ? 'Saving…' : 'Save Page'}
-          </button>
-        </div>
+      </div>
+      <div>
+        <label className="block text-xs font-medium text-gray-700 mb-1">Content</label>
+        <textarea
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          rows={3}
+          placeholder="Enter the text content…"
+          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
+        />
+      </div>
+      <div>
+        <label className="block text-xs font-medium text-gray-700 mb-1">Content Type</label>
+        <select
+          value={contentType}
+          onChange={(e) => setContentType(e.target.value)}
+          className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none w-32"
+        >
+          <option value="text">text</option>
+          <option value="html">html</option>
+        </select>
+      </div>
+      <div className="flex gap-2 justify-end">
+        <button onClick={onClose} className="px-3 py-1.5 text-sm rounded-lg border border-gray-300 hover:bg-gray-50">Cancel</button>
+        <button onClick={handleAdd} disabled={add.isPending} className="px-3 py-1.5 text-sm rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-60 flex items-center gap-1">
+          <Plus size={13} /> Add Block
+        </button>
       </div>
     </div>
   );
 }
 
-function PagesTab() {
-  const { data: pages = [], isLoading } = useSitePages();
-  const deletePage = useDeletePage();
-  const [editPage, setEditPage] = useState(null);
-  const [deleteTarget, setDeleteTarget] = useState(null);
-  const [creating, setCreating] = useState(false);
+// ─── Editable Cell ────────────────────────────────────────────────────────────
+function EditableContent({ block, pageSlug }) {
+  const [value, setValue] = useState(block.content || '');
+  const [saved, setSaved] = useState(false);
+  const upsert = useUpsertContentBlock();
 
-  if (isLoading) return <LoadingSpinner />;
+  const handleBlur = async () => {
+    if (value === (block.content || '')) return;
+    try {
+      await upsert.mutateAsync({
+        page_slug: pageSlug,
+        block_key: block.block_key,
+        content: value,
+        label: block.label,
+        content_type: block.content_type || 'text',
+      });
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2000);
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
+
+  return (
+    <div className="relative">
+      <textarea
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        onBlur={handleBlur}
+        rows={2}
+        className="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 resize-y bg-gray-50 focus:bg-white transition-colors"
+      />
+      {saved && (
+        <span className="absolute top-1 right-1 flex items-center gap-0.5 text-xs text-green-600 bg-green-50 px-1.5 py-0.5 rounded-full">
+          <Check size={10} /> Saved
+        </span>
+      )}
+    </div>
+  );
+}
+
+// ─── Tab 2: Text Editor ───────────────────────────────────────────────────────
+function TextEditorTab() {
+  const { data: pages = [], isLoading: pagesLoading } = usePageVisibility();
+  const [selectedSlug, setSelectedSlug] = useState('');
+  const { data: blocks = [], isLoading: blocksLoading } = useContentBlocks(selectedSlug);
+  const deleteBlock = useDeleteContentBlock();
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState(null);
 
   return (
     <div>
-      <div className="flex justify-end mb-4">
-        <button onClick={() => setCreating(true)} className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700">
-          <Plus size={14} /> New Page
-        </button>
+      {/* Page selector */}
+      <div className="flex items-center gap-3 mb-6">
+        <label className="text-sm font-medium text-gray-700 shrink-0">Select page:</label>
+        <select
+          value={selectedSlug}
+          onChange={(e) => { setSelectedSlug(e.target.value); setShowAddForm(false); }}
+          className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-64"
+          disabled={pagesLoading}
+        >
+          <option value="">— choose a page —</option>
+          {pages.map((p) => (
+            <option key={p.page_slug} value={p.page_slug}>
+              {p.page_name || p.page_slug} ({p.page_slug})
+            </option>
+          ))}
+        </select>
       </div>
-      {pages.length === 0 ? (
-        <EmptyState icon="📄" title="No pages yet" message="Create your first page to get started." action={<button onClick={() => setCreating(true)} className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm">Create Page</button>} />
-      ) : (
-        <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-gray-200 bg-gray-50">
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Title</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Slug</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Status</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Updated</th>
-                <th className="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {pages.map(p => (
-                <tr key={p.id} className="border-b border-gray-100 last:border-0">
-                  <td className="px-4 py-3 font-medium text-gray-900">{p.title}</td>
-                  <td className="px-4 py-3 text-gray-500 font-mono text-xs">/{p.slug}</td>
-                  <td className="px-4 py-3"><StatusBadge status={p.status} /></td>
-                  <td className="px-4 py-3 text-gray-500">{p.updated_at ? format(new Date(p.updated_at), 'MMM d, yyyy') : '—'}</td>
-                  <td className="px-4 py-3">
-                    <div className="flex justify-end gap-2">
-                      <button onClick={() => setEditPage(p)} className="p-1.5 rounded-md hover:bg-gray-100 text-gray-500 hover:text-blue-600"><Edit2 size={13} /></button>
-                      <button onClick={() => setDeleteTarget(p)} className="p-1.5 rounded-md hover:bg-red-50 text-gray-500 hover:text-red-600"><Trash2 size={13} /></button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+
+      {!selectedSlug && (
+        <EmptyState icon="✏️" title="No page selected" message="Choose a page from the dropdown above to manage its text blocks." />
       )}
-      {(creating || editPage) && <PageEditor page={editPage} onClose={() => { setCreating(false); setEditPage(null); }} />}
-      <ConfirmDialog open={!!deleteTarget} title="Delete Page" message={`Delete "${deleteTarget?.title}"?`} onConfirm={async () => { await deletePage.mutateAsync(deleteTarget.id); toast.success('Page deleted'); setDeleteTarget(null); }} onCancel={() => setDeleteTarget(null)} loading={deletePage.isPending} />
+
+      {selectedSlug && blocksLoading && <LoadingSpinner />}
+
+      {selectedSlug && !blocksLoading && (
+        <>
+          {blocks.length === 0 && !showAddForm ? (
+            <EmptyState
+              icon="📝"
+              title="No text blocks yet"
+              message="Add your first text block for this page."
+              action={
+                <button onClick={() => setShowAddForm(true)} className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700">
+                  <Plus size={14} /> Add Text Block
+                </button>
+              }
+            />
+          ) : (
+            <>
+              <div className="flex justify-between items-center mb-3">
+                <p className="text-sm text-gray-500">{blocks.length} block{blocks.length !== 1 ? 's' : ''} for <span className="font-mono text-gray-700">{selectedSlug}</span></p>
+                {!showAddForm && (
+                  <button onClick={() => setShowAddForm(true)} className="flex items-center gap-1.5 bg-blue-600 text-white px-3 py-1.5 rounded-lg text-sm hover:bg-blue-700">
+                    <Plus size={13} /> Add Text Block
+                  </button>
+                )}
+              </div>
+
+              <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-gray-200 bg-gray-50">
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase w-40">Label</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase w-40">Block Key</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Content</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase w-20">Type</th>
+                      <th className="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase w-16">Del</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {blocks.map((block) => (
+                      <tr key={block.id} className="border-b border-gray-100 last:border-0 align-top">
+                        <td className="px-4 py-3 text-gray-700 font-medium">{block.label || <span className="text-gray-400 italic">—</span>}</td>
+                        <td className="px-4 py-3">
+                          <code className="text-xs bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded">{block.block_key}</code>
+                        </td>
+                        <td className="px-4 py-3 min-w-[200px]">
+                          <EditableContent block={block} pageSlug={selectedSlug} />
+                        </td>
+                        <td className="px-4 py-3 text-gray-400 text-xs">{block.content_type || 'text'}</td>
+                        <td className="px-4 py-3 text-right">
+                          <button
+                            onClick={() => setDeleteTarget(block)}
+                            className="p-1.5 rounded-md hover:bg-red-50 text-gray-400 hover:text-red-600 transition-colors"
+                          >
+                            <Trash2 size={13} />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
+          )}
+
+          {showAddForm && (
+            <AddBlockForm pageSlug={selectedSlug} onClose={() => setShowAddForm(false)} />
+          )}
+        </>
+      )}
+
+      <ConfirmDialog
+        open={!!deleteTarget}
+        title="Delete Block"
+        message={`Delete block "${deleteTarget?.block_key}"? This cannot be undone.`}
+        onConfirm={async () => {
+          try {
+            await deleteBlock.mutateAsync({ id: deleteTarget.id, page_slug: selectedSlug });
+            toast.success('Block deleted');
+          } catch (err) {
+            toast.error(err.message);
+          }
+          setDeleteTarget(null);
+        }}
+        onCancel={() => setDeleteTarget(null)}
+        loading={deleteBlock.isPending}
+      />
     </div>
   );
 }
 
+// ─── Tab 3: Stories (verbatim from original) ──────────────────────────────────
 function StoriesTab() {
   const { data: stories = [], isLoading } = useCommunityStories();
   const update = useUpdateStory();
@@ -184,18 +407,31 @@ function StoriesTab() {
   );
 }
 
+// ─── Main Export ──────────────────────────────────────────────────────────────
 export default function Content() {
-  const [tab, setTab] = useState('pages');
+  const [tab, setTab] = useState('visibility');
 
   return (
     <div>
-      <PageHeader title="Content Management" subtitle="Manage pages and community stories" />
+      <PageHeader title="Content Management" subtitle="Manage page visibility, text content, and community stories" />
       <div className="flex gap-1 mb-6 bg-gray-100 rounded-lg p-1 w-fit">
-        {[['pages', 'Pages'], ['stories', 'Stories']].map(([id, label]) => (
-          <button key={id} onClick={() => setTab(id)} className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${tab === id ? 'bg-white shadow-sm text-gray-900' : 'text-gray-600 hover:text-gray-900'}`}>{label}</button>
+        {[
+          ['visibility', 'Page Visibility'],
+          ['editor', 'Text Editor'],
+          ['stories', 'Stories'],
+        ].map(([id, label]) => (
+          <button
+            key={id}
+            onClick={() => setTab(id)}
+            className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${tab === id ? 'bg-white shadow-sm text-gray-900' : 'text-gray-600 hover:text-gray-900'}`}
+          >
+            {label}
+          </button>
         ))}
       </div>
-      {tab === 'pages' ? <PagesTab /> : <StoriesTab />}
+      {tab === 'visibility' && <PagesVisibilityTab />}
+      {tab === 'editor' && <TextEditorTab />}
+      {tab === 'stories' && <StoriesTab />}
     </div>
   );
 }

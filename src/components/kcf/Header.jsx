@@ -4,6 +4,7 @@ import { Menu, X, Search, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import SiteSearch from "./SiteSearch";
 import KCFLogo from "./KCFLogo";
+import { usePageVisibility } from "@/hooks/usePageVisibility";
 
 const navLinks = [
   { label: "Home", href: "#home" },
@@ -32,6 +33,17 @@ export default function Header() {
   const [activeLink, setActiveLink] = useState(null);
   const [openSubmenu, setOpenSubmenu] = useState(null);
   const submenuRef = useRef(null);
+  const { isVisible } = usePageVisibility();
+
+  const getSlug = (href) =>
+    href?.startsWith('/') ? href.slice(1) :
+    href?.startsWith('#') ? href.slice(1) : null;
+
+  const visibleNavLinks = navLinks.filter((l) => {
+    if (l.submenu) return true;
+    const slug = getSlug(l.href);
+    return !slug || isVisible(slug);
+  });
 
   useEffect(() => {
     let ticking = false;
@@ -107,7 +119,7 @@ export default function Header() {
 
           {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center gap-2" aria-label="Main navigation">
-            {navLinks.map((link) => {
+            {visibleNavLinks.map((link) => {
               const hasSubmenu = !!link.submenu;
               const isActive = activeLink === link.href;
 
@@ -270,7 +282,7 @@ export default function Header() {
               }}
             >
               <nav className="px-4 py-4 space-y-1">
-                {navLinks.map((link, i) => {
+                {visibleNavLinks.map((link, i) => {
                   if (!link.submenu) {
                     return (
                       <motion.div
