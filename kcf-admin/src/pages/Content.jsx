@@ -28,7 +28,7 @@ function Toggle({ checked, onChange, disabled }) {
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-const SITE_ORIGIN = 'https://kindnesscommununityfoundation.com';
+const SITE_ORIGIN = 'https://kindnesscommunityfoundation.com';
 const SLUG_TO_PATH = {
   home: '/',
   kindwave: '/kindwave',
