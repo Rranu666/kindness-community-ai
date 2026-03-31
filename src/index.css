@@ -38,6 +38,9 @@ body {
   }
 }
 
+/* Loading spinner used by Leaflet map cards */
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
 /* Premium selection color */
 ::selection {
   background: rgba(244, 63, 94, 0.3);

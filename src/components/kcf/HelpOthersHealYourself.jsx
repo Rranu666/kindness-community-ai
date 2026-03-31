@@ -1,5 +1,66 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { MapContainer, TileLayer, Marker } from "react-leaflet";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
+
+// Geolocation hook — resolves once, no city name needed here
+function useGeoLocation() {
+  const [loc, setLoc] = useState(null);
+  useEffect(() => {
+    if (!navigator.geolocation) { setLoc({ lat: 37.7749, lng: -122.4194 }); return; }
+    navigator.geolocation.getCurrentPosition(
+      ({ coords }) => setLoc({ lat: coords.latitude, lng: coords.longitude }),
+      () => setLoc({ lat: 37.7749, lng: -122.4194 }),
+      { timeout: 8000, maximumAge: 300000 }
+    );
+  }, []);
+  return loc;
+}
+
+// Coloured inline-SVG marker
+function pinIcon(color) {
+  return L.divIcon({
+    html: `<svg width="32" height="42" viewBox="0 0 34 44" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 3px 5px ${color}99);display:block"><path d="M17 0C7.6 0 0 7.6 0 17c0 11 17 27 17 27s17-16 17-27C34 7.6 26.4 0 17 0z" fill="${color}"/><circle cx="17" cy="16" r="7" fill="#030712" opacity=".85"/></svg>`,
+    iconSize: [32, 42], iconAnchor: [16, 42], className: "",
+  });
+}
+
+// Scatter offsets for demo pins around user
+const PIN_OFFSETS = [
+  { dlat: -0.010, dlng: -0.015, color: "#f43f5e" },
+  { dlat:  0.016, dlng:  0.008, color: "#8b66ff" },
+  { dlat:  0.005, dlng: -0.022, color: "#44aaff" },
+  { dlat: -0.018, dlng:  0.019, color: "#f43f5e" },
+];
+
+const MY_DOT = L.divIcon({
+  html: `<div style="width:14px;height:14px;border-radius:50%;background:linear-gradient(135deg,#00e8b4,#00bf94);border:3px solid rgba(255,255,255,.9);box-shadow:0 0 0 4px rgba(0,232,180,.25)"></div>`,
+  iconSize: [14, 14], iconAnchor: [7, 7], className: "",
+});
+
+// Map card component
+function LiveMapCard() {
+  const loc = useGeoLocation();
+  const center = loc || { lat: 37.7749, lng: -122.4194 };
+  return (
+    <div style={{ position: "relative", width: "100%", height: "100%", minHeight: 280, borderRadius: 16, overflow: "hidden" }}>
+      {!loc && (
+        <div style={{ position: "absolute", inset: 0, zIndex: 10, background: "rgba(3,7,18,0.85)", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 10, borderRadius: 16 }}>
+          <div style={{ width: 28, height: 28, borderRadius: "50%", border: "3px solid #00e8b4", borderTopColor: "transparent", animation: "spin 0.8s linear infinite" }} />
+          <span style={{ color: "#4a7a9b", fontSize: 12 }}>Getting your location…</span>
+        </div>
+      )}
+      <MapContainer center={[center.lat, center.lng]} zoom={14} style={{ width: "100%", height: "100%", minHeight: 280 }} zoomControl={false} attributionControl={false} dragging={false} scrollWheelZoom={false} doubleClickZoom={false}>
+        <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" />
+        {loc && <Marker position={[loc.lat, loc.lng]} icon={MY_DOT} zIndexOffset={1000} />}
+        {loc && PIN_OFFSETS.map((p, i) => (
+          <Marker key={i} position={[loc.lat + p.dlat, loc.lng + p.dlng]} icon={pinIcon(p.color)} />
+        ))}
+      </MapContainer>
+    </div>
+  );
+}
 
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
@@ -147,42 +208,15 @@ export default function HelpOthersHealYourself() {
           </motion.div>
 
           <div className="grid md:grid-cols-2 gap-5">
-            {/* Map mockup */}
+            {/* Live map */}
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0}
-              className="rounded-3xl p-8 border border-white/[0.08] relative overflow-hidden"
-              style={{ background: "rgba(255,255,255,0.025)", backdropFilter: "blur(10px)", minHeight: "320px" }}>
-              <div className="absolute inset-0 opacity-[0.04]"
-                style={{
-                  backgroundImage: "linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)",
-                  backgroundSize: "40px 40px",
-                }} />
-              <div className="relative z-10">
-                <div className="text-xs text-white/30 tracking-widest uppercase font-bold mb-6">Help Near You</div>
-                <div className="flex flex-wrap gap-2 mb-8">
-                  {["🚨 Urgent", "💬 Emotional", "🙏 Prayer", "🌿 General", "🤝 Community"].map((tag) => (
-                    <span key={tag} className="text-xs px-3 py-1.5 rounded-full border border-white/10 text-white/50"
-                      style={{ background: "rgba(255,255,255,0.04)" }}>{tag}</span>
-                  ))}
-                </div>
-                {/* Mock pins */}
-                <div className="relative h-40">
-                  {[
-                    { top: "20%", left: "30%", icon: "🤝", color: "#f43f5e" },
-                    { top: "50%", left: "60%", icon: "🙏", color: "#8b66ff" },
-                    { top: "65%", left: "20%", icon: "💬", color: "#44aaff" },
-                    { top: "30%", left: "75%", icon: "🚨", color: "#f43f5e" },
-                  ].map((pin, i) => (
-                    <motion.div key={i}
-                      style={{ position: "absolute", top: pin.top, left: pin.left }}
-                      animate={{ y: [0, -6, 0] }}
-                      transition={{ duration: 2 + i * 0.5, repeat: Infinity, ease: "easeInOut" }}>
-                      <div className="w-9 h-9 rounded-full flex items-center justify-center text-lg border-2"
-                        style={{ background: "rgba(3,7,18,0.8)", borderColor: pin.color, boxShadow: `0 0 16px ${pin.color}40` }}>
-                        {pin.icon}
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
+              className="rounded-3xl border border-white/[0.08] relative overflow-hidden"
+              style={{ background: "rgba(255,255,255,0.025)", minHeight: "320px" }}>
+              <div className="absolute top-4 left-4 z-[1000] text-xs text-white/50 tracking-widest uppercase font-bold px-3 py-1.5 rounded-full border border-white/10" style={{ background: "rgba(3,7,18,0.7)", backdropFilter: "blur(8px)" }}>
+                Help Near You
+              </div>
+              <div style={{ height: 320 }}>
+                <LiveMapCard />
               </div>
             </motion.div>
 
