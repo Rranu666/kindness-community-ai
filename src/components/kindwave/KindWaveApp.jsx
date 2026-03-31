@@ -1,4 +1,7 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 import { supabase } from "@/api/supabaseClient";
 
 /* ═══════════════════════════════════════════════════════
@@ -134,6 +137,10 @@ input,textarea,button{font-family:'Plus Jakarta Sans',sans-serif}
 @keyframes radarSpin {from{transform:rotate(0deg)} to{transform:rotate(360deg)}}
 @keyframes cardReveal{0%{opacity:0;transform:scale(.82) translateY(32px)} 70%{transform:scale(1.03) translateY(-4px)} 100%{opacity:1;transform:scale(1) translateY(0)}}
 @keyframes streakPop {0%{transform:scale(0) rotate(-15deg);opacity:0} 65%{transform:scale(1.18) rotate(3deg)} 100%{transform:scale(1) rotate(0);opacity:1}}
+@keyframes spin      {from{transform:rotate(0deg)} to{transform:rotate(360deg)}}
+.kw-popup .leaflet-popup-content-wrapper{background:transparent;border:none;box-shadow:none;padding:0}
+.kw-popup .leaflet-popup-content{margin:0}
+.kw-popup .leaflet-popup-tip-container{display:none}
 @keyframes dotBounce {0%,80%,100%{transform:scale(0)} 40%{transform:scale(1)}}
 @keyframes callPulse {0%,100%{box-shadow:0 0 0 0 rgba(29,233,155,.5)} 50%{box-shadow:0 0 0 16px rgba(29,233,155,0)}}
 @keyframes shieldFloat{0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)}}
@@ -855,19 +862,112 @@ function TooltipGuide({ tab, onDismiss }) {
   );
 }
 
+// ── Geolocation + city name hook ────────────────────────
+function useUserLocation() {
+  const [loc, setLoc] = useState(null);       // { lat, lng }
+  const [city, setCity] = useState("Your Area");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!navigator.geolocation) {
+      setLoc({ lat: 37.7749, lng: -122.4194 }); // San Francisco fallback
+      setCity("Your Area");
+      setLoading(false);
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const { latitude: lat, longitude: lng } = pos.coords;
+        setLoc({ lat, lng });
+        // Reverse geocode via Nominatim
+        try {
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`,
+            { headers: { "Accept-Language": "en" } }
+          );
+          const data = await res.json();
+          const a = data.address || {};
+          const name = a.city || a.town || a.village || a.county || a.state || "Your Area";
+          setCity(name);
+        } catch {
+          setCity("Your Area");
+        }
+        setLoading(false);
+      },
+      () => {
+        // Permission denied or unavailable — use a generic fallback
+        setLoc({ lat: 37.7749, lng: -122.4194 });
+        setCity("Your Area");
+        setLoading(false);
+      },
+      { timeout: 8000, maximumAge: 300000 }
+    );
+  }, []);
+
+  return { loc, city, loading };
+}
+
+// Build a coloured SVG data-URI pin icon for Leaflet
+function makePinIcon(color) {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="34" height="44" viewBox="0 0 34 44"><defs><filter id="s"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="${color}" flood-opacity=".7"/></filter></defs><path d="M17 0C7.6 0 0 7.6 0 17c0 11 17 27 17 27s17-16 17-27C34 7.6 26.4 0 17 0z" fill="${color}" filter="url(%23s)"/><circle cx="17" cy="16" r="7" fill="#05091a" opacity=".85"/></svg>`;
+  return L.divIcon({
+    html: `<img src="data:image/svg+xml,${svg}" width="34" height="44" style="display:block"/>`,
+    iconSize: [34, 44],
+    iconAnchor: [17, 44],
+    popupAnchor: [0, -48],
+    className: "",
+  });
+}
+
+// "My location" pulse icon
+const MY_LOC_ICON = L.divIcon({
+  html: `<div style="position:relative;width:18px;height:18px"><div style="position:absolute;inset:-14px;border-radius:50%;background:rgba(0,232,180,.12);animation:pulse 2.2s infinite"></div><div style="width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#00e8b4,#00bf94);border:3px solid rgba(255,255,255,.92);box-shadow:0 0 0 4px rgba(0,232,180,.22),0 4px 14px rgba(0,232,180,.22)"></div></div>`,
+  iconSize: [18, 18],
+  iconAnchor: [9, 9],
+  className: "",
+});
+
+// Scatter offset helper — places pins at real GPS offsets around user location
+const SCATTER = [
+  [-0.012, -0.018], [0.018, -0.008], [0.022, 0.019], [-0.009, 0.024],
+  [0.031, -0.002], [-0.026, 0.013], [0.005, -0.031], [0.014, 0.028],
+];
+
+// Pans map to user's location when it becomes available
+function MapAutoCenter({ loc }) {
+  const map = useMap();
+  useEffect(() => {
+    if (loc) map.setView([loc.lat, loc.lng], 14, { animate: true });
+  }, [loc, map]);
+  return null;
+}
+
 // Map View
 function MapView({ pins, onPin, onAdd, filterCats, setFilterCats }) {
   const [showF, setShowF] = useState(false);
-  const [hov, setHov]     = useState(null);
+  const { loc, city, loading } = useUserLocation();
   const vis = pins.filter(p => filterCats.length === 0 || filterCats.includes(p.cat));
+
+  // Assign real lat/lng to each pin using scatter offsets
+  const geopins = useMemo(() => {
+    const base = loc || { lat: 37.7749, lng: -122.4194 };
+    return vis.map((pin, i) => {
+      const [dlat, dlng] = SCATTER[i % SCATTER.length];
+      return { ...pin, lat: base.lat + dlat, lng: base.lng + dlng };
+    });
+  }, [vis, loc]);
 
   return (
     <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
       {/* Header */}
       <div className="glass" style={{ padding: "16px 18px 13px", display: "flex", alignItems: "center", justifyContent: "space-between", zIndex: 10 }}>
         <div>
-          <div style={{ color: T.muted, fontSize: 12, fontWeight: 500 }}>📍 Gurugram, Haryana</div>
-          <div style={{ color: T.white, fontWeight: 700, fontSize: 16, marginTop: 2 }}><span style={{ color: T.teal }}>{pins.length}</span> active requests nearby</div>
+          <div style={{ color: T.muted, fontSize: 12, fontWeight: 500 }}>
+            📍 {loading ? "Locating…" : city}
+          </div>
+          <div style={{ color: T.white, fontWeight: 700, fontSize: 16, marginTop: 2 }}>
+            <span style={{ color: T.teal }}>{pins.length}</span> active requests nearby
+          </div>
         </div>
         <div style={{ display: "flex", gap: 8 }}>
           <button className="glass press" onClick={() => setShowF(f => !f)} style={{ border: `1px solid ${showF ? T.borderHi : T.border}`, borderRadius: 12, width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center", background: showF ? `${T.teal}14` : "rgba(255,255,255,.04)", fontSize: 16 }}>⚡</button>
@@ -889,60 +989,59 @@ function MapView({ pins, onPin, onAdd, filterCats, setFilterCats }) {
         </div>
       )}
 
-      {/* Map Canvas */}
-      <div style={{ flex: 1, position: "relative", overflow: "hidden", background: `radial-gradient(ellipse at 28% 36%, #061530 0%, ${T.deep} 65%)` }}>
-        <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%", opacity: .07 }}>
-          {[10, 20, 30, 40, 50, 60, 70, 80, 90].map(p => (
-            <g key={p}>
-              <line x1={`${p}%`} y1="0" x2={`${p}%`} y2="100%" stroke={T.teal} strokeWidth=".5" />
-              <line y1={`${p}%`} x1="0" y2={`${p}%`} x2="100%" stroke={T.teal} strokeWidth=".5" />
-            </g>
-          ))}
-        </svg>
-        <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%", opacity: .22 }}>
-          <defs><filter id="rg2"><feGaussianBlur stdDeviation="2.5" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter></defs>
-          <path d="M 0 45% Q 30% 42% 52% 51% T 100% 49%" stroke={T.teal} strokeWidth="2.5" fill="none" filter="url(#rg2)" />
-          <path d="M 22% 0 Q 24% 45% 26% 68% T 28% 100%" stroke={T.tealDim} strokeWidth="1.5" fill="none" filter="url(#rg2)" />
-          <path d="M 63% 0 Q 65% 38% 67% 72% T 69% 100%" stroke={T.tealDim} strokeWidth="1.5" fill="none" filter="url(#rg2)" />
-          <path d="M 0 76% Q 45% 74% 100% 73%" stroke={T.tealDim} strokeWidth="1.5" fill="none" filter="url(#rg2)" />
-        </svg>
-        {[["Sector 14", "10%", "20%"], ["DLF Phase 2", "58%", "12%"], ["Sector 47", "74%", "58%"], ["MG Road", "35%", "88%"], ["Cyber City", "14%", "52%"]].map(([l, x, y]) => (
-          <div key={l} style={{ position: "absolute", left: x, top: y, fontSize: 10, color: `${T.teal}40`, pointerEvents: "none", transform: "translate(-50%,-50%)", fontWeight: 600 }}>{l}</div>
-        ))}
+      {/* Real Leaflet Map */}
+      <div style={{ flex: 1, position: "relative", overflow: "hidden" }}>
+        {loading && (
+          <div style={{ position: "absolute", inset: 0, zIndex: 500, background: T.deep, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 12 }}>
+            <div style={{ width: 36, height: 36, borderRadius: "50%", border: `3px solid ${T.teal}`, borderTopColor: "transparent", animation: "spin 0.8s linear infinite" }} />
+            <span style={{ color: T.muted, fontSize: 13 }}>Getting your location…</span>
+          </div>
+        )}
+        <MapContainer
+          center={loc ? [loc.lat, loc.lng] : [37.7749, -122.4194]}
+          zoom={14}
+          style={{ width: "100%", height: "100%" }}
+          zoomControl={true}
+          attributionControl={false}
+        >
+          <TileLayer
+            url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+            attribution='&copy; <a href="https://carto.com/">CARTO</a>'
+          />
+          {loc && <MapAutoCenter loc={loc} />}
 
-        {vis.map((pin, i) => {
-          const c = catOf(pin.cat);
-          const urg = pin.urgency === "Urgent";
-          return (
-            <button key={pin.id} onClick={() => onPin(pin)} onMouseEnter={() => setHov(pin.id)} onMouseLeave={() => setHov(null)}
-              style={{ position: "absolute", left: `${pin.x}%`, top: `${pin.y}%`, transform: "translate(-50%,-100%)", background: "none", border: "none", cursor: "pointer", padding: 0, zIndex: urg ? 20 : 10, animation: `pinBounce .55s ${i * .06}s both` }}>
-              {urg && (<><div style={{ position: "absolute", inset: -10, borderRadius: "50%", background: `${c.color}18`, animation: "rippleOut 1.6s infinite" }} /><div style={{ position: "absolute", inset: -5, borderRadius: "50%", background: `${c.color}12`, animation: "rippleOut 1.6s .4s infinite" }} /></>)}
-              <div style={{ transition: "transform .15s", transform: hov === pin.id ? "scale(1.25)" : "scale(1)" }}>
-                <svg width="34" height="44" viewBox="0 0 34 44">
-                  <defs><filter id={`pf${pin.id}`}><feDropShadow dx="0" dy="3" stdDeviation="4" floodColor={c.color} floodOpacity=".7" /></filter></defs>
-                  <path d="M17 0C7.6 0 0 7.6 0 17c0 11 17 27 17 27s17-16 17-27C34 7.6 26.4 0 17 0z" fill={c.color} filter={`url(#pf${pin.id})`} />
-                  <circle cx="17" cy="16" r="7" fill={T.deep} opacity=".85" />
-                </svg>
-              </div>
-              {hov === pin.id && (
-                <div className="glassHi si" style={{ position: "absolute", bottom: "calc(100% + 5px)", left: "50%", transform: "translateX(-50%)", borderRadius: 10, padding: "6px 11px", color: T.white, fontSize: 11, whiteSpace: "nowrap", pointerEvents: "none", border: `1px solid ${c.color}44`, zIndex: 50 }}>
-                  {pin.title}
-                </div>
-              )}
-            </button>
-          );
-        })}
+          {/* User's real location */}
+          {loc && (
+            <Marker position={[loc.lat, loc.lng]} icon={MY_LOC_ICON} zIndexOffset={1000} />
+          )}
 
-        {/* My location */}
-        <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%,-50%)", zIndex: 30 }}>
-          <div style={{ position: "absolute", inset: -14, borderRadius: "50%", background: `${T.teal}12`, animation: "pulse 2.2s infinite" }} />
-          <div style={{ width: 18, height: 18, borderRadius: "50%", background: `linear-gradient(135deg,${T.teal},${T.tealDim})`, border: "3px solid rgba(255,255,255,.92)", boxShadow: `0 0 0 4px ${T.tealGlow}, 0 4px 14px ${T.tealGlow}` }} />
-        </div>
+          {/* Request pins */}
+          {geopins.map((pin) => {
+            const c = catOf(pin.cat);
+            return (
+              <Marker
+                key={pin.id}
+                position={[pin.lat, pin.lng]}
+                icon={makePinIcon(c.color)}
+                eventHandlers={{ click: () => onPin(pin) }}
+              >
+                <Popup className="kw-popup">
+                  <div style={{ background: T.navy, border: `1px solid ${T.borderHi}`, borderRadius: 12, padding: "10px 14px", minWidth: 180, color: T.white, fontFamily: "inherit" }}>
+                    <div style={{ fontSize: 12, color: c.color, fontWeight: 700, marginBottom: 4 }}>{c.emoji} {pin.urgency}</div>
+                    <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 4 }}>{pin.title}</div>
+                    <div style={{ fontSize: 11, color: T.muted }}>{pin.user} · {pin.time} ago</div>
+                  </div>
+                </Popup>
+              </Marker>
+            );
+          })}
+        </MapContainer>
 
-        <div className="glass" style={{ position: "absolute", bottom: 16, left: 16, borderRadius: 12, padding: "7px 11px", display: "flex", gap: 8, flexWrap: "wrap", maxWidth: "56%" }}>
+        {/* Legend */}
+        <div className="glass" style={{ position: "absolute", bottom: 16, left: 16, borderRadius: 12, padding: "7px 11px", display: "flex", gap: 8, flexWrap: "wrap", maxWidth: "56%", zIndex: 1000 }}>
           {CATS.map(c => (<div key={c.id} style={{ display: "flex", alignItems: "center", gap: 4 }}><div style={{ width: 7, height: 7, borderRadius: "50%", background: c.color }} /><span style={{ fontSize: 10, color: T.muted }}>{c.id}</span></div>))}
         </div>
-        <button className="press" onClick={onAdd} style={{ position: "absolute", bottom: 16, right: 16, width: 52, height: 52, borderRadius: "50%", background: `linear-gradient(135deg,${T.teal},${T.tealDim})`, border: "none", fontSize: 26, color: T.deep, boxShadow: `0 4px 24px ${T.tealGlow}, 0 0 0 6px ${T.tealGlow}`, display: "flex", alignItems: "center", justifyContent: "center", animation: "glow 3s ease-in-out infinite" }}>+</button>
+        <button className="press" onClick={onAdd} style={{ position: "absolute", bottom: 16, right: 16, width: 52, height: 52, borderRadius: "50%", background: `linear-gradient(135deg,${T.teal},${T.tealDim})`, border: "none", fontSize: 26, color: T.deep, boxShadow: `0 4px 24px ${T.tealGlow}, 0 0 0 6px ${T.tealGlow}`, display: "flex", alignItems: "center", justifyContent: "center", animation: "glow 3s ease-in-out infinite", zIndex: 1000 }}>+</button>
       </div>
     </div>
   );
