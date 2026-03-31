@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Calendar, Clock, Tag, Heart, Globe, Users, Zap, Shield, Sparkles, BrainCircuit, ArrowRight, ChevronRight } from "lucide-react";
@@ -256,6 +257,10 @@ function BlogPostFull() {
 }
 
 export default function Blog() {
+  usePageMeta(
+    "KCF Blog – Community Stories & Nonprofit Insights",
+    "Read the latest stories, volunteer spotlights, and community news from Kindness Community Foundation. Nonprofit insights and impact updates."
+  );
   const [viewPost, setViewPost] = useState(false);
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [newsletterDone, setNewsletterDone] = useState(false);

@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { motion, useInView } from "framer-motion";
 import { Link } from "react-router-dom";
 import {
@@ -58,26 +59,37 @@ const contactDetails = [
 ];
 
 export default function Contact() {
+  usePageMeta(
+    "Contact Kindness Community Foundation | KCF",
+    "Reach out to KCF with questions about volunteering, partnerships, or donations. We'd love to hear from you."
+  );
+
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.name || !form.email || !form.message) return;
     setLoading(true);
-    // Build mailto link with form data
-    const subject = encodeURIComponent(form.subject || `Message from ${form.name}`);
-    const body = encodeURIComponent(
-      `Name: ${form.name}\nEmail: ${form.email}\n\nMessage:\n${form.message}`
-    );
-    window.location.href = `mailto:contact@kindnesscommunityfoundation.com?subject=${subject}&body=${body}`;
-    setTimeout(() => {
-      setLoading(false);
+    setError(false);
+    try {
+      const data = new URLSearchParams({ "form-name": "contact", ...form });
+      const res = await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: data.toString(),
+      });
+      if (!res.ok) throw new Error("Submission failed");
       setSubmitted(true);
-    }, 800);
+    } catch {
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -204,9 +216,9 @@ export default function Contact() {
                     style={{ background: "linear-gradient(135deg, rgba(52,211,153,0.15), rgba(16,185,129,0.1))" }}>
                     <CheckCircle className="w-8 h-8 text-emerald-400" />
                   </div>
-                  <h3 className="text-white font-black text-xl mb-2">Your email app should open!</h3>
+                  <h3 className="text-white font-black text-xl mb-2">Message sent successfully!</h3>
                   <p className="text-white/50 text-sm leading-relaxed mb-6">
-                    If it didn't open automatically, email us directly at{" "}
+                    Thank you! We'll get back to you within 24–48 hours. You can also reach us directly at{" "}
                     <a href="mailto:contact@kindnesscommunityfoundation.com"
                       className="text-rose-400 hover:underline">
                       contact@kindnesscommunityfoundation.com
@@ -224,7 +236,16 @@ export default function Contact() {
                 <>
                   <h2 className="text-xl font-black text-white mb-1">Send us a message</h2>
                   <p className="text-white/40 text-sm mb-6">Fill in the form and we'll get back to you shortly.</p>
-                  <form onSubmit={handleSubmit} className="space-y-4">
+                  <form
+                    onSubmit={handleSubmit}
+                    name="contact"
+                    method="POST"
+                    data-netlify="true"
+                    data-netlify-honeypot="bot-field"
+                    className="space-y-4"
+                  >
+                    <input type="hidden" name="form-name" value="contact" />
+                    <input type="hidden" name="bot-field" className="hidden" />
                     <div className="grid sm:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-white/50 text-xs font-semibold uppercase tracking-wider mb-2">
@@ -300,7 +321,7 @@ export default function Contact() {
                       {loading ? (
                         <>
                           <span className="w-4 h-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
-                          Opening email...
+                          Sending...
                         </>
                       ) : (
                         <>
@@ -310,9 +331,11 @@ export default function Contact() {
                       )}
                     </motion.button>
 
-                    <p className="text-white/25 text-xs text-center">
-                      Clicking "Send Message" will open your default email client.
-                    </p>
+                    {error && (
+                      <p className="text-rose-400 text-xs text-center">
+                        Something went wrong. Please email us directly at contact@kindnesscommunityfoundation.com
+                      </p>
+                    )}
                   </form>
                 </>
               )}

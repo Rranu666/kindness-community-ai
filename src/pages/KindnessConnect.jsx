@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { Link, useNavigate } from "react-router-dom";
 import Header from "@/components/kcf/Header";
 import Footer from "@/components/kcf/Footer";
@@ -66,6 +67,10 @@ const fadeUp = {
 };
 
 export default function KindnessConnect() {
+  usePageMeta(
+    "ServeKindness – Structured Volunteering | KCF",
+    "ServeKindness makes community service trackable and meaningful. Find volunteer opportunities near you through Kindness Community Foundation."
+  );
   const navigate = useNavigate();
   const [scoreExpanded, setScoreExpanded] = useState(false);
   const [email, setEmail] = useState("");

@@ -52,7 +52,7 @@
     <!-- Preconnect for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Syne:wght@700;800&display=optional" rel="stylesheet" />
 
     <!-- Structured Data -->
     <script type="application/ld+json">
@@ -113,75 +113,15 @@
     </script>
   </head>
   <body>
-    <div id="root">
-      <!--
-        Static pre-render for search engine crawlers that do not execute JavaScript.
-        Hidden from visual display — Google indexes display:none HTML source content.
-      -->
-      <div style="display:none" aria-hidden="true">
-      <header>
-        <nav aria-label="Main navigation">
-          <a href="/">KCF Home</a>
-          <a href="/#about">About KCF</a>
-          <a href="/#vision">Vision &amp; Mission</a>
-          <a href="/#initiatives">Our Initiatives</a>
-          <a href="/#evolution">Our Evolution</a>
-          <a href="/#leadership">Leadership Team</a>
-          <a href="/#governance">Governance</a>
-          <a href="/kindwave">KindWave App</a>
-          <a href="/servekindness">Serve Kindness</a>
-          <a href="/blog">Latest Blog Posts</a>
-          <a href="/contact">Contact Us</a>
-        </nav>
-      </header>
-      <main>
-        <section>
-          <h1>Building Sustainable Community Infrastructure for Lasting Impact</h1>
-          <p>Kindness Community Foundation (KCF) is a California nonprofit dedicated to building sustainable community infrastructure for lasting impact. We develop ethical, technology-assisted volunteer networks and transparent governance systems that enable communities to coordinate mutual aid, contributions, and service at scale across the United States.</p>
-          <a href="/#initiatives">Explore Our Initiatives</a>
-          <a href="/contact">Get Involved with KCF</a>
-        </section>
-        <section id="about">
-          <h2>About Kindness Community Foundation</h2>
-          <p>KCF is building structured, transparent, and technology-assisted community infrastructure that enables lasting impact for neighbourhoods everywhere. Founded in Newport Beach, California, our volunteer-led programs create sustainable systems for collective kindness and mutual aid. We believe every community deserves access to ethical, well-governed infrastructure for social impact.</p>
-          <p>As a registered nonprofit, KCF is committed to transparent governance, open reporting, and community accountability in everything we do. <a href="https://www.irs.gov/charities-non-profits/charitable-organizations" target="_blank" rel="noopener noreferrer">Learn about nonprofit accountability standards</a> that guide our work.</p>
-        </section>
-        <section id="vision">
-          <h2>Our Vision &amp; Mission</h2>
-          <p>Our vision is a world where every community has access to sustainable, ethical infrastructure for collective kindness and mutual aid, creating lasting impact for generations. Our mission is to promote community stabilization through transparent governance, ethical technology, and structured volunteer coordination that empowers people to serve their neighbours.</p>
-        </section>
-        <section id="initiatives">
-          <h2>Our Key Initiatives</h2>
-          <ul>
-            <li><a href="/kindwave"><strong>KindWave</strong></a> — A real-time community kindness mapping platform connecting people who need help with those who can offer it, creating sustainable ripples of impact.</li>
-            <li><a href="/servekindness"><strong>ServeKindness</strong></a> — Structured volunteer coordination for meaningful, trackable community service with lasting impact.</li>
-            <li><strong>Community Giving</strong> — Transparent donation infrastructure ensuring every contribution reaches its intended purpose and creates sustainable community benefit.</li>
-            <li><strong>KindWave App</strong> — Mobile technology bringing sustainable community support networks to your fingertips for lasting neighbourhood impact.</li>
-          </ul>
-        </section>
-        <section id="leadership">
-          <h2>Leadership &amp; Governance</h2>
-          <p>KCF operates under transparent governance with a volunteer board of directors committed to ethical leadership, community accountability, and sustainable nonprofit practices. Our governance model is designed to ensure lasting impact through clear decision-making, open reporting, and stakeholder engagement.</p>
-        </section>
-        <section>
-          <h2>Contact Kindness Community Foundation</h2>
-          <address>
-            <p>Email: <a href="mailto:contact@kindnesscommunityfoundation.com">contact@kindnesscommunityfoundation.com</a></p>
-            <p>Location: Newport Beach, California, USA</p>
-          </address>
-        </section>
-      </main>
-      <footer>
-        <p>&copy; 2026 Kindness Community Foundation. All rights reserved. Building sustainable community infrastructure for lasting impact.</p>
-        <nav aria-label="Footer links">
-          <a href="/">Return to Homepage</a>
-          <a href="/kindwave">KindWave Platform</a>
-          <a href="/blog">KCF Blog</a>
-          <a href="/contact">Reach Out to KCF</a>
-        </nav>
-      </footer>
-      </div>
-    </div>
+    <!-- Netlify Forms detection — hidden, not rendered -->
+    <form name="contact" netlify netlify-honeypot="bot-field" hidden>
+      <input name="bot-field" />
+      <input name="name" />
+      <input name="email" />
+      <input name="subject" />
+      <textarea name="message"></textarea>
+    </form>
+    <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

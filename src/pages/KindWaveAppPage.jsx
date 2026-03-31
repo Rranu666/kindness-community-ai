@@ -1,9 +1,15 @@
 import { useEffect } from "react";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import Header from "@/components/kcf/Header";
 import Footer from "@/components/kcf/Footer";
 import KindWaveApp from "@/components/kindwave/KindWaveApp";
 
 export default function KindWaveAppPage() {
+  usePageMeta(
+    "KindWave App – Real-Time Community Kindness Map | KCF",
+    "KindWave connects neighbours in real time — find help or offer support on the live community kindness map. Powered by Kindness Community Foundation."
+  );
+
   useEffect(() => {
     return () => {
       document.head.querySelectorAll("style").forEach((el) => {
