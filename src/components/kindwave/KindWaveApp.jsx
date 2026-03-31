@@ -907,11 +907,10 @@ function useUserLocation() {
   return { loc, city, loading };
 }
 
-// Build a coloured SVG data-URI pin icon for Leaflet
+// Build a coloured SVG inline divIcon for Leaflet
 function makePinIcon(color) {
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="34" height="44" viewBox="0 0 34 44"><defs><filter id="s"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="${color}" flood-opacity=".7"/></filter></defs><path d="M17 0C7.6 0 0 7.6 0 17c0 11 17 27 17 27s17-16 17-27C34 7.6 26.4 0 17 0z" fill="${color}" filter="url(%23s)"/><circle cx="17" cy="16" r="7" fill="#05091a" opacity=".85"/></svg>`;
   return L.divIcon({
-    html: `<img src="data:image/svg+xml,${svg}" width="34" height="44" style="display:block"/>`,
+    html: `<svg width="34" height="44" viewBox="0 0 34 44" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 3px 5px ${color}aa);display:block"><path d="M17 0C7.6 0 0 7.6 0 17c0 11 17 27 17 27s17-16 17-27C34 7.6 26.4 0 17 0z" fill="${color}"/><circle cx="17" cy="16" r="7" fill="#05091a" opacity=".85"/></svg>`,
     iconSize: [34, 44],
     iconAnchor: [17, 44],
     popupAnchor: [0, -48],
