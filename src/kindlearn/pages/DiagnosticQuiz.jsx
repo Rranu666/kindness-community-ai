@@ -140,30 +140,34 @@ export default function DiagnosticQuiz() {
     const rec = getRecommendation();
     const today = new Date().toISOString().split('T')[0];
 
-    const existing = await progressApi.filter({ language: langId, mode: 'adult' });
-    if (existing.length > 0) {
-      // Update existing record
-      await progressApi.update(existing[0].id, {
-        current_day: rec.startDay,
-        diagnostic_level: rec.level,
-        last_activity_date: today,
-      });
-    } else {
-      // Create new record
-      await progressApi.create({
-        language: langId,
-        mode: 'adult',
-        current_day: rec.startDay,
-        diagnostic_level: rec.level,
-        xp_total: 0,
-        streak_days: 0,
-        longest_streak: 0,
-        lessons_completed: [],
-        daily_xp: 0,
-        words_learned: 0,
-        badges: [],
-        last_activity_date: today,
-      });
+    try {
+      const existing = await progressApi.filter({ language: langId, mode: 'adult' });
+      if (existing.length > 0) {
+        // Update existing record
+        await progressApi.update(existing[0].id, {
+          current_day: rec.startDay,
+          diagnostic_level: rec.level,
+          last_activity_date: today,
+        });
+      } else {
+        // Create new record
+        await progressApi.create({
+          language: langId,
+          mode: 'adult',
+          current_day: rec.startDay,
+          diagnostic_level: rec.level,
+          xp_total: 0,
+          streak_days: 0,
+          longest_streak: 0,
+          lessons_completed: [],
+          daily_xp: 0,
+          words_learned: 0,
+          badges: [],
+          last_activity_date: today,
+        });
+      }
+    } catch {
+      // API unavailable (guest mode) — proceed to dashboard anyway
     }
 
     navigate(`/kindlearn/dashboard?lang=${langId}`);

@@ -68,11 +68,15 @@ export default function ParentSettings() {
       summary_email: summaryEmail,
       summary_frequency: frequency,
     };
-    if (settingsId) {
-      await parentSettingsApi.update(settingsId, data);
-    } else {
-      const created = await parentSettingsApi.create(data);
-      setSettingsId(created.id);
+    try {
+      if (settingsId) {
+        await parentSettingsApi.update(settingsId, data);
+      } else {
+        const created = await parentSettingsApi.create(data);
+        setSettingsId(created.id);
+      }
+    } catch {
+      // API unavailable — silently ignore so button doesn't freeze
     }
     setSaving(false);
   };
