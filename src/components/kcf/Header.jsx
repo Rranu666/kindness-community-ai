@@ -9,7 +9,7 @@ import { usePageVisibility } from "@/hooks/usePageVisibility";
 const navLinks = [
   { label: "Home", href: "#home" },
   { label: "KindWave", href: "/kindwave", external: true, highlight: true },
-  { label: "KindCalmUnity", href: "/kindcalmunity", external: true, highlightGreen: true },
+  { label: "KindCalmUnity", href: "/kindcalmunity", external: true },
   { label: "Serve", href: "/servekindness", external: true },
   { label: "Initiatives", href: "#initiatives" },
   {
