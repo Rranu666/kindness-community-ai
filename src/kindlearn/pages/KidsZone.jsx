@@ -26,10 +26,14 @@ export default function KidsZone() {
   }, []);
 
   const checkExisting = async () => {
-    const list = await progressApi.filter({ mode: 'kids' });
-    if (list.length > 0) {
-      setProgress(list[0]);
-      setSetup(false);
+    try {
+      const list = await progressApi.filter({ mode: 'kids' });
+      if (list.length > 0) {
+        setProgress(list[0]);
+        setSetup(false);
+      }
+    } catch {
+      // API unavailable or guest user — stay on setup screen
     }
     setChecking(false);
   };
@@ -37,29 +41,37 @@ export default function KidsZone() {
   const handleStart = async () => {
     if (!kidName.trim()) return;
     setLoading(true);
-    const created = await progressApi.create({
-      language: selectedLang,
-      mode: 'kids',
-      kid_name: kidName,
-      kid_avatar: avatar,
-      kid_age_group: ageGroup,
-      current_day: 1,
-      xp_total: 0,
-      streak_days: 0,
-      longest_streak: 0,
-      lessons_completed: [],
-      daily_xp: 0,
-      words_learned: 0,
-      badges: [],
-      last_activity_date: new Date().toISOString().split('T')[0],
-    });
-    setProgress(created);
-    setSetup(false);
+    try {
+      const created = await progressApi.create({
+        language: selectedLang,
+        mode: 'kids',
+        kid_name: kidName,
+        kid_avatar: avatar,
+        kid_age_group: ageGroup,
+        current_day: 1,
+        xp_total: 0,
+        streak_days: 0,
+        longest_streak: 0,
+        lessons_completed: [],
+        daily_xp: 0,
+        words_learned: 0,
+        badges: [],
+        last_activity_date: new Date().toISOString().split('T')[0],
+      });
+      setProgress(created);
+      setSetup(false);
+    } catch {
+      // API unavailable — run in guest mode with local state only
+      setProgress({ language: selectedLang, current_day: 1, lessons_completed: [], xp_total: 0, streak_days: 0, words_learned: 0, badges: [] });
+      setSetup(false);
+    }
     setLoading(false);
   };
 
   const handleStartLesson = (day) => {
-    navigate(`/kindlearn/kids-lesson?lang=${progress.language}&day=${day}&pid=${progress.id}`);
+    const lang = progress?.language || selectedLang;
+    const pid = progress?.id || null;
+    navigate(`/kindlearn/kids-lesson?lang=${lang}&day=${day}${pid ? `&pid=${pid}` : ''}`);
   };
 
   const selectedAvatar = KIDS_AVATARS.find((a) => a.id === (progress?.kid_avatar || avatar));

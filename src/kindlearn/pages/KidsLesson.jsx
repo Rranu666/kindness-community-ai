@@ -40,9 +40,11 @@ const KIDS_WORDS = {
 export default function KidsLesson() {
   const navigate = useNavigate();
   const urlParams = new URLSearchParams(window.location.search);
-  const langId = urlParams.get('lang') || 'spanish';
+  const rawLang = urlParams.get('lang');
+  const langId = (rawLang && rawLang !== 'undefined' && rawLang !== 'null') ? rawLang : 'spanish';
   const day = parseInt(urlParams.get('day') || '1');
-  const pid = urlParams.get('pid');
+  const rawPid = urlParams.get('pid');
+  const pid = (rawPid && rawPid !== 'undefined' && rawPid !== 'null') ? rawPid : null;
   const topic = DAILY_TOPICS[day - 1] || 'Lesson';
 
   const baseWords = KIDS_WORDS[langId] || KIDS_WORDS.default;

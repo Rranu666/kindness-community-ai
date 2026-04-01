@@ -50,7 +50,7 @@ function similarityScore(a, b) {
 }
 
 export function useSpeechRecognition(langId) {
-  const langCode = LANG_CODES[langId] || 'en-US';
+  const langCode = (langId && LANG_CODES[langId]) ? LANG_CODES[langId] : 'en-US';
   const isSupported = typeof window !== 'undefined' &&
     ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
 
