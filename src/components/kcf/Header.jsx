@@ -9,7 +9,7 @@ import { usePageVisibility } from "@/hooks/usePageVisibility";
 const navLinks = [
   { label: "Home", href: "#home" },
   { label: "KindWave", href: "/kindwave", external: true, highlight: true },
-  { label: "KindCalmUnity", href: "/kindcalmunity", external: true },
+  { label: "KindCalmUnity", href: "/kindcalmunity", external: true, native: true },
   { label: "Serve", href: "/servekindness", external: true },
   { label: "Initiatives", href: "#initiatives" },
   {
@@ -170,6 +170,19 @@ export default function Header() {
                       </Link>
                     );
                   }
+                  // native: true forces a full browser request (bypasses React Router)
+                  // needed for standalone HTML apps served via Netlify rewrite
+                  if (link.native) {
+                    return (
+                      <a
+                        key={link.href}
+                        href={link.href}
+                        className="relative px-5 py-2 text-base font-semibold text-white/60 hover:text-white transition-colors duration-200"
+                      >
+                        {link.label}
+                      </a>
+                    );
+                  }
                   return (
                     <Link
                       key={link.href}
@@ -314,7 +327,15 @@ export default function Header() {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: i * 0.05 }}
                       >
-                        {link.external ? (
+                        {link.external && link.native ? (
+                          <a
+                            href={link.href}
+                            onClick={() => setMobileOpen(false)}
+                            className="block px-4 py-3 rounded-xl text-base font-semibold transition-all text-white/60 hover:text-white hover:bg-white/5"
+                          >
+                            {link.label}
+                          </a>
+                        ) : link.external ? (
                           <Link
                             to={link.href}
                             onClick={() => setMobileOpen(false)}
