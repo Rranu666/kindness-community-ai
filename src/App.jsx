@@ -4,10 +4,11 @@ import { queryClientInstance } from '@/lib/query-client'
 import NavigationTracker from '@/lib/NavigationTracker'
 import ScrollToggleButton from '@/components/ScrollToggleButton'
 import { pagesConfig } from './pages.config'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import ErrorBoundary from './lib/ErrorBoundary';
 import { AuthProvider } from '@/lib/AuthContext';
+import KindraWebBot from '@/components/kcf/KindraWebBot';
 import VolunteerDashboard from './pages/VolunteerDashboard';
 import TeamPortal from './pages/TeamPortal';
 import TeamPortalLanding from './pages/TeamPortalLanding';
@@ -75,6 +76,19 @@ function AppRoutes() {
   );
 }
 
+// Hide the public bot on pages that have their own AI assistant
+const BOT_HIDDEN_PATHS = [
+  '/synergyhub', '/TeamPortal', '/teamportal',
+  '/login', '/Login',
+];
+
+function PublicBot() {
+  const location = useLocation();
+  const hide = BOT_HIDDEN_PATHS.some(p => location.pathname.toLowerCase() === p.toLowerCase());
+  if (hide) return null;
+  return <KindraWebBot />;
+}
+
 function App() {
   return (
     <ErrorBoundary>
@@ -86,6 +100,7 @@ function App() {
               <AppRoutes />
             </ErrorBoundary>
             <ScrollToggleButton />
+            <PublicBot />
           </Router>
           <Toaster />
         </QueryClientProvider>
