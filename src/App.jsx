@@ -9,6 +9,7 @@ import PageNotFound from './lib/PageNotFound';
 import ErrorBoundary from './lib/ErrorBoundary';
 import { AuthProvider } from '@/lib/AuthContext';
 import KindraWebBot from '@/components/kcf/KindraWebBot';
+import KindlearnApp from '@/kindlearn/KindlearnApp';
 import VolunteerDashboard from './pages/VolunteerDashboard';
 import TeamPortal from './pages/TeamPortal';
 import TeamPortalLanding from './pages/TeamPortalLanding';
@@ -71,6 +72,8 @@ function AppRoutes() {
       <Route path="/KindWaveApp" element={<KindWaveAppPage />} />
       <Route path="/Contact" element={<Contact />} />
       <Route path="/Analytics" element={<LayoutWrapper currentPageName="Analytics"><Analytics /></LayoutWrapper>} />
+      {/* Kindlearn language-learning app — wildcard catches all /kindlearn/* routes */}
+      <Route path="/kindlearn/*"                element={<KindlearnApp />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
@@ -80,11 +83,13 @@ function AppRoutes() {
 const BOT_HIDDEN_PATHS = [
   '/synergyhub', '/TeamPortal', '/teamportal',
   '/login', '/Login',
+  '/kindlearn',
 ];
 
 function PublicBot() {
   const location = useLocation();
-  const hide = BOT_HIDDEN_PATHS.some(p => location.pathname.toLowerCase() === p.toLowerCase());
+  const hide = BOT_HIDDEN_PATHS.some(p => location.pathname.toLowerCase() === p.toLowerCase())
+    || location.pathname.toLowerCase().startsWith('/kindlearn');
   if (hide) return null;
   return <KindraWebBot />;
 }
