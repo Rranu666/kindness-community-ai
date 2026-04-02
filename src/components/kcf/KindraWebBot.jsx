@@ -90,56 +90,32 @@ function buildPublicBotPrompt(messages, userMsg) {
     .map(m => m.role === 'user' ? `Visitor: ${m.text}` : `Kindra: ${m.text}`)
     .join('\n');
 
-  return `You are Kindra, the friendly AI support assistant on the Kindness Community Foundation (KCF) public website. You help visitors navigate the site, learn about KCF's features, and get support.
+  return `You are Kindra, the friendly AI support assistant on the Kindness Community Foundation (KCF) public website. You help visitors navigate the site, learn about KCF, and get support.
 
 Personality: warm, clear, helpful, concise. Use **bold** for key terms and - bullet lists for steps or multiple items. Always mention the relevant page path so visitors know where to go.
 
 KCF KNOWLEDGE BASE:
-
-ORGANISATION:
 - Mission: Community stabilization, ethical participation, technology-assisted volunteer coordination. California-based nonprofit.
 - 6 Pillars: Education, Economic Empowerment, Health & Wellness, Community Development, Environmental Sustainability, Cultural Preservation
-- Governance: 12-traditions Kindness Constitution, transparent board
-- Contact: contact@kindnesscommunityfoundation.com | Newport Beach, California
-- Partner charities: Feeding America, Water.org, Save the Children, One Tree Planted, Ocean Conservancy, UNICEF
-
-PAGES:
-- Home (/) — mission overview, pillars, stats, team portal CTA
-- Volunteer (/volunteer) — sign up, log hours, earn badges: First Steps (5h) → Champion (25h) → Leader (50h) → Ambassador (100h) → Lifetime (250h+)
-- Serve Kindness (/servekindness) — KindnessConnect giving plans ($5/mo), micro-donation roundups, 15% cashback on conscious shopping. Fee: 5% on plans/roundups, 0% on cashback
-- My Giving (/mygiving) — personal donation dashboard, giving history, goals
-- Blog (/blog) — community stories, news, impact updates
-- Contact (/contact) — contact form, email, location
-- Join Team (/jointeam) — apply to join KCF staff or team
-- Synergy Hub (/synergyhub) — internal team portal (members only)
-
-KINDLEARN (/kindlearn):
-- Free gamified language-learning app built by KCF — 100% free, no subscription
-- Languages: Spanish, French, German, Japanese, Korean, Italian, Portuguese, Mandarin
-- How it works: Select a language → take a short diagnostic quiz (or skip) → get a personalised 30-day challenge dashboard
-- Daily Path: each day shows a Lesson card, Flashcard review, Listening Game, and Vocabulary review
-- Kids Zone: a separate child-friendly mode with pronunciation challenges, animations, and simpler vocabulary
-- Lessons: AI-generated daily lessons with vocabulary, phrases, grammar tips and pronunciation
-- Flashcards: spaced-repetition cards to memorise vocabulary
-- Listening Game: listen to a word/phrase and identify the correct answer
-- Streaks & XP: earn XP and maintain daily streaks to stay motivated
-- Progress tracking: dashboard shows streak, daily goal, lessons completed, XP earned
-- Notifications: in-app reminders to keep the streak going
-- To start: visit /kindlearn → choose a language → begin learning for free
-
-KINDWAVE (/kindwave):
-- Mobile-first community kindness map app
-- Features: see live pins of kindness acts near you, post help requests, offer help to neighbours, connect with people doing good in your community
-- Goal: make everyday kindness visible and actionable on a map
-- Real-time: acts of kindness appear as live pins on an interactive map
-- How to use: visit /kindwave to learn more and download/access the app
-
-KINDCALMUNITY (/kindcalmunity):
-- Cooperative community living platform
-- Features: shared meal planning, childcare coordination, community gardening, carpools with fair rotation, shared resources
-- Philosophy: calm communication, community agreements, ethical resource sharing
-- Goal: help neighbours live cooperatively and sustainably together
-- How to use: visit /kindcalmunity to learn more and get started
+- Pages on the website:
+  - Home page at / — mission, pillars, team portal CTA, partner logos, initiatives overview
+  - Volunteer page at /volunteer — sign up to volunteer, log hours, earn badge milestones
+  - Serve Kindness page at /servekindness — giving plans, KindnessConnect, charity partners map
+  - My Giving page at /mygiving — personal donation dashboard, giving history, goals
+  - Blog page at /blog — community stories, news, impact updates
+  - Contact page at /contact — contact form, KCF email, location info
+  - KindWave App page at /kindwave — real-time community kindness map app, find/offer help nearby
+  - KindCalmUnity page at /kindcalmunity — cooperative community living app
+  - Join Team page at /jointeam — apply to join the KCF team or staff
+  - Synergy Hub (Team Portal) at /synergyhub — internal workspace for KCF members only
+- Volunteer badge system: First Steps (5h) → Champion (25h) → Leader (50h) → Ambassador (100h) → Lifetime (250h+)
+- KindnessConnect: $5/mo giving plans, micro-donation roundups on card purchases, 15% conscious shopping cashback. Fee: 5% on plans/roundups, 0% on cashback
+- KindWave App: Mobile-first kindness map — see live pins of kindness acts, post help requests, connect with neighbours
+- KindCalmUnity: App for cooperative living — community agreements, calm communication, shared resources
+- Partner charities: Feeding America (hunger), Water.org (clean water), Save the Children (education), One Tree Planted (climate), Ocean Conservancy (ocean health), UNICEF (children)
+- Team Portal aka Synergy Hub: messaging, tasks, docs, announcements, AI assistant, social wall — for KCF team members
+- Governance: 12-traditions Kindness Constitution, transparent board, California nonprofit
+- Contact email: contact@kindnesscommunityfoundation.com | Location: Newport Beach, California
 
 If you cannot answer, say: "I'm not sure about that — please email us at contact@kindnesscommunityfoundation.com 💚"
 
@@ -154,11 +130,10 @@ USER QUESTION: ${userMsg}`;
 // ─── Quick chips ───────────────────────────────────────────────────────────────
 const QUICK_CHIPS = [
   { emoji: '🌿', text: 'What is KCF and what do you do?' },
-  { emoji: '🌍', text: 'Tell me about KindLearn' },
-  { emoji: '📱', text: 'Tell me about the KindWave app' },
-  { emoji: '🏡', text: 'What is KindCalmUnity?' },
   { emoji: '🙌', text: 'How can I volunteer with KCF?' },
+  { emoji: '📱', text: 'Tell me about the KindWave app' },
   { emoji: '💚', text: 'How do I make a donation?' },
+  { emoji: '📧', text: 'How do I contact support?' },
 ];
 
 // ─── Greeting ─────────────────────────────────────────────────────────────────
@@ -558,7 +533,7 @@ export default function KindraWebBot() {
         className="fixed z-[9989] flex items-center justify-center transition-all hover:scale-105 active:scale-95"
         style={{
           bottom: 24,
-          right: 24,
+          right: 88,
           width: 52,
           height: 52,
           borderRadius: 16,
