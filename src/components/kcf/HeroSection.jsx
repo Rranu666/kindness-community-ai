@@ -127,6 +127,14 @@ export default function HeroSection() {
   const cursorDot = useRef(null);
   const trailsRef = useRef([]);
   const mousePos = useRef({ x: 0, y: 0 });
+  const [scrolled, setScrolled] = useState(false);
+
+  /* ── Hide scroll arrow once user scrolls ─────────────────────────────── */
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 80);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   /* ── Custom cursor + trail ────────────────────────────────────────────── */
   useEffect(() => {
@@ -520,22 +528,6 @@ export default function HeroSection() {
         <div className="absolute bottom-16 left-0 right-0 h-20 pointer-events-none"
           style={{ background: "linear-gradient(to top, #030712 0%, transparent 100%)" }} />
 
-        {/* Scroll indicator */}
-        <motion.div
-          className="absolute bottom-20 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-10"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2.2 }}
-        >
-          <span className="text-white/15 text-[9px] tracking-[0.4em] uppercase">Scroll</span>
-          <div className="w-[1px] h-10 overflow-hidden" style={{ background: "rgba(255,255,255,0.08)" }}>
-            <motion.div
-              className="w-full h-5 bg-gradient-to-b from-rose-400/60 to-transparent"
-              animate={{ y: ["0%", "200%"] }}
-              transition={{ duration: 1.4, repeat: Infinity, ease: "linear" }}
-            />
-          </div>
-        </motion.div>
       </section>
 
       {/* Marquee keyframe */}

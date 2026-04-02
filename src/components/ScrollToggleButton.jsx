@@ -21,19 +21,23 @@ export default function ScrollToggleButton() {
   const showDown = !atBottom && document.documentElement.scrollHeight > window.innerHeight + 200;
 
   const btnBase =
-    "w-11 h-11 rounded-full flex items-center justify-center text-white shadow-lg";
-  const btnStyle = { background: "linear-gradient(135deg, #f43f5e, #ec4899)" };
+    "w-11 h-11 rounded-full flex items-center justify-center text-white/70 hover:text-white transition-all";
+  const btnStyle = {
+    background: "rgba(255,255,255,0.08)",
+    border: "1px solid rgba(255,255,255,0.15)",
+    backdropFilter: "blur(8px)",
+  };
 
   return (
-    <div className="fixed bottom-6 right-6 z-[9999] flex flex-col gap-2 items-center">
+    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[9999] flex flex-row gap-3 items-center">
       {/* Scroll to Top */}
       <AnimatePresence>
         {showUp && (
           <motion.button
             key="scroll-up"
-            initial={{ opacity: 0, scale: 0.7, y: 10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.7, y: 10 }}
+            initial={{ opacity: 0, scale: 0.7 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.7 }}
             transition={{ type: "spring", stiffness: 400, damping: 28 }}
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             title="Scroll to top"
@@ -52,9 +56,9 @@ export default function ScrollToggleButton() {
         {showDown && (
           <motion.button
             key="scroll-down"
-            initial={{ opacity: 0, scale: 0.7, y: -10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.7, y: -10 }}
+            initial={{ opacity: 0, scale: 0.7 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.7 }}
             transition={{ type: "spring", stiffness: 400, damping: 28 }}
             onClick={() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "smooth" })}
             title="Scroll to bottom"

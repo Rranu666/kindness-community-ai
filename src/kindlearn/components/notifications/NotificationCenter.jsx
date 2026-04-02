@@ -47,11 +47,12 @@ export default function NotificationCenter({ langId }) {
 
   const loadNotifications = async () => {
     try {
-      const list = await notificationsApi.filter(
+      const raw = await notificationsApi.filter(
         { dismissed: false },
         '-created_date',
         50
       );
+      const list = Array.isArray(raw) ? raw : [];
       setNotifications(list);
       const unread = list.filter(n => !n.read).length;
       setUnreadCount(unread);
