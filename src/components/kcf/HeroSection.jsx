@@ -203,9 +203,9 @@ export default function HeroSection() {
       pos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
       pos[i * 3 + 2] = r * Math.cos(phi);
       const t = Math.random();
-      col[i * 3] = 0.85 + t * 0.15;
+      col[i * 3] = 0.55 + t * 0.15;
       col[i * 3 + 1] = 0.15 + t * 0.25;
-      col[i * 3 + 2] = 0.25 + t * 0.55;
+      col[i * 3 + 2] = 0.45 + t * 0.55;
       sz[i] = Math.random() * 2.8 + 0.4;
     }
     const geo = new THREE.BufferGeometry();
@@ -228,7 +228,7 @@ export default function HeroSection() {
           float d = length(gl_PointCoord - vec2(0.5));
           if (d > 0.5) discard;
           float a = 1.0 - smoothstep(0.25, 0.5, d);
-          gl_FragColor = vec4(vColor, a * 0.65);
+          gl_FragColor = vec4(vColor, a * 0.40);
         }`,
     });
     const particles = new THREE.Points(geo, mat);
@@ -236,7 +236,7 @@ export default function HeroSection() {
 
     /* icosahedron wireframe */
     const icoGeo = new THREE.IcosahedronGeometry(1.5, 1);
-    const icoMat = new THREE.MeshBasicMaterial({ color: 0xf43f5e, wireframe: true, transparent: true, opacity: 0.12 });
+    const icoMat = new THREE.MeshBasicMaterial({ color: 0xf43f5e, wireframe: true, transparent: true, opacity: 0.06 });
     const ico = new THREE.Mesh(icoGeo, icoMat);
     scene.add(ico);
 
@@ -351,7 +351,7 @@ export default function HeroSection() {
         {/* Layered ambient glows */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-[-10%] left-[20%] w-[700px] h-[700px] rounded-full blur-[160px]"
-            style={{ background: "radial-gradient(circle, rgba(244,63,94,0.10) 0%, transparent 70%)" }} />
+            style={{ background: "radial-gradient(circle, rgba(244,63,94,0.04) 0%, transparent 70%)" }} />
           <div className="absolute top-[30%] right-[-5%] w-[500px] h-[500px] rounded-full blur-[140px]"
             style={{ background: "radial-gradient(circle, rgba(136,102,255,0.07) 0%, transparent 70%)" }} />
           <div className="absolute bottom-[10%] left-[-5%] w-[400px] h-[400px] rounded-full blur-[120px]"
