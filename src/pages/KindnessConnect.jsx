@@ -1,5 +1,20 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { usePageMeta } from "@/hooks/usePageMeta";
+import { ArrowUp, ArrowDown } from "lucide-react";
+
+const btnStyle = {
+  width: 44,
+  height: 44,
+  borderRadius: "50%",
+  border: "none",
+  cursor: "pointer",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  color: "#fff",
+  background: "linear-gradient(135deg, #f43f5e, #ec4899)",
+  boxShadow: "0 4px 16px rgba(244,63,94,0.4)",
+};
 
 export default function KindnessConnect() {
   usePageMeta(
@@ -8,6 +23,16 @@ export default function KindnessConnect() {
   );
 
   const [loaded, setLoaded] = useState(false);
+  const iframeRef = useRef(null);
+
+  const scroll = (dir) => {
+    try {
+      iframeRef.current?.contentWindow?.scrollBy({ top: dir * 400, behavior: "smooth" });
+    } catch {
+      // cross-origin — postMessage fallback
+      iframeRef.current?.contentWindow?.postMessage({ type: "scroll", top: dir * 400 }, "*");
+    }
+  };
 
   return (
     <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", background: "#030712" }}>
@@ -26,7 +51,6 @@ export default function KindnessConnect() {
             zIndex: 1,
           }}
         >
-          {/* Spinner */}
           <div
             style={{
               width: 48,
@@ -43,6 +67,7 @@ export default function KindnessConnect() {
       )}
 
       <iframe
+        ref={iframeRef}
         src="https://kindness-community-foundation.netlify.app/"
         title="ServeKindness"
         onLoad={() => setLoaded(true)}
@@ -59,6 +84,30 @@ export default function KindnessConnect() {
         }}
         allow="microphone; camera"
       />
+
+      {/* Centered scroll arrows — overlay on top of iframe */}
+      {loaded && (
+        <div
+          style={{
+            position: "fixed",
+            bottom: 24,
+            left: "50%",
+            transform: "translateX(-50%)",
+            zIndex: 10,
+            display: "flex",
+            flexDirection: "column",
+            gap: 8,
+            alignItems: "center",
+          }}
+        >
+          <button style={btnStyle} onClick={() => scroll(-1)} title="Scroll up">
+            <ArrowUp size={18} />
+          </button>
+          <button style={btnStyle} onClick={() => scroll(1)} title="Scroll down">
+            <ArrowDown size={18} />
+          </button>
+        </div>
+      )}
     </div>
   );
 }
