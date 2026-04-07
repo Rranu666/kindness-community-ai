@@ -83,13 +83,11 @@ function AppRoutes() {
 const BOT_HIDDEN_PATHS = [
   '/synergyhub', '/TeamPortal', '/teamportal',
   '/login', '/Login',
-  '/kindlearn',
 ];
 
 function PublicBot() {
   const location = useLocation();
-  const hide = BOT_HIDDEN_PATHS.some(p => location.pathname.toLowerCase() === p.toLowerCase())
-    || location.pathname.toLowerCase().startsWith('/kindlearn');
+  const hide = BOT_HIDDEN_PATHS.some(p => location.pathname.toLowerCase() === p.toLowerCase());
   if (hide) return null;
   return <KindraWebBot />;
 }
