@@ -203,9 +203,9 @@ export default function HeroSection() {
       pos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
       pos[i * 3 + 2] = r * Math.cos(phi);
       const t = Math.random();
-      col[i * 3] = 0.55 + t * 0.15;
-      col[i * 3 + 1] = 0.15 + t * 0.25;
-      col[i * 3 + 2] = 0.45 + t * 0.55;
+      col[i * 3] = 0.65 + t * 0.12;
+      col[i * 3 + 1] = 0.18 + t * 0.22;
+      col[i * 3 + 2] = 0.28 + t * 0.30;
       sz[i] = Math.random() * 2.8 + 0.4;
     }
     const geo = new THREE.BufferGeometry();
@@ -228,7 +228,7 @@ export default function HeroSection() {
           float d = length(gl_PointCoord - vec2(0.5));
           if (d > 0.5) discard;
           float a = 1.0 - smoothstep(0.25, 0.5, d);
-          gl_FragColor = vec4(vColor, a * 0.40);
+          gl_FragColor = vec4(vColor, a * 0.28);
         }`,
     });
     const particles = new THREE.Points(geo, mat);
