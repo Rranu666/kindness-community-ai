@@ -102,7 +102,7 @@ function App() {
             <ErrorBoundary>
               <AppRoutes />
             </ErrorBoundary>
-            <ScrollToggleButton />
+            <ScrollToggleButton hideOn={['/servekindness', '/kindcalmunity']} />
             <PublicBot />
           </Router>
           <Toaster />

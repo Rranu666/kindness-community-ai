@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUp, ArrowDown } from "lucide-react";
 
-export default function ScrollToggleButton() {
+export default function ScrollToggleButton({ hideOn = [] }) {
+  const location = useLocation();
+  if (hideOn.some(p => location.pathname === p)) return null;
   const [scrollY, setScrollY] = useState(0);
   const [atBottom, setAtBottom] = useState(false);
 
