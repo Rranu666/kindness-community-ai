@@ -305,8 +305,7 @@ export default function KindraWebBot() {
           className="kw-panel fixed z-[9990] flex flex-col overflow-hidden"
           style={{
             bottom: 88,
-            left: '50%',
-            transform: 'translateX(-50%)',
+            right: 24,
             width: 'min(390px, calc(100vw - 32px))',
             height: minimized ? 'auto' : 540,
             background: 'rgba(3,7,18,0.97)',
@@ -534,8 +533,7 @@ export default function KindraWebBot() {
         className="fixed z-[9989] flex items-center justify-center transition-all hover:scale-105 active:scale-95"
         style={{
           bottom: 24,
-          left: '50%',
-          transform: 'translateX(-50%)',
+          right: 24,
           width: 52,
           height: 52,
           borderRadius: 16,
