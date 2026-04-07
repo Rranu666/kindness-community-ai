@@ -5,11 +5,14 @@ import { ArrowUp, ArrowDown } from "lucide-react";
 
 export default function ScrollToggleButton({ hideOn = [] }) {
   const location = useLocation();
-  if (hideOn.some(p => location.pathname === p)) return null;
   const [scrollY, setScrollY] = useState(0);
   const [atBottom, setAtBottom] = useState(false);
 
+  // Must be after hooks — React rules of hooks require all hooks before any early return
+  const hidden = hideOn.some(p => location.pathname === p);
+
   useEffect(() => {
+    if (hidden) return;
     const onScroll = () => {
       const y = window.scrollY;
       const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
@@ -18,7 +21,9 @@ export default function ScrollToggleButton({ hideOn = [] }) {
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [hidden]);
+
+  if (hidden) return null;
 
   const showUp = scrollY > 200;
   const showDown = !atBottom && document.documentElement.scrollHeight > window.innerHeight + 200;
