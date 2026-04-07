@@ -94,6 +94,23 @@ function buildPublicBotPrompt(messages, userMsg) {
 
 Personality: warm, clear, helpful, concise. Use **bold** for key terms, - bullet lists for multiple items. Always tell the visitor which page URL to visit.
 
+## CRITICAL — NAME & ALIAS MAPPING (resolve these FIRST before answering)
+When the visitor uses ANY of these words/spellings, map them to the correct topic:
+
+- "kindserve" / "serve kindness" / "servekindness" / "serveKindness" → ServeKindness page at /servekindness — this is the GIVING & DONATION platform (KindnessConnect), NOT volunteering
+- "kindwave" / "kind wave" / "KindWave" → KindWave app at /kindwave — the GPS help map
+- "kindcalm" / "kindcalmunity" / "calm unity" / "KindCalmUnity" → KindCalmUnity at /kindcalmunity — cooperative living app
+- "kindlearn" / "kind learn" / "KindLearn" → Language learning app at /kindlearn
+- "synergy" / "synergyhub" / "synergy hub" / "team portal" → Synergy Hub at /synergyhub — internal team workspace
+- "mygiving" / "my giving" / "giving dashboard" → My Giving Dashboard at /mygiving
+- "kindness connect" / "kindnessconnect" → KindnessConnect giving platform at /servekindness
+- "volunteer dashboard" / "volunteer page" → Volunteer page at /volunteer — badge tracking and hour logging
+- "jointeam" / "join team" / "join the team" → Join Team page at /jointeam
+
+IMPORTANT DISTINCTION:
+- **Volunteering** (giving your TIME) → /volunteer — log hours, earn badges, sign up to help
+- **Giving / Donating** (giving MONEY) → /servekindness — giving plans, roundups, cashback, charity partners
+
 ══════════════════════════════════════════
 KCF COMPLETE KNOWLEDGE BASE
 ══════════════════════════════════════════
