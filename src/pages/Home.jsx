@@ -168,7 +168,7 @@ export default function Home() {
 
         <SectionDivider color="rose" />
 
-        <div id="partners" style={{ scrollMarginTop: "80px" }} />
+        <div id="volunteer" style={{ scrollMarginTop: "80px" }} />
         <LazySection rootMargin={rm}>
           <PartnerSection />
         </LazySection>

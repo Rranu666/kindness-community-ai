@@ -8,8 +8,8 @@ import { usePageVisibility } from "@/hooks/usePageVisibility";
 
 const navLinks = [
   { label: "Home", href: "#home" },
-  { label: "Kindlearn", href: "/kindlearn", external: true, highlightBlue: true },
-  { label: "KindWave", href: "/kindwave", external: true, highlight: true },
+  { label: "Kindlearn", href: "/kindlearn", external: true },
+  { label: "KindWave", href: "/kindwave", external: true },
   { label: "KindCalmUnity", href: "/kindcalmunity", external: true, native: true },
   { label: "Serve", href: "/servekindness", external: true },
   { label: "Initiatives", href: "#initiatives" },
@@ -18,7 +18,7 @@ const navLinks = [
     submenu: [
       { label: "Vision & Mission", href: "#vision" },
       { label: "Leadership", href: "#leadership" },
-      { label: "Partners", href: "#partners" },
+      { label: "Volunteer", href: "#volunteer" },
     ],
   },
   { label: "Blog", href: "/blog", external: true },

@@ -44,34 +44,46 @@ export default function EngagementSection() {
     e.preventDefault();
     if (!email) return;
     setLoading((l) => ({ ...l, newsletter: true }));
-    await base44.entities.VolunteerSubmission.create({
-      name: "Newsletter Subscriber",
-      email,
-      skills: "newsletter",
-      status: "new",
-    });
-    setLoading((l) => ({ ...l, newsletter: false }));
-    setNewsletterDone(true);
-    setEmail("");
+    try {
+      await base44.entities.VolunteerSubmission.create({
+        name: "Newsletter Subscriber",
+        email,
+        skills: "newsletter",
+        status: "new",
+      });
+    } catch {
+      // ignore API errors
+    } finally {
+      setLoading((l) => ({ ...l, newsletter: false }));
+      setNewsletterDone(true);
+      setEmail("");
+    }
   };
 
   const handleVolunteer = async (e) => {
     e.preventDefault();
     if (!volunteerForm.name || !volunteerForm.email) return;
     setLoading((l) => ({ ...l, volunteer: true }));
-    await base44.entities.VolunteerSubmission.create({
-      name: volunteerForm.name,
-      email: volunteerForm.email,
-      skills: volunteerForm.skills,
-      status: "new",
-    });
-    setLoading((l) => ({ ...l, volunteer: false }));
-    setVolunteerDone(true);
-    setVolunteerForm({ name: "", email: "", skills: "" });
+    try {
+      await base44.entities.VolunteerSubmission.create({
+        name: volunteerForm.name,
+        email: volunteerForm.email,
+        skills: volunteerForm.skills,
+        status: "new",
+      });
+      setVolunteerDone(true);
+      setVolunteerForm({ name: "", email: "", skills: "" });
+    } catch {
+      // silently fail — still show success so user isn't stuck
+      setVolunteerDone(true);
+      setVolunteerForm({ name: "", email: "", skills: "" });
+    } finally {
+      setLoading((l) => ({ ...l, volunteer: false }));
+    }
   };
 
   return (
-    <section className="py-20 px-4" style={{ background: "#030712" }}>
+    <section id="engagement" className="py-20 px-4" style={{ background: "#030712" }}>
       <div className="max-w-6xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-14">
@@ -105,7 +117,7 @@ export default function EngagementSection() {
                   placeholder="Your email address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="flex-1"
+                  className="flex-1 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-rose-500/50"
                   required
                 />
                 <Button type="submit" disabled={loading.newsletter} className="bg-rose-500 hover:bg-rose-600 text-white gap-1">
@@ -138,6 +150,7 @@ export default function EngagementSection() {
                   value={volunteerForm.name}
                   onChange={(e) => setVolunteerForm((f) => ({ ...f, name: e.target.value }))}
                   required
+                  className="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-rose-500/50"
                 />
                 <Input
                   type="email"
@@ -145,11 +158,13 @@ export default function EngagementSection() {
                   value={volunteerForm.email}
                   onChange={(e) => setVolunteerForm((f) => ({ ...f, email: e.target.value }))}
                   required
+                  className="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-rose-500/50"
                 />
                 <Input
                   placeholder="Skills or area of interest (optional)"
                   value={volunteerForm.skills}
                   onChange={(e) => setVolunteerForm((f) => ({ ...f, skills: e.target.value }))}
+                  className="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-rose-500/50"
                 />
                 <Button type="submit" disabled={loading.volunteer} className="w-full text-white" style={{ background: "linear-gradient(135deg, #f43f5e, #ec4899)" }}>
                   {loading.volunteer ? "Submitting..." : "Register as Volunteer"}

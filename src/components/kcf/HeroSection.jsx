@@ -468,7 +468,7 @@ export default function HeroSection() {
               whileTap={{ scale: 0.97 }}
             >
               <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/5" />
-              <span className="relative z-10">Partner With Us</span>
+              <span className="relative z-10">Volunteer With Us</span>
               <span className="relative z-10 text-white/30 group-hover:text-white/70 transition-colors duration-300">↗</span>
             </motion.button>
           </motion.div>

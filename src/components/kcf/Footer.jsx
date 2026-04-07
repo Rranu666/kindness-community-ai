@@ -12,7 +12,7 @@ const quickLinks = [
   { label: "KindWave App", href: "/kindwave", external: true },
   { label: "KindCalmUnity", href: "/kindcalmunity", external: true },
   { label: "Blog", href: "/blog", external: true },
-  { label: "Partners", href: "#partners" },
+  { label: "Volunteer", href: "#volunteer" },
   { label: "Governance", href: "#governance" },
   { label: "Community Stories", href: "#stories" },
   { label: "Contact", href: "#contact" },
