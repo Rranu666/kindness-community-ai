@@ -7,6 +7,7 @@ import { useState, useRef, useEffect } from 'react';
 import { X, Send, Minus, RefreshCw, Mic, MicOff, Copy, Check, Zap } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { KindraAvatar } from '@/components/synergy/AskKindra';
+import KIcon from '@/components/kcf/KIcon';
 
 // ─── Markdown renderer ─────────────────────────────────────────────────────────
 function InlineText({ text }) {
@@ -783,15 +784,15 @@ export default function KindraWebBot() {
         style={{
           bottom: 24,
           right: 24,
-          width: 52,
-          height: 52,
+          width: 60,
+          height: 60,
           borderRadius: 16,
-          background: open && !minimized
-            ? 'rgba(5,150,105,0.9)'
-            : 'linear-gradient(135deg, #059669 0%, #10b981 60%, #34d399 100%)',
+          background: open && !minimized ? 'rgba(5,150,105,0.9)' : 'transparent',
           boxShadow: open && !minimized
             ? '0 4px 20px rgba(16,185,129,0.3)'
-            : undefined,
+            : '0 8px 32px rgba(0,0,0,0.45)',
+          padding: 0,
+          overflow: 'hidden',
         }}
         title="Ask Kindra — KCF Support"
       >
@@ -804,7 +805,7 @@ export default function KindraWebBot() {
         />
         {open && !minimized
           ? <X className="w-5 h-5 text-white relative z-10" />
-          : <span className="font-black text-white text-lg select-none relative z-10" style={{ fontFamily: "'Syne', sans-serif" }}>K</span>
+          : <KIcon size={60} animated={true} />
         }
 
         {/* Unread badge */}
