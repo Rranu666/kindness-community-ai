@@ -24,7 +24,7 @@ function InlineText({ text }) {
       const m = p.match(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/);
       if (m) {
         out.push(
-          <a key={i} href={m[2]} className="text-emerald-400 underline hover:text-emerald-300"
+          <a key={i} href={m[2]} className="text-rose-400 underline hover:text-rose-300"
             onClick={e => e.stopPropagation()}>{m[1]}</a>
         );
       } else {
@@ -62,7 +62,7 @@ function BotMarkdown({ text }) {
         <ul key={`ul-${i}`} className="space-y-1 my-1.5 ml-0.5">
           {items.map((item, j) => (
             <li key={j} className="flex items-start gap-2">
-              <span className="text-emerald-400 text-[10px] mt-[5px] flex-shrink-0">▸</span>
+              <span className="text-rose-400 text-[10px] mt-[5px] flex-shrink-0">▸</span>
               <span className="flex-1 text-xs leading-relaxed"><InlineText text={item} /></span>
             </li>
           ))}
@@ -88,10 +88,10 @@ function buildPublicBotPrompt(messages, userMsg) {
   const history = messages
     .filter(m => m.id !== 'greeting')
     .slice(-8)
-    .map(m => m.role === 'user' ? `Visitor: ${m.text}` : `Kindra: ${m.text}`)
+    .map(m => m.role === 'user' ? `Visitor: ${m.text}` : `Kindbot: ${m.text}`)
     .join('\n');
 
-  return `You are Kindra, the warm and knowledgeable AI support assistant for the Kindness Community Foundation (KCF) public website at kindnesscommunityfoundation.com. You help visitors navigate every page, answer every question about KCF's programs, and guide them to take action.
+  return `You are Kindbot, the warm and knowledgeable AI support assistant for the Kindness Community Foundation (KCF) public website at kindnesscommunityfoundation.com. You help visitors navigate every page, answer every question about KCF's programs, and guide them to take action.
 
 Personality: warm, clear, helpful, concise. Use **bold** for key terms, - bullet lists for multiple items. Always tell the visitor which page URL to visit.
 
@@ -387,7 +387,7 @@ const QUICK_CHIPS = [
 ];
 
 // ─── Greeting ─────────────────────────────────────────────────────────────────
-const GREETING = `Hi there! 👋 I'm **Kindra** — KCF's AI support assistant.
+const GREETING = `Hi there! 👋 I'm **Kindbot** — KCF's AI support assistant.
 
 I'm here 24/7 to help you:
 - **Navigate** the KCF website
@@ -404,7 +404,7 @@ function CopyBtn({ msgId, text, copied, onCopy }) {
       className="p-0.5 rounded opacity-0 group-hover:opacity-100 transition-all hover:bg-white/10"
       title="Copy">
       {copied === msgId
-        ? <Check className="w-2.5 h-2.5 text-emerald-400" />
+        ? <Check className="w-2.5 h-2.5 text-rose-400" />
         : <Copy className="w-2.5 h-2.5 text-white/30 hover:text-white/60" />}
     </button>
   );
@@ -569,7 +569,7 @@ export default function KindraWebBot() {
           {!minimized && (
             <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-[20px]">
               <div className="absolute -top-20 -right-20 w-64 h-64 rounded-full opacity-[0.06]"
-                style={{ background: 'radial-gradient(circle, #10b981, transparent 70%)' }} />
+                style={{ background: 'radial-gradient(circle, #f43f5e, transparent 70%)' }} />
               <div className="absolute -bottom-20 -left-20 w-48 h-48 rounded-full opacity-[0.04]"
                 style={{ background: 'radial-gradient(circle, #059669, transparent 70%)' }} />
             </div>
@@ -584,12 +584,12 @@ export default function KindraWebBot() {
             <KindraAvatar size={32} glow />
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
-                <span className="text-white font-bold text-sm">Kindra</span>
+                <span className="text-white font-bold text-sm">Kindbot</span>
                 <span
-                  className="flex items-center gap-1 text-[9px] font-bold text-emerald-400"
-                  style={{ background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.22)', borderRadius: 99, padding: '1px 6px' }}
+                  className="flex items-center gap-1 text-[9px] font-bold text-rose-400"
+                  style={{ background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(244,63,94,0.22)', borderRadius: 99, padding: '1px 6px' }}
                 >
-                  <span className="w-1 h-1 rounded-full bg-emerald-400" style={{ animation: 'kw-pulse 2s infinite' }} />
+                  <span className="w-1 h-1 rounded-full bg-rose-400" style={{ animation: 'kw-pulse 2s infinite' }} />
                   LIVE
                 </span>
               </div>
@@ -633,7 +633,7 @@ export default function KindraWebBot() {
                     <div key={msg.id} className="flex justify-end">
                       <div
                         className="max-w-[83%] px-3.5 py-2.5 rounded-2xl rounded-tr-sm text-xs text-white leading-relaxed"
-                        style={{ background: 'linear-gradient(135deg, #059669, #10b981)', boxShadow: '0 3px 14px rgba(16,185,129,0.22)' }}
+                        style={{ background: 'linear-gradient(135deg, #f43f5e, #ec4899)', boxShadow: '0 3px 14px rgba(244,63,94,0.22)' }}
                       >
                         {msg.text}
                       </div>
@@ -644,7 +644,7 @@ export default function KindraWebBot() {
                       <KindraAvatar size={26} />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-1.5 mb-1">
-                          <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-wide">Kindra</span>
+                          <span className="text-[9px] font-bold text-rose-400 uppercase tracking-wide">Kindbot</span>
                           <CopyBtn msgId={msg.id} text={msg.text} copied={copied} onCopy={copyMsg} />
                         </div>
                         <div
@@ -669,7 +669,7 @@ export default function KindraWebBot() {
                       {[0, 1, 2].map(i => (
                         <span
                           key={i}
-                          className="w-1.5 h-1.5 rounded-full bg-emerald-400/70"
+                          className="w-1.5 h-1.5 rounded-full bg-rose-400/70"
                           style={{ animation: `kw-dot 1.2s ease-in-out ${i * 0.18}s infinite` }}
                         />
                       ))}
@@ -696,7 +696,7 @@ export default function KindraWebBot() {
                         disabled={loading}
                         className="flex-shrink-0 flex items-center gap-1.5 text-[10px] text-white/50 hover:text-white/80 px-3 py-2 rounded-xl transition-all whitespace-nowrap disabled:opacity-30"
                         style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}
-                        onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(16,185,129,0.3)'}
+                        onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(244,63,94,0.3)'}
                         onMouseLeave={e => e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)'}
                       >
                         <span>{chip.emoji}</span>
@@ -741,7 +741,7 @@ export default function KindraWebBot() {
                       }}
                     >
                       {listening
-                        ? <MicOff className="w-3 h-3 text-emerald-400" />
+                        ? <MicOff className="w-3 h-3 text-rose-400" />
                         : <Mic className="w-3 h-3 text-white/40" />
                       }
                     </button>
@@ -752,7 +752,7 @@ export default function KindraWebBot() {
                     onClick={() => send()}
                     disabled={!input.trim() || loading}
                     className="flex-shrink-0 w-7 h-7 flex items-center justify-center rounded-xl disabled:opacity-25 transition-all hover:scale-105 active:scale-95"
-                    style={{ background: 'linear-gradient(135deg, #059669, #10b981)' }}
+                    style={{ background: 'linear-gradient(135deg, #f43f5e, #ec4899)' }}
                   >
                     <Send className="w-3 h-3 text-white" />
                   </button>
@@ -787,14 +787,14 @@ export default function KindraWebBot() {
           width: 60,
           height: 60,
           borderRadius: 16,
-          background: open && !minimized ? 'rgba(5,150,105,0.9)' : 'transparent',
+          background: open && !minimized ? 'rgba(244,63,94,0.9)' : 'transparent',
           boxShadow: open && !minimized
-            ? '0 4px 20px rgba(16,185,129,0.3)'
+            ? '0 4px 20px rgba(244,63,94,0.3)'
             : '0 8px 32px rgba(0,0,0,0.45)',
           padding: 0,
           overflow: 'hidden',
         }}
-        title="Ask Kindra — KCF Support"
+        title="Ask Kindbot — KCF Support"
       >
         <span
           className={open && !minimized ? '' : 'kw-trigger-ring'}
