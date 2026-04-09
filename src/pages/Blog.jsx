@@ -466,7 +466,59 @@ export default function Blog() {
             </motion.div>
           ) : !viewPost ? (
             <motion.div key="card" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-              {/* Section label */}
+
+              {/* Dynamic DB posts — shown FIRST */}
+              {dbPosts.length > 0 && (
+                <div className="mb-16">
+                  <div className="flex items-center gap-3 mb-8">
+                    <div className="w-1 h-6 rounded-full" style={{ background: "linear-gradient(180deg, #f43f5e, #ec4899)" }} />
+                    <span className="text-white font-black text-xl">Latest Posts</span>
+                  </div>
+                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {dbPosts.map((post, i) => {
+                      const tags = (() => { try { return JSON.parse(post.tags); } catch { return post.tags ? post.tags.split(',').map(t => t.trim()) : []; } })();
+                      return (
+                        <Link key={post.id} to={`/blog/${post.slug}`}>
+                        <motion.div
+                          initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+                          transition={{ delay: i * 0.08 }}
+                          className="rounded-2xl overflow-hidden border border-white/[0.07] cursor-pointer group hover:border-rose-500/30 transition-all duration-300"
+                          style={{ background: "rgba(255,255,255,0.02)" }}>
+                          <div className="relative overflow-hidden h-44">
+                            {post.image_url
+                              ? <img src={post.image_url} alt={post.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" decoding="async" />
+                              : <div className="w-full h-full flex items-center justify-center" style={{ background: "linear-gradient(135deg, rgba(244,63,94,0.08), rgba(99,102,241,0.08))" }}>
+                                  <Sparkles className="w-10 h-10 text-rose-400/30" />
+                                </div>
+                            }
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#030712]/80 to-transparent" />
+                            {post.category && (
+                              <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-xs font-bold"
+                                style={{ background: "rgba(244,63,94,0.15)", border: "1px solid rgba(244,63,94,0.3)", color: "#fb7185" }}>
+                                {post.category}
+                              </div>
+                            )}
+                          </div>
+                          <div className="p-5">
+                            <h3 className="text-white font-bold text-sm leading-snug mb-2 group-hover:text-rose-300 transition-colors line-clamp-2">{post.title}</h3>
+                            {post.excerpt && <p className="text-white/45 text-xs leading-relaxed mb-4 line-clamp-2">{post.excerpt}</p>}
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-3 text-white/35 text-xs">
+                                <span className="flex items-center gap-1"><Calendar className="w-3 h-3" />{new Date(post.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                                {post.read_time && <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{post.read_time}</span>}
+                              </div>
+                              <span className="text-rose-400 text-xs font-bold group-hover:underline flex items-center gap-1">Read <ChevronRight className="w-3 h-3" /></span>
+                            </div>
+                          </div>
+                        </motion.div>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Latest Articles — Featured hardcoded post */}
               <div className="flex items-center gap-3 mb-8">
                 <div className="w-1 h-6 rounded-full" style={{ background: "linear-gradient(180deg, #f43f5e, #ec4899)" }} />
                 <span className="text-white font-black text-xl">Latest Articles</span>
@@ -519,57 +571,6 @@ export default function Blog() {
                   </div>
                 </div>
               </motion.div>
-
-              {/* Dynamic DB posts */}
-              {dbPosts.length > 0 && (
-                <div className="mt-12">
-                  <div className="flex items-center gap-3 mb-8">
-                    <div className="w-1 h-6 rounded-full" style={{ background: "linear-gradient(180deg, #f43f5e, #ec4899)" }} />
-                    <span className="text-white font-black text-xl">Latest Posts</span>
-                  </div>
-                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {dbPosts.map((post, i) => {
-                      const tags = (() => { try { return JSON.parse(post.tags); } catch { return post.tags ? post.tags.split(',').map(t => t.trim()) : []; } })();
-                      return (
-                        <Link key={post.id} to={`/blog/${post.slug}`}>
-                        <motion.div
-                          initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-                          transition={{ delay: i * 0.08 }}
-                          className="rounded-2xl overflow-hidden border border-white/[0.07] cursor-pointer group hover:border-rose-500/30 transition-all duration-300"
-                          style={{ background: "rgba(255,255,255,0.02)" }}>
-                          <div className="relative overflow-hidden h-44">
-                            {post.image_url
-                              ? <img src={post.image_url} alt={post.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" decoding="async" />
-                              : <div className="w-full h-full flex items-center justify-center" style={{ background: "linear-gradient(135deg, rgba(244,63,94,0.08), rgba(99,102,241,0.08))" }}>
-                                  <Sparkles className="w-10 h-10 text-rose-400/30" />
-                                </div>
-                            }
-                            <div className="absolute inset-0 bg-gradient-to-t from-[#030712]/80 to-transparent" />
-                            {post.category && (
-                              <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-xs font-bold"
-                                style={{ background: "rgba(244,63,94,0.15)", border: "1px solid rgba(244,63,94,0.3)", color: "#fb7185" }}>
-                                {post.category}
-                              </div>
-                            )}
-                          </div>
-                          <div className="p-5">
-                            <h3 className="text-white font-bold text-sm leading-snug mb-2 group-hover:text-rose-300 transition-colors line-clamp-2">{post.title}</h3>
-                            {post.excerpt && <p className="text-white/45 text-xs leading-relaxed mb-4 line-clamp-2">{post.excerpt}</p>}
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center gap-3 text-white/35 text-xs">
-                                <span className="flex items-center gap-1"><Calendar className="w-3 h-3" />{new Date(post.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
-                                {post.read_time && <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{post.read_time}</span>}
-                              </div>
-                              <span className="text-rose-400 text-xs font-bold group-hover:underline flex items-center gap-1">Read <ChevronRight className="w-3 h-3" /></span>
-                            </div>
-                          </div>
-                        </motion.div>
-                        </Link>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
 
               {/* Coming Soon cards */}
               <div className="flex items-center gap-3 mt-12 mb-6">
