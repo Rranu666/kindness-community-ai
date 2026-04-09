@@ -30,10 +30,10 @@ const navLinks = [
   {
     label: "About",
     submenu: [
-      { label: "Vision & Mission", href: "#vision" },
-      { label: "Leadership", href: "#leadership" },
-      { label: "Initiatives", href: "#initiatives" },
-      { label: "Governance", href: "#governance" },
+      { label: "Vision & Mission", href: "/vision", external: true },
+      { label: "Leadership", href: "/leadership", external: true },
+      { label: "Initiatives", href: "/initiatives", external: true },
+      { label: "Governance", href: "/governance", external: true },
     ],
   },
   { label: "Contact", href: "/contact", external: true },

@@ -51,9 +51,22 @@ function LazySection({ children, rootMargin = "200px" }) {
   );
 }
 
+// Section-URL → hash mapping: lets /leadership, /vision, etc. render the
+// homepage and auto-scroll to the right anchor without losing the clean URL.
+const SECTION_PATHS = {
+  '/vision':       '#vision',
+  '/leadership':   '#leadership',
+  '/initiatives':  '#initiatives',
+  '/governance':   '#governance',
+  '/volunteer-section': '#volunteer',
+};
+
 export default function Home() {
   const location = useLocation();
-  const scrollTarget = location.state?.scrollTarget || window.location.hash;
+  const scrollTarget =
+    location.state?.scrollTarget ||
+    SECTION_PATHS[location.pathname] ||
+    window.location.hash;
 
   // When navigating to a specific section, use a huge rootMargin so ALL
   // LazySection IntersectionObservers fire immediately — the full page height

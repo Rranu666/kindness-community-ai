@@ -17,6 +17,7 @@ import Analytics from './pages/Analytics';
 import KindnessConnect from './pages/KindnessConnect';
 import GivingDashboard from './pages/GivingDashboard';
 import GrowPage from './pages/GrowPage';
+import SectionPage from './pages/SectionPage';
 import Blog from './pages/Blog';
 import KindWaveAppPage from './pages/KindWaveAppPage';
 import KindCalmUnityPage from './pages/KindCalmUnityPage';
@@ -61,6 +62,11 @@ function AppRoutes() {
       <Route path="/kindwave" element={<KindWaveAppPage />} />
       <Route path="/kindcalmunity" element={<KindCalmUnityPage />} />
       <Route path="/grow" element={<GrowPage />} />
+      {/* Section routes — render full homepage, scroll to anchor, clean URL */}
+      <Route path="/vision"      element={<SectionPage title="Vision & Mission | Kindness Community Foundation" description="KCF's vision: ethical, technology-assisted volunteer networks building sustainable community infrastructure for lasting global impact." />} />
+      <Route path="/leadership"  element={<SectionPage title="Leadership | Kindness Community Foundation" description="Meet the leadership team driving KCF's mission of community empowerment, ethical participation, and measurable social impact." />} />
+      <Route path="/initiatives" element={<SectionPage title="Initiatives | Kindness Community Foundation" description="Explore KCF's six strategic revenue-backed initiatives — from FreeAppMaker.ai to KarmaTrust — funding our nonprofit mission worldwide." />} />
+      <Route path="/governance"  element={<SectionPage title="Governance & Ethics | Kindness Community Foundation" description="KCF is governed by the 12-Tradition Kindness Constitution — ensuring unity, servant leadership, transparency, and principles before personalities." />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/login" element={<Login />} />
       <Route path="/analytics" element={<LayoutWrapper currentPageName="Analytics"><Analytics /></LayoutWrapper>} />
