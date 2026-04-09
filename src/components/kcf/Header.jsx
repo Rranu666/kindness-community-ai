@@ -25,6 +25,7 @@ const navLinks = [
       { label: "Personal Growth", href: "/grow", external: true },
     ],
   },
+  { label: "Serve", href: "/servekindness", external: true },
   { label: "Blog", href: "/blog", external: true },
   {
     label: "About",
