@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { usePageMeta } from '@/hooks/usePageMeta';
-import { MessageSquare, FileText, Megaphone, Users, Shield, Zap, Heart, Cpu, Globe, ArrowRight } from 'lucide-react';
+import { MessageSquare, FileText, Megaphone, Users, Shield, Zap, Heart, Cpu, Globe, ArrowRight, ArrowLeft } from 'lucide-react';
 
 export default function TeamPortalLanding() {
   usePageMeta(
@@ -48,6 +48,13 @@ export default function TeamPortalLanding() {
       <nav className="sticky top-0 z-50 border-b border-white/[0.06]" style={{ background: 'rgba(3,7,18,0.85)', backdropFilter: 'blur(20px)' }}>
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
+            <button
+              onClick={() => navigate('/')}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium text-white/50 hover:text-white hover:bg-white/8 transition-all duration-200"
+            >
+              <ArrowLeft className="w-4 h-4" /> Back to Website
+            </button>
+            <div className="w-px h-5 bg-white/10" />
             <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #f43f5e, #ec4899)' }}>
               <Heart className="w-4 h-4 text-white" />
             </div>
