@@ -32,10 +32,11 @@ const faqs = [
   },
 ];
 
-export default function VolunteerSignupForm({ onSuccess }) {
+export default function VolunteerSignupForm() {
   const [openFaq, setOpenFaq] = useState(null);
   const [email, setEmail] = useState("");
   const [newsletterDone, setNewsletterDone] = useState(false);
+  const [volunteerDone, setVolunteerDone] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", skills: "" });
   const [loading, setLoading] = useState({ newsletter: false, volunteer: false });
 
@@ -71,10 +72,11 @@ export default function VolunteerSignupForm({ onSuccess }) {
         status: "new",
       });
     } catch {
-      // silently fail — still redirect
+      // silently fail — still show success
     } finally {
       setLoading((l) => ({ ...l, volunteer: false }));
-      if (onSuccess) onSuccess();
+      setVolunteerDone(true);
+      setForm({ name: "", email: "", skills: "" });
     }
   };
 
@@ -134,6 +136,11 @@ export default function VolunteerSignupForm({ onSuccess }) {
             <p className="text-white/35 text-sm mb-5">
               Share your time, skills, and passion. We'll find the right program for you.
             </p>
+            {volunteerDone ? (
+              <div className="flex items-center gap-2 text-green-400 font-medium text-sm rounded-lg px-4 py-3 border border-green-500/20" style={{ background: "rgba(34,197,94,0.08)" }}>
+                <Heart className="w-4 h-4" /> We'll be in touch soon — thank you!
+              </div>
+            ) : (
             <form onSubmit={handleVolunteer} className="space-y-3">
               <Input
                 placeholder="Your full name"
@@ -165,6 +172,7 @@ export default function VolunteerSignupForm({ onSuccess }) {
                 {loading.volunteer ? "Submitting..." : "Register as Volunteer →"}
               </Button>
             </form>
+            )}
           </div>
         </div>
 
