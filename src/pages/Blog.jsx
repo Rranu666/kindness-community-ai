@@ -531,10 +531,10 @@ export default function Blog() {
                     {dbPosts.map((post, i) => {
                       const tags = (() => { try { return JSON.parse(post.tags); } catch { return post.tags ? post.tags.split(',').map(t => t.trim()) : []; } })();
                       return (
-                        <motion.div key={post.id}
+                        <Link key={post.id} to={`/blog/${post.slug}`}>
+                        <motion.div
                           initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
                           transition={{ delay: i * 0.08 }}
-                          onClick={() => setActiveDbPost(post)}
                           className="rounded-2xl overflow-hidden border border-white/[0.07] cursor-pointer group hover:border-rose-500/30 transition-all duration-300"
                           style={{ background: "rgba(255,255,255,0.02)" }}>
                           <div className="relative overflow-hidden h-44">
@@ -564,6 +564,7 @@ export default function Blog() {
                             </div>
                           </div>
                         </motion.div>
+                        </Link>
                       );
                     })}
                   </div>
