@@ -62,11 +62,11 @@ function AppRoutes() {
       <Route path="/kindwave" element={<KindWaveAppPage />} />
       <Route path="/kindcalmunity" element={<KindCalmUnityPage />} />
       <Route path="/grow" element={<GrowPage />} />
-      {/* Section routes — render full homepage, scroll to anchor, clean URL */}
-      <Route path="/vision"      element={<SectionPage title="Vision & Mission | Kindness Community Foundation" description="KCF's vision: ethical, technology-assisted volunteer networks building sustainable community infrastructure for lasting global impact." />} />
-      <Route path="/leadership"  element={<SectionPage title="Leadership | Kindness Community Foundation" description="Meet the leadership team driving KCF's mission of community empowerment, ethical participation, and measurable social impact." />} />
-      <Route path="/initiatives" element={<SectionPage title="Initiatives | Kindness Community Foundation" description="Explore KCF's six strategic revenue-backed initiatives — from FreeAppMaker.ai to KarmaTrust — funding our nonprofit mission worldwide." />} />
-      <Route path="/governance"  element={<SectionPage title="Governance & Ethics | Kindness Community Foundation" description="KCF is governed by the 12-Tradition Kindness Constitution — ensuring unity, servant leadership, transparency, and principles before personalities." />} />
+      {/* Section routes — render full homepage scrolled to the right anchor, clean URL */}
+      <Route path="/vision"      element={<LayoutWrapper currentPageName="Home"><SectionPage title="Vision & Mission | Kindness Community Foundation" description="KCF's vision: ethical, technology-assisted volunteer networks building sustainable community infrastructure for lasting global impact." /></LayoutWrapper>} />
+      <Route path="/leadership"  element={<LayoutWrapper currentPageName="Home"><SectionPage title="Leadership | Kindness Community Foundation" description="Meet the leadership team driving KCF's mission of community empowerment, ethical participation, and measurable social impact." /></LayoutWrapper>} />
+      <Route path="/initiatives" element={<LayoutWrapper currentPageName="Home"><SectionPage title="Initiatives | Kindness Community Foundation" description="Explore KCF's six strategic revenue-backed initiatives — from FreeAppMaker.ai to KarmaTrust — funding our nonprofit mission worldwide." /></LayoutWrapper>} />
+      <Route path="/governance"  element={<LayoutWrapper currentPageName="Home"><SectionPage title="Governance & Ethics | Kindness Community Foundation" description="KCF is governed by the 12-Tradition Kindness Constitution — ensuring unity, servant leadership, transparency, and principles before personalities." /></LayoutWrapper>} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/login" element={<Login />} />
       <Route path="/analytics" element={<LayoutWrapper currentPageName="Analytics"><Analytics /></LayoutWrapper>} />
