@@ -46,23 +46,25 @@ export default function TeamPortalLanding() {
     <div className="min-h-screen text-white" style={{ background: '#030712' }}>
       {/* Nav */}
       <nav className="sticky top-0 z-50 border-b border-white/[0.06]" style={{ background: 'rgba(3,7,18,0.85)', backdropFilter: 'blur(20px)' }}>
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+            {/* Back button — icon only on mobile, icon+text on desktop */}
             <button
               onClick={() => navigate('/')}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium text-white/50 hover:text-white hover:bg-white/8 transition-all duration-200"
+              className="flex items-center gap-1.5 px-2 sm:px-3 py-1.5 rounded-lg text-sm font-medium text-white/50 hover:text-white hover:bg-white/8 transition-all duration-200 whitespace-nowrap flex-shrink-0"
             >
-              <ArrowLeft className="w-4 h-4" /> Back to Website
+              <ArrowLeft className="w-4 h-4" />
+              <span className="hidden sm:inline">Back to Website</span>
             </button>
-            <div className="w-px h-5 bg-white/10" />
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #f43f5e, #ec4899)' }}>
+            <div className="w-px h-5 bg-white/10 flex-shrink-0" />
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg, #f43f5e, #ec4899)' }}>
               <Heart className="w-4 h-4 text-white" />
             </div>
-            <span className="font-black text-white text-lg" style={{ fontFamily: "'Syne', sans-serif" }}>Kindness Synergy Hub</span>
+            <span className="font-black text-white text-base sm:text-lg truncate" style={{ fontFamily: "'Syne', sans-serif" }}>Kindness Synergy Hub</span>
           </div>
           <button
             onClick={() => base44.auth.redirectToLogin('/synergyhub')}
-            className="flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90"
+            className="flex items-center gap-2 px-3 sm:px-5 py-2 rounded-xl text-xs sm:text-sm font-semibold text-white transition-all hover:opacity-90 flex-shrink-0 whitespace-nowrap"
             style={{ background: 'linear-gradient(135deg, #f43f5e, #ec4899)' }}
           >
             Sign In to Enter <ArrowRight className="w-4 h-4" />
