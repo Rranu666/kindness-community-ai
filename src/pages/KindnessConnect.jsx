@@ -18,8 +18,8 @@ const btnStyle = {
 
 export default function KindnessConnect() {
   usePageMeta(
-    "ServeKindness – Structured Volunteering | KCF",
-    "ServeKindness makes community service trackable and meaningful. Find volunteer opportunities near you through Kindness Community Foundation."
+    "Donate & Give | ServeKindness – Kindness Community Foundation",
+    "Support causes you love with micro-donations, monthly giving plans, and conscious shopping cashback. Track your real-world impact with KCF's ServeKindness platform."
   );
 
   const [loaded, setLoaded] = useState(false);

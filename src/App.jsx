@@ -16,6 +16,7 @@ import TeamPortalLanding from './pages/TeamPortalLanding';
 import Analytics from './pages/Analytics';
 import KindnessConnect from './pages/KindnessConnect';
 import GivingDashboard from './pages/GivingDashboard';
+import GrowPage from './pages/GrowPage';
 import Blog from './pages/Blog';
 import KindWaveAppPage from './pages/KindWaveAppPage';
 import KindCalmUnityPage from './pages/KindCalmUnityPage';
@@ -59,6 +60,7 @@ function AppRoutes() {
       <Route path="/blog" element={<Blog />} />
       <Route path="/kindwave" element={<KindWaveAppPage />} />
       <Route path="/kindcalmunity" element={<KindCalmUnityPage />} />
+      <Route path="/grow" element={<GrowPage />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/login" element={<Login />} />
       <Route path="/analytics" element={<LayoutWrapper currentPageName="Analytics"><Analytics /></LayoutWrapper>} />

@@ -8,20 +8,33 @@ import { usePageVisibility } from "@/hooks/usePageVisibility";
 
 const navLinks = [
   { label: "Home", href: "#home" },
-  { label: "Kindlearn", href: "/kindlearn", external: true },
-  { label: "KindWave", href: "/kindwave", external: true },
-  { label: "KindCalmUnity", href: "/kindcalmunity", external: true, native: true },
-  { label: "Serve", href: "/servekindness", external: true },
-  { label: "Initiatives", href: "#initiatives" },
+  {
+    label: "Get Involved",
+    submenu: [
+      { label: "Volunteer", href: "/volunteer", external: true },
+      { label: "Donate & Give", href: "/servekindness", external: true },
+      { label: "Join the Team", href: "/jointeam", external: true },
+    ],
+  },
+  {
+    label: "Programs",
+    submenu: [
+      { label: "KindWave", href: "/kindwave", external: true },
+      { label: "KindLearn", href: "/kindlearn", external: true },
+      { label: "KindCalmUnity", href: "/kindcalmunity", external: true, native: true },
+      { label: "Personal Growth", href: "/grow", external: true },
+    ],
+  },
+  { label: "Blog", href: "/blog", external: true },
   {
     label: "About",
     submenu: [
       { label: "Vision & Mission", href: "#vision" },
       { label: "Leadership", href: "#leadership" },
-      { label: "Volunteer", href: "#volunteer" },
+      { label: "Initiatives", href: "#initiatives" },
+      { label: "Governance", href: "#governance" },
     ],
   },
-  { label: "Blog", href: "/blog", external: true },
   { label: "Contact", href: "/contact", external: true },
 ];
 

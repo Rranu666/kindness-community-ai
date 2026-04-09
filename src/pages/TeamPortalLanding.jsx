@@ -1,9 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
+import { usePageMeta } from '@/hooks/usePageMeta';
 import { MessageSquare, FileText, Megaphone, Users, Shield, Zap, Heart, Cpu, Globe, ArrowRight } from 'lucide-react';
 
 export default function TeamPortalLanding() {
+  usePageMeta(
+    "Join the KCF Team | Kindness Synergy Hub",
+    "Apply to join the Kindness Community Foundation team. Access the Kindness Synergy Hub — our internal workspace for collaboration, messaging, AI tools, and documents."
+  );
   const navigate = useNavigate();
   const [checking, setChecking] = useState(true);
 

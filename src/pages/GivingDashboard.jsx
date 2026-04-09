@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { motion } from "framer-motion";
 import { Lock } from "lucide-react";
 import Header from "@/components/kcf/Header";
@@ -22,6 +23,10 @@ const fadeUp = {
 const TABS = ["Overview", "Subscriptions", "Impact", "Goals", "History", "Payment"];
 
 export default function GivingDashboard() {
+  usePageMeta(
+    "My Giving Dashboard | Track Donations & Impact | KCF",
+    "Manage your giving plans, track real-world impact, and view your donation history. Your generosity feeds families, plants trees, and changes lives."
+  );
   const [user, setUser] = useState(null);
   const [tab, setTab] = useState("Overview");
 
