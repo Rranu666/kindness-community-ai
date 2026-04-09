@@ -5,23 +5,23 @@ import { useNavigate, useLocation, Link } from "react-router-dom";
 import KCFLogo from "@/components/kcf/KCFLogo";
 
 const quickLinks = [
-  { label: "Home", href: "#home" },
-  { label: "Initiatives", href: "#initiatives" },
-  { label: "Vision & Mission", href: "#vision" },
-  { label: "Leadership", href: "#leadership" },
+  { label: "Home", href: "/", external: true },
+  { label: "Initiatives", href: "/initiatives", external: true },
+  { label: "Vision & Mission", href: "/vision", external: true },
+  { label: "Leadership", href: "/leadership", external: true },
   { label: "KindWave App", href: "/kindwave", external: true },
   { label: "KindCalmUnity", href: "/kindcalmunity", external: true },
   { label: "Blog", href: "/blog", external: true },
-  { label: "Volunteer", href: "#volunteer" },
-  { label: "Governance", href: "#governance" },
-  { label: "Community Stories", href: "#stories" },
-  { label: "Contact", href: "#contact" },
+  { label: "Volunteer", href: "/volunteer", external: true },
+  { label: "Governance", href: "/governance", external: true },
+  { label: "Personal Growth", href: "/grow", external: true },
+  { label: "Contact", href: "/contact", external: true },
 ];
 
 const legalLinks = [
-  { label: "Terms of Service", href: "#governance" },
-  { label: "Privacy Policy", href: "#governance" },
-  { label: "Governance & Ethics", href: "#governance" },
+  { label: "Terms of Service", href: "/governance", external: true },
+  { label: "Privacy Policy", href: "/governance", external: true },
+  { label: "Governance & Ethics", href: "/governance", external: true },
 ];
 
 export default function Footer({ hideCta = false }) {

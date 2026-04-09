@@ -7,7 +7,7 @@ import KCFLogo from "./KCFLogo";
 import { usePageVisibility } from "@/hooks/usePageVisibility";
 
 const navLinks = [
-  { label: "Home", href: "#home" },
+  { label: "Home", href: "/", external: true },
   {
     label: "Get Involved",
     submenu: [
