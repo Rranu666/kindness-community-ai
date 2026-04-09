@@ -1,10 +1,11 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Calendar, Clock, Tag, Heart, Globe, Users, Zap, Shield, Sparkles, BrainCircuit, ArrowRight, ChevronRight } from "lucide-react";
+import { ArrowLeft, Calendar, Clock, Tag, Heart, Globe, Users, Zap, Shield, Sparkles, BrainCircuit, ArrowRight, ChevronRight, User } from "lucide-react";
 import Header from "@/components/kcf/Header";
 import Footer from "@/components/kcf/Footer";
+import { supabase } from "@/api/supabaseClient";
 
 const featuredPost = {
   id: 1,
@@ -262,14 +263,135 @@ function BlogPostFull() {
   );
 }
 
+// Simple markdown → JSX renderer for DB post content
+function renderContent(text) {
+  if (!text) return null;
+  return text.split('\n').map((line, i) => {
+    if (line.startsWith('## ')) {
+      return <h2 key={i} className="text-white font-black text-xl mt-8 mb-3">{line.slice(3)}</h2>;
+    }
+    if (line.startsWith('### ')) {
+      return <h3 key={i} className="text-white font-bold text-lg mt-6 mb-2">{line.slice(4)}</h3>;
+    }
+    if (line.startsWith('- ') || line.startsWith('* ')) {
+      return <li key={i} className="text-white/70 text-sm leading-relaxed ml-4 list-disc">{line.slice(2)}</li>;
+    }
+    if (line.startsWith('> ')) {
+      return (
+        <blockquote key={i} className="border-l-4 border-rose-500 pl-4 my-4 text-white/80 italic text-base">
+          {line.slice(2)}
+        </blockquote>
+      );
+    }
+    if (line.trim() === '') return <div key={i} className="h-3" />;
+    // Bold text
+    const parts = line.split(/(\*\*[^*]+\*\*)/g).map((part, j) =>
+      part.startsWith('**') && part.endsWith('**')
+        ? <strong key={j} className="text-white">{part.slice(2, -2)}</strong>
+        : part
+    );
+    return <p key={i} className="text-white/70 text-sm leading-relaxed">{parts}</p>;
+  });
+}
+
+function DbPostFull({ post, onBack }) {
+  const tags = (() => {
+    try { return JSON.parse(post.tags); } catch { return post.tags ? post.tags.split(',').map(t => t.trim()) : []; }
+  })();
+  return (
+    <div>
+      <button onClick={onBack} className="flex items-center gap-2 text-white/50 hover:text-white text-sm font-semibold mb-10 transition-colors group">
+        <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+        Back to Blog
+      </button>
+      <article className="max-w-4xl mx-auto">
+        {post.image_url && (
+          <div className="relative rounded-3xl overflow-hidden mb-10 shadow-2xl shadow-black/50">
+            <img src={post.image_url} alt={post.title} className="w-full h-64 sm:h-80 lg:h-[400px] object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#030712]/90 via-[#030712]/30 to-transparent" />
+            <div className="absolute bottom-6 left-6 right-6">
+              <div className="flex flex-wrap gap-2 mb-3">
+                {tags.map((tag, i) => (
+                  <span key={i} className="px-3 py-1 rounded-full text-xs font-semibold border"
+                    style={{ background: "rgba(244,63,94,0.15)", borderColor: "rgba(244,63,94,0.3)", color: "#fb7185" }}>
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-black text-white leading-tight">{post.title}</h1>
+            </div>
+          </div>
+        )}
+        {!post.image_url && (
+          <h1 className="text-2xl sm:text-3xl font-black text-white leading-tight mb-8">{post.title}</h1>
+        )}
+        <div className="flex flex-wrap items-center gap-4 mb-10 pb-8 border-b border-white/[0.07]">
+          {post.author_name && (
+            <div className="flex items-center gap-2 text-white/50 text-sm">
+              <User className="w-4 h-4 text-rose-400" />
+              {post.author_name}
+            </div>
+          )}
+          <div className="flex items-center gap-2 text-white/50 text-sm">
+            <Calendar className="w-4 h-4 text-rose-400" />
+            {new Date(post.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+          </div>
+          {post.read_time && (
+            <div className="flex items-center gap-2 text-white/50 text-sm">
+              <Clock className="w-4 h-4 text-rose-400" />
+              {post.read_time}
+            </div>
+          )}
+          {post.category && (
+            <div className="flex items-center gap-2 text-white/50 text-sm">
+              <Tag className="w-4 h-4 text-rose-400" />
+              {post.category}
+            </div>
+          )}
+        </div>
+        <div className="prose prose-invert max-w-none space-y-2">
+          {renderContent(post.content)}
+        </div>
+        <div className="flex flex-col sm:flex-row gap-4 mt-12 pt-10 border-t border-white/[0.07]">
+          <Link to="/servekindness">
+            <motion.button whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
+              className="flex items-center gap-2 px-7 py-3.5 rounded-2xl text-white font-bold text-sm"
+              style={{ background: "linear-gradient(135deg, #f43f5e, #ec4899)" }}>
+              <Heart className="w-4 h-4" /> Start Giving Today <ArrowRight className="w-4 h-4" />
+            </motion.button>
+          </Link>
+          <Link to="/volunteer">
+            <motion.button whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
+              className="flex items-center gap-2 px-7 py-3.5 rounded-2xl text-white/80 font-bold text-sm border border-white/20 hover:border-white/40 transition-all"
+              style={{ background: "rgba(255,255,255,0.04)" }}>
+              <Users className="w-4 h-4" /> Volunteer With Us
+            </motion.button>
+          </Link>
+        </div>
+      </article>
+    </div>
+  );
+}
+
 export default function Blog() {
   usePageMeta(
     "KCF Blog – Community Stories & Nonprofit Insights",
     "Read the latest stories, volunteer spotlights, and community news from Kindness Community Foundation. Nonprofit insights and impact updates."
   );
   const [viewPost, setViewPost] = useState(false);
+  const [activeDbPost, setActiveDbPost] = useState(null);
+  const [dbPosts, setDbPosts] = useState([]);
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [newsletterDone, setNewsletterDone] = useState(false);
+
+  useEffect(() => {
+    supabase
+      .from('blog_posts')
+      .select('*')
+      .eq('published', true)
+      .order('created_at', { ascending: false })
+      .then(({ data }) => setDbPosts(data || []));
+  }, []);
 
   const handleSubscribe = () => {
     if (!newsletterEmail || !newsletterEmail.includes('@')) return;
@@ -338,7 +460,11 @@ export default function Blog() {
 
         {/* Featured Post Card / Full Post Toggle */}
         <AnimatePresence mode="wait">
-          {!viewPost ? (
+          {activeDbPost ? (
+            <motion.div key="dbpost" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+              <DbPostFull post={activeDbPost} onBack={() => setActiveDbPost(null)} />
+            </motion.div>
+          ) : !viewPost ? (
             <motion.div key="card" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
               {/* Section label */}
               <div className="flex items-center gap-3 mb-8">
@@ -394,8 +520,58 @@ export default function Blog() {
                 </div>
               </motion.div>
 
+              {/* Dynamic DB posts */}
+              {dbPosts.length > 0 && (
+                <div className="mt-12">
+                  <div className="flex items-center gap-3 mb-8">
+                    <div className="w-1 h-6 rounded-full" style={{ background: "linear-gradient(180deg, #f43f5e, #ec4899)" }} />
+                    <span className="text-white font-black text-xl">Latest Posts</span>
+                  </div>
+                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {dbPosts.map((post, i) => {
+                      const tags = (() => { try { return JSON.parse(post.tags); } catch { return post.tags ? post.tags.split(',').map(t => t.trim()) : []; } })();
+                      return (
+                        <motion.div key={post.id}
+                          initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+                          transition={{ delay: i * 0.08 }}
+                          onClick={() => setActiveDbPost(post)}
+                          className="rounded-2xl overflow-hidden border border-white/[0.07] cursor-pointer group hover:border-rose-500/30 transition-all duration-300"
+                          style={{ background: "rgba(255,255,255,0.02)" }}>
+                          <div className="relative overflow-hidden h-44">
+                            {post.image_url
+                              ? <img src={post.image_url} alt={post.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" decoding="async" />
+                              : <div className="w-full h-full flex items-center justify-center" style={{ background: "linear-gradient(135deg, rgba(244,63,94,0.08), rgba(99,102,241,0.08))" }}>
+                                  <Sparkles className="w-10 h-10 text-rose-400/30" />
+                                </div>
+                            }
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#030712]/80 to-transparent" />
+                            {post.category && (
+                              <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-xs font-bold"
+                                style={{ background: "rgba(244,63,94,0.15)", border: "1px solid rgba(244,63,94,0.3)", color: "#fb7185" }}>
+                                {post.category}
+                              </div>
+                            )}
+                          </div>
+                          <div className="p-5">
+                            <h3 className="text-white font-bold text-sm leading-snug mb-2 group-hover:text-rose-300 transition-colors line-clamp-2">{post.title}</h3>
+                            {post.excerpt && <p className="text-white/45 text-xs leading-relaxed mb-4 line-clamp-2">{post.excerpt}</p>}
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-3 text-white/35 text-xs">
+                                <span className="flex items-center gap-1"><Calendar className="w-3 h-3" />{new Date(post.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                                {post.read_time && <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{post.read_time}</span>}
+                              </div>
+                              <span className="text-rose-400 text-xs font-bold group-hover:underline flex items-center gap-1">Read <ChevronRight className="w-3 h-3" /></span>
+                            </div>
+                          </div>
+                        </motion.div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
               {/* Coming Soon cards */}
-              <div className="flex items-center gap-3 mb-6">
+              <div className="flex items-center gap-3 mt-12 mb-6">
                 <div className="w-1 h-6 rounded-full" style={{ background: "linear-gradient(180deg, #6366f1, #8b5cf6)" }} />
                 <span className="text-white font-black text-xl">Coming Soon</span>
               </div>
