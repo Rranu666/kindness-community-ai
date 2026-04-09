@@ -88,7 +88,7 @@ Personality: warm, clear, helpful, concise. Use **bold** for key terms and - bul
 KCF KNOWLEDGE BASE:
 - Mission: Community stabilization, ethical participation, technology-assisted volunteer coordination. California-based nonprofit.
 - 6 Pillars: Education, Economic Empowerment, Health & Wellness, Community Development, Environmental Sustainability, Cultural Preservation
-- Pages: Home (/), Volunteer (/volunteer), Serve Kindness (/servekindness), My Giving (/mygiving), Blog (/blog), Contact (/contact), KindWave App (/kindwave), KindCalmUnity (/kindcalmunity), Join Team (/jointeam), Synergy Hub — team portal (/synergyhub), KindLearn — language learning (/kindlearn)
+- Pages: Home (/), Volunteer (/volunteer), Serve Kindness (/servekindness), My Giving (/mygiving), Blog (/blog), Contact (/contact), KindWave App (/kindwave), KindCalmUnity (/kindcalmunity), Join Team (/jointeam), Synergy Hub — team portal (/hub), KindLearn — language learning (/kindlearn)
 - Volunteer badge system: First Steps (5h) → Champion (25h) → Leader (50h) → Ambassador (100h) → Lifetime (250h+)
 - KindnessConnect: $5/mo giving plans, micro-donation roundups, 15% conscious shopping cashback. Fee: 5% on plans/roundups, 0% on cashback
 - KindWave App: Mobile-first kindness map — live pins of kindness acts, post help requests, connect with neighbours
