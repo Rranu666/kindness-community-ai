@@ -11,6 +11,8 @@ import { AuthProvider } from '@/lib/AuthContext';
 import KindraWebBot from '@/components/kcf/KindraWebBot';
 import KindlearnApp from '@/kindlearn/KindlearnApp';
 import VolunteerDashboard from './pages/VolunteerDashboard';
+import VolunteerPage from './pages/VolunteerPage';
+import VolunteerDashboardPage from './pages/VolunteerDashboardPage';
 import TeamPortal from './pages/TeamPortal';
 import TeamPortalLanding from './pages/TeamPortalLanding';
 import Analytics from './pages/Analytics';
@@ -53,7 +55,8 @@ function AppRoutes() {
         />
       ))}
       {/* New clean URLs */}
-      <Route path="/volunteer" element={<LayoutWrapper currentPageName="VolunteerDashboard"><VolunteerDashboard /></LayoutWrapper>} />
+      <Route path="/volunteer" element={<VolunteerPage />} />
+      <Route path="/volunteer/dashboard" element={<VolunteerDashboardPage />} />
       <Route path="/jointeam" element={<TeamPortalLanding />} />
       <Route path="/synergyhub" element={<TeamPortal />} />
       <Route path="/servekindness" element={<KindnessConnect />} />
@@ -71,7 +74,7 @@ function AppRoutes() {
       <Route path="/login" element={<Login />} />
       <Route path="/analytics" element={<LayoutWrapper currentPageName="Analytics"><Analytics /></LayoutWrapper>} />
       {/* Legacy aliases — keep old URLs working */}
-      <Route path="/VolunteerDashboard" element={<LayoutWrapper currentPageName="VolunteerDashboard"><VolunteerDashboard /></LayoutWrapper>} />
+      <Route path="/VolunteerDashboard" element={<VolunteerDashboardPage />} />
       <Route path="/TeamPortalLanding" element={<TeamPortalLanding />} />
       <Route path="/TeamPortal" element={<TeamPortal />} />
       <Route path="/KindnessConnect" element={<KindnessConnect />} />
