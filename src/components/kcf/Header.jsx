@@ -349,7 +349,7 @@ export default function Header() {
             </button>
 
             <motion.button
-              onClick={() => navigate('/synergyhub')}
+              onClick={() => navigate('/hub')}
               className="ml-1 px-4 py-1.5 text-sm font-bold rounded-full text-white relative overflow-hidden group"
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.96 }}
@@ -518,7 +518,7 @@ export default function Header() {
                 })}
                 <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.35 }}>
                   <button
-                    onClick={() => { navigate('/synergyhub'); setMobileOpen(false); }}
+                    onClick={() => { navigate('/hub'); setMobileOpen(false); }}
                     className="w-full text-left px-4 py-3 text-white rounded-xl text-sm font-bold mt-2"
                     style={{ background: "linear-gradient(135deg, #f43f5e, #ec4899)" }}
                   >
