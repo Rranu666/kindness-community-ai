@@ -22,10 +22,10 @@ const navLinks = [
       { label: "KindWave", href: "/kindwave", external: true },
       { label: "KindLearn", href: "/kindlearn", external: true },
       { label: "KindCalmUnity", href: "/kindcalmunity", external: true, native: true },
+      { label: "Serve", href: "/servekindness", external: true },
       { label: "Personal Growth", href: "/grow", external: true },
     ],
   },
-  { label: "Serve", href: "/servekindness", external: true },
   { label: "Blog", href: "/blog", external: true },
   {
     label: "About",
