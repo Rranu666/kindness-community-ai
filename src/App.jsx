@@ -15,6 +15,7 @@ import VolunteerPage from './pages/VolunteerPage';
 import VolunteerDashboardPage from './pages/VolunteerDashboardPage';
 import TeamPortal from './pages/TeamPortal';
 import TeamPortalLanding from './pages/TeamPortalLanding';
+import JoinTeamPage from './pages/JoinTeamPage';
 import Analytics from './pages/Analytics';
 import KindnessConnect from './pages/KindnessConnect';
 import GivingDashboard from './pages/GivingDashboard';
@@ -57,7 +58,8 @@ function AppRoutes() {
       {/* New clean URLs */}
       <Route path="/volunteer" element={<VolunteerPage />} />
       <Route path="/volunteer/dashboard" element={<VolunteerDashboardPage />} />
-      <Route path="/jointeam" element={<TeamPortalLanding />} />
+      <Route path="/jointeam" element={<JoinTeamPage />} />
+      <Route path="/hub" element={<TeamPortalLanding />} />
       <Route path="/synergyhub" element={<TeamPortal />} />
       <Route path="/servekindness" element={<KindnessConnect />} />
       <Route path="/mygiving" element={<GivingDashboard />} />
@@ -93,6 +95,7 @@ function AppRoutes() {
 // Hide the public bot on pages that have their own AI assistant
 const BOT_HIDDEN_PATHS = [
   '/synergyhub', '/TeamPortal', '/teamportal',
+  '/hub',
   '/login', '/Login',
 ];
 
@@ -113,7 +116,7 @@ function App() {
             <ErrorBoundary>
               <AppRoutes />
             </ErrorBoundary>
-            <ScrollToggleButton hideOn={['/servekindness', '/kindcalmunity']} />
+            <ScrollToggleButton hideOn={['/servekindness', '/kindcalmunity', '/kindwave']} />
             <PublicBot />
           </Router>
           <Toaster />
