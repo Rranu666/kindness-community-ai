@@ -97,7 +97,6 @@ function AppRoutes() {
 // Hide the public bot on pages that have their own AI assistant
 const BOT_HIDDEN_PATHS = [
   '/synergyhub', '/TeamPortal', '/teamportal',
-  '/hub',
   '/login', '/Login',
 ];
 
