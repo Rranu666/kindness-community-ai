@@ -1,22 +1,25 @@
 /**
- * Netlify Edge Function — Blog Post Open Graph Tags
+ * Netlify Edge Function — Blog Post Open Graph injection
  *
- * When a social crawler (WhatsApp, Telegram, Facebook, Twitter, etc.) requests
- * a blog post URL, this function fetches the post data from Supabase and returns
- * a minimal HTML page with the correct og:title, og:description, og:image, etc.
+ * For every /blog/:slug request (bots AND real users):
+ *   1. Fetch the blog post from Supabase
+ *   2. Fetch the real index.html (full React SPA)
+ *   3. Replace the generic OG tags with post-specific ones
+ *   4. Return the patched HTML
  *
- * Regular users are passed through to the React SPA unchanged.
+ * Real users: React mounts normally, full SPA experience
+ * Social bots: they read OG tags, don't execute JS — see correct preview
+ *
+ * No user-agent detection needed — eliminates the entire class of
+ * "bot UA not matched → wrong HTML served" bugs.
  */
 
-const BOT_PATTERN = /facebookexternalhit|twitterbot|whatsapp|telegrambot|linkedinbot|slackbot|discordbot|googlebot|bingbot|applebot|duckduckbot|yandexbot|baiduspider|ia_archiver|embedly|outbrain|quora|pinterest|vkshare|w3c_validator|curl|wget|python-requests/i;
-
-// Hosted on Supabase/Cloudflare CDN — no X-Frame-Options or CSP headers
-// that Netlify's /* rule was injecting and blocking Meta's image proxy.
+const SUPABASE_URL   = "https://dwewfplxnemuwwwutfhq.supabase.co";
 const FALLBACK_IMAGE = "https://dwewfplxnemuwwwutfhq.supabase.co/storage/v1/object/public/blog-images/og-image.jpg";
-const SITE_NAME     = "Kindness Community Foundation";
-const BASE_URL      = "https://kindnesscommunityfoundation.com";
+const SITE_NAME      = "Kindness Community Foundation";
+const BASE_URL       = "https://kindnesscommunityfoundation.com";
 
-function escapeHtml(str) {
+function esc(str) {
   return String(str ?? "")
     .replace(/&/g, "&amp;")
     .replace(/"/g, "&quot;")
@@ -25,28 +28,17 @@ function escapeHtml(str) {
 }
 
 export default async function handler(request, context) {
-  const ua = request.headers.get("user-agent") || "";
-
-  // Let regular users through to the React SPA
-  if (!BOT_PATTERN.test(ua)) {
-    return context.next();
-  }
-
-  // Extract slug from URL path: /blog/:slug
   const url  = new URL(request.url);
   const slug = url.pathname.replace(/^\/blog\//, "").replace(/\/$/, "").trim();
-
   if (!slug) return context.next();
 
-  // Pull Supabase credentials from Netlify env vars
-  const supabaseUrl = Deno.env.get("VITE_SUPABASE_URL");
+  // ── 1. Fetch post from Supabase ──────────────────────────────────────────
   const supabaseKey = Deno.env.get("VITE_SUPABASE_ANON_KEY");
-
-  if (!supabaseUrl || !supabaseKey) return context.next();
+  if (!supabaseKey) return context.next();
 
   let post = null;
   try {
-    const apiUrl = `${supabaseUrl}/rest/v1/blog_posts?slug=eq.${encodeURIComponent(slug)}&published=eq.true&select=title,excerpt,meta_description,image_url,author_name,category,created_at&limit=1`;
+    const apiUrl = `${SUPABASE_URL}/rest/v1/blog_posts?slug=eq.${encodeURIComponent(slug)}&published=eq.true&select=title,excerpt,meta_description,image_url,author_name,created_at&limit=1`;
     const res = await fetch(apiUrl, {
       headers: {
         apikey: supabaseKey,
@@ -59,74 +51,72 @@ export default async function handler(request, context) {
       post = rows[0] ?? null;
     }
   } catch (_) {
-    // On any error fall through to SPA
     return context.next();
   }
 
   if (!post) return context.next();
 
-  const title       = escapeHtml(post.title) + ` | ${SITE_NAME} Blog`;
-  const description = escapeHtml(post.meta_description || post.excerpt || "Read the latest from Kindness Community Foundation.");
-
-  // Ensure image URL is absolute; Supabase storage URLs are already absolute.
-  // If empty/relative, fall back to the branded og-image.jpg.
+  // ── 2. Resolve image URL ─────────────────────────────────────────────────
   let rawImage = post.image_url || "";
-  if (rawImage && !rawImage.startsWith("http://") && !rawImage.startsWith("https://")) {
+  if (rawImage && !rawImage.startsWith("http")) {
     rawImage = BASE_URL + (rawImage.startsWith("/") ? rawImage : "/" + rawImage);
   }
-  // WhatsApp/Telegram cannot render SVG images — fall back to the JPEG fallback.
-  const isSvg = /\.svg(\?|$)/i.test(rawImage);
-  const image = escapeHtml((!rawImage || isSvg) ? FALLBACK_IMAGE : rawImage);
-  const pageUrl     = escapeHtml(`${BASE_URL}/blog/${slug}`);
-  const author      = escapeHtml(post.author_name || SITE_NAME);
+  const isSvgOrEmpty = !rawImage || /\.svg(\?|$)/i.test(rawImage);
+  const imageUrl = isSvgOrEmpty ? FALLBACK_IMAGE : rawImage;
+
+  const title       = esc(post.title) + ` | ${SITE_NAME} Blog`;
+  const description = esc(post.meta_description || post.excerpt || `Read ${post.title} on the KCF Blog.`);
+  const pageUrl     = `${BASE_URL}/blog/${slug}`;
   const pubDate     = post.created_at ? new Date(post.created_at).toISOString() : "";
 
-  const html = `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  // ── 3. Fetch real index.html ─────────────────────────────────────────────
+  let html;
+  try {
+    const indexRes = await fetch(new URL("/index.html", request.url));
+    html = await indexRes.text();
+  } catch (_) {
+    return context.next();
+  }
+
+  // ── 4. Inject / replace OG tags ──────────────────────────────────────────
+  const ogBlock = `
+  <!-- Blog post OG — injected by edge function -->
   <title>${title}</title>
   <meta name="description" content="${description}" />
-  <meta name="author" content="${author}" />
-  ${pubDate ? `<meta name="article:published_time" content="${pubDate}" />` : ""}
-
-  <!-- Open Graph -->
-  <meta property="og:type"        content="article" />
-  <meta property="og:site_name"   content="${SITE_NAME}" />
-  <meta property="og:url"         content="${pageUrl}" />
-  <meta property="og:title"       content="${title}" />
-  <meta property="og:description" content="${description}" />
-  <meta property="og:image"       content="${image}" />
+  <meta property="og:type"         content="article" />
+  <meta property="og:site_name"    content="${esc(SITE_NAME)}" />
+  <meta property="og:url"          content="${esc(pageUrl)}" />
+  <meta property="og:title"        content="${title}" />
+  <meta property="og:description"  content="${description}" />
+  <meta property="og:image"        content="${esc(imageUrl)}" />
   <meta property="og:image:type"   content="image/jpeg" />
   <meta property="og:image:width"  content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt"   content="${escapeHtml(post.title)}" />
-  <meta property="og:locale"      content="en_US" />
+  <meta property="og:locale"       content="en_US" />
   ${pubDate ? `<meta property="article:published_time" content="${pubDate}" />` : ""}
-  ${post.author_name ? `<meta property="article:author" content="${author}" />` : ""}
-
-  <!-- Twitter Card -->
+  ${post.author_name ? `<meta property="article:author" content="${esc(post.author_name)}" />` : ""}
   <meta name="twitter:card"        content="summary_large_image" />
-  <meta name="twitter:site"        content="@KCFKindness" />
   <meta name="twitter:title"       content="${title}" />
   <meta name="twitter:description" content="${description}" />
-  <meta name="twitter:image"       content="${image}" />
-  <meta name="twitter:image:alt"   content="${escapeHtml(post.title)}" />
+  <meta name="twitter:image"       content="${esc(imageUrl)}" />
+  <link rel="canonical"            href="${esc(pageUrl)}" />`;
 
-  <link rel="canonical" href="${pageUrl}" />
-</head>
-<body>
-  <p><a href="${pageUrl}">${escapeHtml(post.title)}</a></p>
-  <p>${description}</p>
-</body>
-</html>`;
+  // Remove existing og:/twitter:/title/description/canonical tags from index.html
+  // then inject the post-specific ones at the top of <head>
+  html = html
+    .replace(/<title>[^<]*<\/title>/gi, "")
+    .replace(/<meta\s+name="description"[^>]*>/gi, "")
+    .replace(/<meta\s+property="og:[^"]*"[^>]*>/gi, "")
+    .replace(/<meta\s+name="twitter:[^"]*"[^>]*>/gi, "")
+    .replace(/<link\s+rel="canonical"[^>]*>/gi, "")
+    .replace(/<head>/, `<head>${ogBlock}`);
 
   return new Response(html, {
     status: 200,
     headers: {
       "Content-Type": "text/html; charset=utf-8",
-      "Cache-Control": "no-cache, no-store, must-revalidate",
+      "Cache-Control": "no-cache",
+      "X-Edge-OG": "injected",
     },
   });
 }
