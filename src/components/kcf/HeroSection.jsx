@@ -1,62 +1,130 @@
-import { useEffect, useRef, useState, useCallback } from "react";
-import { motion, useMotionValue, useSpring, AnimatePresence } from "framer-motion";
-import { useNavigate } from "react-router-dom";
-import * as THREE from "three";
+/**
+ * HeroSection — Futuristic depth-map hero
+ * Exact visual replica of larsen66/hero-futuristic:
+ *  • Pre-rendered 3D blob image + depth map
+ *  • Cell-noise (Worley) dot overlay that follows depth scan
+ *  • Red glow scan line synced to shader progress
+ *  • Depth-based mouse parallax
+ *  • Word-by-word title reveal + subtitle fade
+ *  • "Scroll to explore" bouncing button
+ * Implemented with vanilla Three.js WebGL (no R3F needed)
+ */
+import { useEffect, useRef, useState } from 'react';
+import * as THREE from 'three';
+import { useNavigate } from 'react-router-dom';
 
-/* ─── Magnetic button ──────────────────────────────────────────────────── */
-function useMagnetic(strength = 0.35) {
-  const ref = useRef(null);
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const sx = useSpring(x, { stiffness: 180, damping: 18 });
-  const sy = useSpring(y, { stiffness: 180, damping: 18 });
+/* ─── Textures ────────────────────────────────────────────────────────────── */
+const TEXTURE_URL = 'https://i.postimg.cc/XYwvXN8D/img-4.png';
+const DEPTH_URL   = 'https://i.postimg.cc/2SHKQh2q/raw-4.webp';
 
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const mm = (e) => {
-      const r = el.getBoundingClientRect();
-      x.set((e.clientX - r.left - r.width / 2) * strength);
-      y.set((e.clientY - r.top - r.height / 2) * strength);
-    };
-    const ml = () => { x.set(0); y.set(0); };
-    el.addEventListener("mousemove", mm);
-    el.addEventListener("mouseleave", ml);
-    return () => { el.removeEventListener("mousemove", mm); el.removeEventListener("mouseleave", ml); };
-  }, [x, y, strength]);
+/* ─── Marquee ─────────────────────────────────────────────────────────────── */
+const MARQUEE = [
+  'Community Infrastructure','Ethical Technology','Volunteer Networks',
+  'Transparent Governance','Sustainable Impact','AI-Accelerated Kindness',
+  '47+ Nations','Revenue-Backed Model','Founded 2026','California Nonprofit',
+];
 
-  return { ref, style: { x: sx, y: sy } };
+/* ─── GLSL: Worley cell noise ─────────────────────────────────────────────── */
+const WORLEY_GLSL = /* glsl */`
+float hash21(vec2 p) {
+  p = fract(p * vec2(127.1, 311.7));
+  p += dot(p, p + 19.19);
+  return fract(p.x * p.y);
 }
+float cellNoise(vec2 uv) {
+  vec2 i = floor(uv);
+  vec2 f = fract(uv);
+  float minD = 1.0;
+  for (int y = -1; y <= 1; y++) {
+    for (int x = -1; x <= 1; x++) {
+      vec2 nb = vec2(float(x), float(y));
+      vec2 pt = fract(vec2(hash21(i + nb), hash21(i + nb + 31.41)));
+      float d = length(nb + pt - f);
+      minD = min(minD, d);
+    }
+  }
+  return minD;
+}
+`;
 
-/* ─── Kinetic word cycler ──────────────────────────────────────────────── */
-const WORDS = ["Communities", "Futures", "Ecosystems", "Movements", "Legacies"];
+/* ─── Vertex shader ───────────────────────────────────────────────────────── */
+const VERT = /* glsl */`
+varying vec2 vUv;
+void main() {
+  vUv = uv;
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+}`;
+
+/* ─── Fragment shader ─────────────────────────────────────────────────────── */
+const FRAG = /* glsl */`
+${WORLEY_GLSL}
+
+uniform sampler2D uMap;
+uniform sampler2D uDepth;
+uniform float     uProgress;   /* 0‒1 scan position */
+uniform vec2      uPointer;    /* normalised mouse */
+uniform float     uAspect;
+uniform float     uOpacity;
+
+varying vec2 vUv;
+
+/* Screen blend */
+vec3 screen(vec3 a, vec3 b) { return 1.0 - (1.0 - a) * (1.0 - b); }
+
+void main() {
+  /* depth parallax */
+  float dep  = texture2D(uDepth, vUv).r;
+  vec2  pUv  = vUv + dep * uPointer * 0.01;
+  vec4  col  = texture2D(uMap, pUv);
+
+  /* cell‑noise dot grid */
+  vec2  tUv    = vec2(vUv.x * uAspect, vUv.y);
+  float tiling = 120.0;
+  vec2  tiledUv = mod(tUv * tiling, 2.0) - 1.0;
+  float bright  = cellNoise(tUv * tiling / 2.0);
+  float dist    = length(tiledUv);
+  float dotMask = smoothstep(0.50, 0.49, dist) * bright;
+
+  /* depth scan flow */
+  float flow = 1.0 - smoothstep(0.0, 0.02, abs(dep - uProgress));
+
+  /* red dot mask */
+  vec3 mask = dotMask * flow * vec3(10.0, 0.0, 0.0);
+
+  /* screen blend image + dots */
+  vec3 final = screen(col.rgb, mask);
+
+  gl_FragColor = vec4(final, col.a * uOpacity);
+}`;
+
+/* ─── Cycling kinetic word ────────────────────────────────────────────────── */
+const CYCLE_WORDS = ['Communities', 'Futures', 'Ecosystems', 'Movements', 'Legacies'];
+
 function KineticWord() {
   const [idx, setIdx] = useState(0);
   useEffect(() => {
-    const t = setInterval(() => setIdx(i => (i + 1) % WORDS.length), 2400);
+    const t = setInterval(() => setIdx(i => (i + 1) % CYCLE_WORDS.length), 2400);
     return () => clearInterval(t);
   }, []);
   return (
-    <span className="relative inline-block overflow-hidden align-bottom" style={{ minWidth: "13ch", verticalAlign: "bottom" }}>
-      <AnimatePresence mode="wait">
-        <motion.span
-          key={idx}
-          initial={{ y: 80, opacity: 0, filter: "blur(12px)" }}
-          animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
-          exit={{ y: -80, opacity: 0, filter: "blur(12px)" }}
-          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-          className="inline-block text-transparent bg-clip-text"
-          style={{ backgroundImage: "linear-gradient(135deg, #f43f5e 0%, #ec4899 50%, #f97316 100%)" }}
-        >
-          {WORDS[idx]}
-        </motion.span>
-      </AnimatePresence>
+    <span
+      key={idx}
+      className="kcf-cycle-word"
+      style={{
+        display: 'inline-block',
+        background: 'linear-gradient(135deg,#f43f5e 0%,#ec4899 50%,#f97316 100%)',
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        backgroundClip: 'text',
+      }}
+    >
+      {CYCLE_WORDS[idx]}
     </span>
   );
 }
 
-/* ─── Animated counter ─────────────────────────────────────────────────── */
-function Counter({ end, suffix = "", duration = 2200 }) {
+/* ─── Animated counter ────────────────────────────────────────────────────── */
+function Counter({ end, suffix = '' }) {
   const [val, setVal] = useState(0);
   const ref = useRef(null);
   useEffect(() => {
@@ -64,8 +132,9 @@ function Counter({ end, suffix = "", duration = 2200 }) {
       if (!e.isIntersecting) return;
       ob.disconnect();
       const s = Date.now();
+      const dur = 2000;
       const tick = () => {
-        const p = Math.min((Date.now() - s) / duration, 1);
+        const p = Math.min((Date.now() - s) / dur, 1);
         const ease = 1 - Math.pow(1 - p, 4);
         setVal(Math.round(ease * end));
         if (p < 1) requestAnimationFrame(tick);
@@ -74,475 +143,444 @@ function Counter({ end, suffix = "", duration = 2200 }) {
     });
     if (ref.current) ob.observe(ref.current);
     return () => ob.disconnect();
-  }, [end, duration]);
+  }, [end]);
   return <span ref={ref}>{val}{suffix}</span>;
 }
 
-/* ─── Typing effect ────────────────────────────────────────────────────── */
-function TypingText({ text, delay = 0 }) {
-  const [shown, setShown] = useState(0);
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (shown >= text.length) return;
-      const t = setInterval(() => {
-        setShown(n => {
-          if (n >= text.length) { clearInterval(t); return n; }
-          return n + 1;
-        });
-      }, 28);
-      return () => clearInterval(t);
-    }, delay);
-    return () => clearTimeout(timer);
-  }, [text, delay, shown]);
-  return (
-    <span>
-      {text.slice(0, shown)}
-      {shown < text.length && <span className="animate-pulse text-rose-400">|</span>}
-    </span>
-  );
-}
-
-/* ─── STATS ────────────────────────────────────────────────────────────── */
-const stats = [
-  { value: 6, suffix: "+", label: "Strategic Initiatives" },
-  { value: 47, suffix: "+", label: "Nations Reached" },
-  { value: 100, suffix: "%", label: "Revenue-Backed" },
-  { value: 12, suffix: "K+", label: "Lives Impacted" },
+/* ─── Stats data ──────────────────────────────────────────────────────────── */
+const STATS = [
+  { value: 6,   suffix: '+',  label: 'Strategic Initiatives' },
+  { value: 47,  suffix: '+',  label: 'Nations Reached'       },
+  { value: 100, suffix: '%',  label: 'Revenue-Backed'        },
+  { value: 12,  suffix: 'K+', label: 'Lives Impacted'        },
 ];
 
-/* ─── MARQUEE ITEMS ────────────────────────────────────────────────────── */
-const marqueeItems = [
-  "Community Infrastructure", "Ethical Technology", "Volunteer Networks",
-  "Transparent Governance", "Sustainable Impact", "AI-Accelerated Kindness",
-  "47+ Nations", "Revenue-Backed Model", "Founded 2026", "California Nonprofit",
-];
-
-/* ─── MAIN COMPONENT ───────────────────────────────────────────────────── */
+/* ─── Main Component ─────────────────────────────────────────────────────── */
 export default function HeroSection() {
-  const navigate = useNavigate();
-  const canvasRef = useRef(null);
-  const btn1 = useMagnetic(0.32);
-  const btn2 = useMagnetic(0.32);
-  const cursorOuter = useRef(null);
-  const cursorDot = useRef(null);
-  const trailsRef = useRef([]);
-  const mousePos = useRef({ x: 0, y: 0 });
+  const navigate    = useNavigate();
+  const canvasRef   = useRef(null);
+  const scanLineRef = useRef(null);
+  const opacityRef  = useRef(0);
 
-  /* ── Custom cursor + trail ────────────────────────────────────────────── */
+  /* ── 3-phase word-by-word reveal ──
+     Phase 1: reveal titleWords one by one (600ms each)
+     Phase 2: show KineticWord line after all line-1 words are visible
+     Phase 3: reveal titleWords2 one by one (500ms each)
+     Phase 4: show description + CTA + stats
+  */
+  const titleWords  = ['Building', 'Sustainable'];
+  const titleWords2 = ['for', 'Lasting', 'Impact'];
+
+  const [visibleWords,    setVisibleWords]    = useState(0);
+  const [showCycle,       setShowCycle]       = useState(false);
+  const [visibleWords2,   setVisibleWords2]   = useState(0);
+  const [subtitleVisible, setSubtitleVisible] = useState(false);
+
+  /* Phase 1 — reveal line-1 words */
   useEffect(() => {
-    const NUM_TRAILS = 8;
-    const trails = [];
-    for (let i = 0; i < NUM_TRAILS; i++) {
-      const el = document.createElement("div");
-      el.style.cssText = `
-        position:fixed;top:0;left:0;width:6px;height:6px;border-radius:50%;
-        background:rgba(244,63,94,${0.6 - i * 0.07});
-        pointer-events:none;z-index:9998;transform:translate(-50%,-50%);
-        transition:transform 0.05s linear;will-change:transform;
-      `;
-      document.body.appendChild(el);
-      trails.push({ el, x: 0, y: 0 });
+    if (visibleWords < titleWords.length) {
+      const t = setTimeout(() => setVisibleWords(v => v + 1), 600);
+      return () => clearTimeout(t);
     }
-    trailsRef.current = trails;
+    /* Phase 2 — show KineticWord */
+    const t = setTimeout(() => setShowCycle(true), 300);
+    return () => clearTimeout(t);
+  }, [visibleWords]);
 
-    const onMove = (e) => {
-      mousePos.current = { x: e.clientX, y: e.clientY };
-      if (cursorOuter.current) {
-        cursorOuter.current.style.transform = `translate(${e.clientX - 20}px,${e.clientY - 20}px)`;
-      }
-      if (cursorDot.current) {
-        cursorDot.current.style.transform = `translate(${e.clientX - 3}px,${e.clientY - 3}px)`;
-      }
-    };
-    window.addEventListener("mousemove", onMove, { passive: true });
+  /* Phase 3 — reveal line-3 words after KineticWord appears */
+  useEffect(() => {
+    if (!showCycle) return;
+    if (visibleWords2 < titleWords2.length) {
+      const t = setTimeout(() => setVisibleWords2(v => v + 1), 500);
+      return () => clearTimeout(t);
+    }
+    /* Phase 4 — show description / CTA / stats */
+    const t = setTimeout(() => setSubtitleVisible(true), 400);
+    return () => clearTimeout(t);
+  }, [showCycle, visibleWords2]);
 
-    let raf;
-    const animTrails = () => {
-      let lx = mousePos.current.x, ly = mousePos.current.y;
-      trails.forEach((t, i) => {
-        const speed = 0.35 - i * 0.03;
-        t.x += (lx - t.x) * speed;
-        t.y += (ly - t.y) * speed;
-        t.el.style.transform = `translate(${t.x - 3}px,${t.y - 3}px)`;
-        lx = t.x; ly = t.y;
-      });
-      raf = requestAnimationFrame(animTrails);
-    };
-    animTrails();
-
-    return () => {
-      window.removeEventListener("mousemove", onMove);
-      cancelAnimationFrame(raf);
-      trails.forEach(t => t.el.remove());
-    };
-  }, []);
-
-  /* ── Three.js scene ───────────────────────────────────────────────────── */
+  /* ── Three.js scene ── */
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
+    /* renderer */
     const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setSize(canvas.offsetWidth, canvas.offsetHeight);
+    renderer.setSize(window.innerWidth, window.innerHeight);
 
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(55, canvas.offsetWidth / canvas.offsetHeight, 0.1, 1000);
-    camera.position.z = 6;
+    const scene  = new THREE.Scene();
+    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
 
-    /* particles */
-    const COUNT = 2800;
-    const pos = new Float32Array(COUNT * 3);
-    const col = new Float32Array(COUNT * 3);
-    const sz = new Float32Array(COUNT);
-    for (let i = 0; i < COUNT; i++) {
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.acos(2 * Math.random() - 1);
-      const r = 2.5 + Math.random() * 5;
-      pos[i * 3] = r * Math.sin(phi) * Math.cos(theta);
-      pos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
-      pos[i * 3 + 2] = r * Math.cos(phi);
-      const t = Math.random();
-      col[i * 3] = 0.65 + t * 0.12;
-      col[i * 3 + 1] = 0.18 + t * 0.22;
-      col[i * 3 + 2] = 0.28 + t * 0.30;
-      sz[i] = Math.random() * 2.8 + 0.4;
-    }
-    const geo = new THREE.BufferGeometry();
-    geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
-    geo.setAttribute("color", new THREE.BufferAttribute(col, 3));
-    geo.setAttribute("size", new THREE.BufferAttribute(sz, 1));
+    const aspect = window.innerWidth / window.innerHeight;
+
     const mat = new THREE.ShaderMaterial({
-      vertexColors: true, transparent: true, depthWrite: false,
-      vertexShader: `
-        attribute float size; varying vec3 vColor;
-        void main() {
-          vColor = color;
-          vec4 mv = modelViewMatrix * vec4(position, 1.0);
-          gl_PointSize = size * (280.0 / -mv.z);
-          gl_Position = projectionMatrix * mv;
-        }`,
-      fragmentShader: `
-        varying vec3 vColor;
-        void main() {
-          float d = length(gl_PointCoord - vec2(0.5));
-          if (d > 0.5) discard;
-          float a = 1.0 - smoothstep(0.25, 0.5, d);
-          gl_FragColor = vec4(vColor, a * 0.28);
-        }`,
-    });
-    const particles = new THREE.Points(geo, mat);
-    scene.add(particles);
-
-    /* icosahedron wireframe */
-    const icoGeo = new THREE.IcosahedronGeometry(1.5, 1);
-    const icoMat = new THREE.MeshBasicMaterial({ color: 0xf43f5e, wireframe: true, transparent: true, opacity: 0.06 });
-    const ico = new THREE.Mesh(icoGeo, icoMat);
-    scene.add(ico);
-
-    /* orbital rings */
-    const rings = [];
-    [[2.2, 0.025, 0xff4466, 0.18, 0], [3.1, 0.018, 0x8866ff, 0.09, Math.PI / 3], [4.0, 0.012, 0x44aaff, 0.06, Math.PI / 5]].forEach(([r, t, c, o, rx]) => {
-      const rg = new THREE.TorusGeometry(r, t, 16, 120);
-      const rm = new THREE.MeshBasicMaterial({ color: c, transparent: true, opacity: o });
-      const mesh = new THREE.Mesh(rg, rm);
-      mesh.rotation.x = rx;
-      scene.add(mesh);
-      rings.push(mesh);
+      uniforms: {
+        uMap:      { value: null },
+        uDepth:    { value: null },
+        uProgress: { value: 0 },
+        uPointer:  { value: new THREE.Vector2(0, 0) },
+        uAspect:   { value: aspect },
+        uOpacity:  { value: 0 },
+      },
+      vertexShader:   VERT,
+      fragmentShader: FRAG,
+      transparent: true,
     });
 
-    /* DNA helix */
-    const helixGroup = new THREE.Group();
-    const helixMat1 = new THREE.MeshBasicMaterial({ color: 0xf43f5e, transparent: true, opacity: 0.5 });
-    const helixMat2 = new THREE.MeshBasicMaterial({ color: 0x8866ff, transparent: true, opacity: 0.5 });
-    const bridgeMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.08 });
-    for (let i = 0; i < 40; i++) {
-      const t = (i / 40) * Math.PI * 6;
-      const x1 = Math.cos(t) * 0.45, z1 = Math.sin(t) * 0.45;
-      const x2 = Math.cos(t + Math.PI) * 0.45, z2 = Math.sin(t + Math.PI) * 0.45;
-      const y = (i / 40) * 6 - 3;
-      const sg = new THREE.SphereGeometry(0.04, 8, 8);
-      const s1 = new THREE.Mesh(sg, helixMat1); s1.position.set(x1 + 3.5, y, z1); helixGroup.add(s1);
-      const s2 = new THREE.Mesh(sg, helixMat2); s2.position.set(x2 + 3.5, y, z2); helixGroup.add(s2);
-      if (i % 4 === 0) {
-        const bl = Math.sqrt((x2 - x1) ** 2 + (z2 - z1) ** 2);
-        const bg = new THREE.CylinderGeometry(0.012, 0.012, bl, 6);
-        const bm = new THREE.Mesh(bg, bridgeMat);
-        bm.position.set((x1 + x2) / 2 + 3.5, y, (z1 + z2) / 2);
-        bm.rotation.z = Math.PI / 2;
-        bm.lookAt(new THREE.Vector3(x2 + 3.5, y, z2));
-        helixGroup.add(bm);
-      }
+    /* plane sized to preserve blob image aspect (1:1) */
+    const planeAspect = 1.0;
+    let planeW, planeH;
+    if (aspect >= planeAspect) {
+      planeH = 1.0;
+      planeW = planeAspect / aspect;
+    } else {
+      planeW = 1.0;
+      planeH = aspect / planeAspect;
     }
-    scene.add(helixGroup);
+    const scaleFactor = 0.82;
+    const mesh = new THREE.Mesh(
+      new THREE.PlaneGeometry(planeW * scaleFactor * 2, planeH * scaleFactor * 2),
+      mat,
+    );
+    scene.add(mesh);
 
-    let mx = 0, my = 0;
+    /* load textures */
+    const loader = new THREE.TextureLoader();
+    loader.crossOrigin = 'anonymous';
+    loader.load(TEXTURE_URL, t => { t.colorSpace = THREE.SRGBColorSpace; mat.uniforms.uMap.value = t; });
+    loader.load(DEPTH_URL,   t => { mat.uniforms.uDepth.value = t; });
+
+    /* mouse */
+    let px = 0, py = 0;
     const onMM = (e) => {
-      mx = (e.clientX / window.innerWidth - 0.5) * 2;
-      my = -(e.clientY / window.innerHeight - 0.5) * 2;
+      px = (e.clientX / window.innerWidth  - 0.5) * 2;
+      py = (e.clientY / window.innerHeight - 0.5) * 2;
     };
-    window.addEventListener("mousemove", onMM, { passive: true });
+    window.addEventListener('mousemove', onMM, { passive: true });
 
-    const clock = new THREE.Clock();
+    /* animate */
     let animId;
-    const animate = () => {
-      animId = requestAnimationFrame(animate);
+    const clock = new THREE.Clock();
+    const tick = () => {
+      animId = requestAnimationFrame(tick);
       const t = clock.getElapsedTime();
-      particles.rotation.y = t * 0.035 + mx * 0.12;
-      particles.rotation.x = t * 0.018 + my * 0.06;
-      ico.rotation.x = t * 0.22;
-      ico.rotation.y = t * 0.14;
-      ico.rotation.z = t * 0.08;
-      rings[0].rotation.z = t * 0.18;
-      rings[1].rotation.z = -t * 0.12;
-      rings[1].rotation.x = Math.PI / 3 + t * 0.08;
-      rings[2].rotation.z = t * 0.09;
-      rings[2].rotation.y = t * 0.05;
-      helixGroup.rotation.y = t * 0.25 + mx * 0.1;
+
+      const progress = Math.sin(t * 0.5) * 0.5 + 0.5;
+      mat.uniforms.uProgress.value = progress;
+
+      mat.uniforms.uPointer.value.x += (px - mat.uniforms.uPointer.value.x) * 0.08;
+      mat.uniforms.uPointer.value.y += (py - mat.uniforms.uPointer.value.y) * 0.08;
+
+      if (mat.uniforms.uMap.value && mat.uniforms.uDepth.value) {
+        opacityRef.current = THREE.MathUtils.lerp(opacityRef.current, 1, 0.07);
+        mat.uniforms.uOpacity.value = opacityRef.current;
+      }
+
+      /* sync red scan line DOM element */
+      if (scanLineRef.current) {
+        const pct = progress * 100;
+        scanLineRef.current.style.top = `${pct}%`;
+        const glow = Math.max(0, Math.sin(progress * Math.PI));
+        scanLineRef.current.style.opacity = (0.5 + glow * 0.5).toString();
+      }
+
       renderer.render(scene, camera);
     };
-    animate();
+    tick();
 
+    /* resize */
     const onResize = () => {
-      if (!canvas) return;
-      renderer.setSize(canvas.offsetWidth, canvas.offsetHeight);
-      camera.aspect = canvas.offsetWidth / canvas.offsetHeight;
-      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      mat.uniforms.uAspect.value = window.innerWidth / window.innerHeight;
     };
-    window.addEventListener("resize", onResize);
+    window.addEventListener('resize', onResize);
 
     return () => {
       cancelAnimationFrame(animId);
-      window.removeEventListener("mousemove", onMM);
-      window.removeEventListener("resize", onResize);
+      window.removeEventListener('mousemove', onMM);
+      window.removeEventListener('resize', onResize);
       renderer.dispose();
     };
   }, []);
 
-  const scrollTo = useCallback((href) => {
-    const el = document.querySelector(href);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
-      return;
-    }
-    window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
-    const interval = setInterval(() => {
-      const target = document.querySelector(href);
-      if (target) {
-        clearInterval(interval);
-        target.scrollIntoView({ behavior: "smooth" });
-      }
-    }, 100);
-    setTimeout(() => clearInterval(interval), 5000);
-  }, []);
 
   return (
     <>
-      {/* Custom cursor */}
-      <div ref={cursorOuter} className="fixed top-0 left-0 w-10 h-10 rounded-full border border-rose-400/30 pointer-events-none z-[9999] hidden lg:block"
-        style={{ willChange: "transform", mixBlendMode: "difference", transition: "transform 0.08s linear" }} />
-      <div ref={cursorDot} className="fixed top-0 left-0 w-1.5 h-1.5 rounded-full bg-rose-400 pointer-events-none z-[9999] hidden lg:block"
-        style={{ willChange: "transform" }} />
+      {/* ══ HERO ══════════════════════════════════════════════════════════ */}
+      <div style={{ height: '100svh', position: 'relative', background: '#000', overflow: 'hidden' }}>
 
-      <section id="home" className="relative min-h-screen flex flex-col overflow-hidden" style={{ background: "#030712" }}>
-        {/* THREE.js canvas */}
-        <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none" />
+        {/* Three.js canvas */}
+        <canvas
+          ref={canvasRef}
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', zIndex: 10, pointerEvents: 'none' }}
+        />
 
-        {/* Layered ambient glows */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-[-10%] left-[20%] w-[700px] h-[700px] rounded-full blur-[160px]"
-            style={{ background: "radial-gradient(circle, rgba(244,63,94,0.04) 0%, transparent 70%)" }} />
-          <div className="absolute top-[30%] right-[-5%] w-[500px] h-[500px] rounded-full blur-[140px]"
-            style={{ background: "radial-gradient(circle, rgba(136,102,255,0.07) 0%, transparent 70%)" }} />
-          <div className="absolute bottom-[10%] left-[-5%] w-[400px] h-[400px] rounded-full blur-[120px]"
-            style={{ background: "radial-gradient(circle, rgba(68,170,255,0.05) 0%, transparent 70%)" }} />
-        </div>
+        {/* Red scan line — synced to shader progress via DOM ref */}
+        <div
+          ref={scanLineRef}
+          style={{
+            position: 'absolute', left: 0, right: 0,
+            height: 2, zIndex: 15, pointerEvents: 'none',
+            background: 'linear-gradient(90deg,transparent 0%,rgba(239,68,68,0.9) 20%,#ef4444 50%,rgba(239,68,68,0.9) 80%,transparent 100%)',
+            boxShadow: '0 0 12px 4px rgba(239,68,68,0.6), 0 0 40px 10px rgba(239,68,68,0.25)',
+            transform: 'translateY(-50%)',
+          }}
+        />
 
-        {/* Grid */}
-        <div className="absolute inset-0 opacity-[0.025] pointer-events-none" style={{
-          backgroundImage: "linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)",
-          backgroundSize: "72px 72px",
-          maskImage: "radial-gradient(ellipse 85% 85% at 50% 50%, black 0%, transparent 100%)"
-        }} />
-
-        {/* Noise */}
-        <div className="absolute inset-0 opacity-[0.018] pointer-events-none" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-          backgroundSize: "180px 180px"
-        }} />
-
-        {/* Main content */}
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 pt-20 sm:pt-28 lg:pt-36 pb-8 sm:pb-12 lg:pb-16 w-full flex-1 flex flex-col justify-center items-center text-center">
-
-          {/* Live badge */}
-          <motion.div
-            initial={{ opacity: 0, y: -24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-            className="mb-5 sm:mb-8 lg:mb-10"
-          >
-            <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-white/[0.08]"
-              style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)" }}>
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-70" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500" />
-              </span>
-              <span className="text-white/45 text-[11px] tracking-[0.25em] uppercase font-medium">
-                <TypingText text="Building the future of kindness" delay={800} />
-              </span>
-            </div>
-          </motion.div>
-
-          {/* Headline */}
-          <div className="max-w-5xl mb-4 sm:mb-6 lg:mb-8 w-full">
-            <motion.h1
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.9, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-              className="font-black text-white leading-[1.03] tracking-tight"
-              style={{
-                fontSize: "clamp(2.2rem, 8vw, 5.8rem)",
-                fontFamily: "'Inter', system-ui, sans-serif"
-              }}
-            >
-              Building Sustainable
-              <br />
-              <KineticWord />
-              <br />
-              <span className="relative">
-                for Lasting Impact
-                <motion.span
-                  initial={{ scaleX: 0 }}
-                  animate={{ scaleX: 1 }}
-                  transition={{ duration: 1.2, delay: 1.4, ease: [0.22, 1, 0.36, 1] }}
-                  className="absolute -bottom-2 left-0 right-0 h-[2px] origin-left"
-                  style={{ background: "linear-gradient(90deg, #f43f5e 0%, #ec4899 50%, transparent 100%)" }}
-                />
-              </span>
-            </motion.h1>
-          </div>
-
-          {/* Sub */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.5 }}
-            className="text-white/80 font-semibold leading-relaxed max-w-xl mb-6 sm:mb-8 lg:mb-12"
-            style={{ fontSize: "clamp(0.95rem, 2.2vw, 1.35rem)" }}
-          >
-            Kindness Community Foundation reinventing giving through kindness and helping others, empowering communities with technology, ethical commerce, and structured opportunities to amplify humanity.
-          </motion.p>
-
-          {/* CTAs */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.68 }}
-            className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-8 sm:mb-14 lg:mb-24 justify-center w-full sm:w-auto"
-          >
-            <motion.button
-              ref={btn1.ref}
-              style={btn1.style}
-              onClick={() => navigate('/hub')}
-              className="group relative inline-flex items-center gap-3 px-8 py-4 rounded-2xl text-white font-bold overflow-hidden text-sm"
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-            >
-              <span className="absolute inset-0 transition-all duration-300"
-                style={{ background: "linear-gradient(135deg, #f43f5e 0%, #ec4899 60%, #f97316 100%)" }} />
-              <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.18) 0%, transparent 60%)" }} />
-              {/* shimmer */}
-              <span className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"
-                style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent)", skewX: "-15deg" }} />
-              <span className="relative z-10">Explore Team Portal</span>
-              <motion.span className="relative z-10 text-lg" whileHover={{ x: 5 }} transition={{ type: "spring", stiffness: 400 }}>→</motion.span>
-            </motion.button>
-
-            <motion.button
-              ref={btn2.ref}
-              style={{ ...btn2.style, background: "rgba(255,255,255,0.04)", backdropFilter: "blur(14px)" }}
-              onClick={() => scrollTo("#contact")}
-              className="group relative inline-flex items-center gap-3 px-8 py-4 rounded-2xl text-white font-semibold border border-white/[0.08] overflow-hidden text-sm"
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-            >
-              <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/5" />
-              <span className="relative z-10">Volunteer With Us</span>
-              <span className="relative z-10 text-white/30 group-hover:text-white/70 transition-colors duration-300">↗</span>
-            </motion.button>
-          </motion.div>
-
-          {/* Stats */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.9 }}
-            className="grid grid-cols-2 lg:grid-cols-4 gap-3"
-          >
-            {stats.map((s, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 24 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.05 + i * 0.09 }}
-                whileHover={{ y: -6, transition: { duration: 0.2 } }}
-                className="relative group px-6 py-5 rounded-2xl border border-white/[0.05] cursor-default overflow-hidden"
-                style={{ background: "rgba(255,255,255,0.025)", backdropFilter: "blur(10px)" }}
-              >
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"
-                  style={{ background: "radial-gradient(circle at 50% -10%, rgba(244,63,94,0.1) 0%, transparent 70%)" }} />
-                <div className="absolute top-0 left-0 right-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                  style={{ background: "linear-gradient(90deg, transparent, rgba(244,63,94,0.5), transparent)" }} />
-                <div className="text-3xl font-black text-white mb-1" style={{ fontVariantNumeric: "tabular-nums" }}>
-                  <Counter end={s.value} suffix={s.suffix} />
-                </div>
-                <div className="text-xs text-white/30 font-medium tracking-wide">{s.label}</div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-
-        {/* Marquee ticker */}
-        <div className="relative z-10 border-t border-white/[0.05] overflow-hidden py-4"
-          style={{ background: "rgba(0,0,0,0.25)", backdropFilter: "blur(10px)" }}>
-          <div className="flex whitespace-nowrap animate-[marquee_28s_linear_infinite]">
-            {[...marqueeItems, ...marqueeItems, ...marqueeItems].map((item, i) => (
-              <span key={i} className="inline-flex items-center gap-4 mx-4 text-xs font-semibold tracking-[0.18em] uppercase text-white/25">
-                {item}
-                <span className="text-rose-500/40">◆</span>
-              </span>
-            ))}
-          </div>
-        </div>
-
-        {/* Bottom fade */}
-        <div className="absolute bottom-16 left-0 right-0 h-20 pointer-events-none"
-          style={{ background: "linear-gradient(to top, #030712 0%, transparent 100%)" }} />
-
-        {/* Scroll indicator */}
-        <motion.div
-          className="absolute bottom-20 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-10"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2.2 }}
+        {/* ── Text overlay ── */}
+        <div
+          style={{
+            position: 'absolute', inset: 0, zIndex: 20,
+            display: 'flex', flexDirection: 'column', justifyContent: 'center',
+            padding: 'clamp(5rem,8vw,7rem) clamp(1.5rem,5vw,3rem) 5rem',
+            pointerEvents: 'none',
+            maxWidth: 860,
+            overflow: 'hidden',
+          }}
         >
-          <span className="text-white/15 text-[9px] tracking-[0.4em] uppercase">Scroll</span>
-          <div className="w-[1px] h-10 overflow-hidden" style={{ background: "rgba(255,255,255,0.08)" }}>
-            <motion.div
-              className="w-full h-5 bg-gradient-to-b from-rose-400/60 to-transparent"
-              animate={{ y: ["0%", "200%"] }}
-              transition={{ duration: 1.4, repeat: Infinity, ease: "linear" }}
-            />
+          {/* Badge */}
+          <div
+            className="kcf-badge-in"
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
+              marginBottom: '1rem',
+            }}
+          >
+            <span style={{ position: 'relative', display: 'inline-flex' }}>
+              <span style={{
+                width: 8, height: 8, borderRadius: '50%',
+                background: '#f43f5e', display: 'inline-block',
+              }} />
+              <span className="kcf-ping" />
+            </span>
+            <span style={{
+              fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.18em',
+              textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)',
+            }}>
+              Building the Future of Kindness
+            </span>
           </div>
-        </motion.div>
-      </section>
 
-      {/* Marquee keyframe */}
+          {/* ── Headline 3-line ── */}
+          <div style={{
+            fontSize: 'clamp(2rem,5.5vw,5rem)',
+            fontWeight: 900, lineHeight: 1.02,
+            fontFamily: "'Inter',system-ui,sans-serif",
+          }}>
+
+            {/* Line 1: Building Sustainable */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.2em', color: '#fff', overflow: 'hidden' }}>
+              {titleWords.map((word, i) => (
+                <span
+                  key={i}
+                  className={i < visibleWords ? 'kcf-word-in' : ''}
+                  style={{
+                    display: 'inline-block',
+                    animationDelay: `${i * 0.13}s`,
+                    opacity: i < visibleWords ? undefined : 0,
+                  }}
+                >
+                  {word}
+                </span>
+              ))}
+            </div>
+
+            {/* Line 2: KineticWord (cycling) */}
+            <div style={{
+              overflow: 'hidden', lineHeight: 1.1,
+              opacity: showCycle ? 1 : 0,
+              transform: showCycle ? 'translateY(0)' : 'translateY(32px)',
+              transition: 'opacity 0.55s cubic-bezier(0.22,1,0.36,1), transform 0.55s cubic-bezier(0.22,1,0.36,1)',
+            }}>
+              {showCycle && <KineticWord />}
+            </div>
+
+            {/* Line 3: for Lasting Impact */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.2em', color: '#fff', overflow: 'hidden' }}>
+              {titleWords2.map((word, i) => (
+                <span
+                  key={i}
+                  className={i < visibleWords2 ? 'kcf-word-in' : ''}
+                  style={{
+                    display: 'inline-block',
+                    animationDelay: `${i * 0.13}s`,
+                    opacity: i < visibleWords2 ? undefined : 0,
+                  }}
+                >
+                  {word}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* ── Description ── */}
+          <div style={{
+            marginTop: '1rem',
+            opacity: subtitleVisible ? 1 : 0,
+            transform: subtitleVisible ? 'translateY(0)' : 'translateY(14px)',
+            transition: 'opacity 0.65s ease, transform 0.65s ease',
+            maxWidth: 540,
+          }}>
+            <p style={{
+              fontSize: 'clamp(0.85rem,1.6vw,1.05rem)',
+              color: 'rgba(255,255,255,0.62)',
+              lineHeight: 1.7,
+              fontWeight: 400,
+              margin: 0,
+            }}>
+              Kindness Community Foundation reinventing giving through kindness and helping others,
+              empowering communities with technology, ethical commerce, and structured opportunities
+              to amplify humanity.
+            </p>
+          </div>
+
+          {/* ── CTA Buttons ── */}
+          <div
+            style={{
+              display: 'flex', flexWrap: 'wrap', gap: '0.75rem',
+              marginTop: '1.25rem', pointerEvents: 'auto',
+              opacity: subtitleVisible ? 1 : 0,
+              transform: subtitleVisible ? 'translateY(0)' : 'translateY(14px)',
+              transition: 'opacity 0.65s ease 0.1s, transform 0.65s ease 0.1s',
+            }}
+          >
+            <button
+              onClick={() => navigate('/volunteer')}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
+                padding: '0.85rem 1.8rem', borderRadius: 999,
+                background: 'linear-gradient(135deg,#f43f5e,#ec4899)',
+                color: '#fff', fontWeight: 700, fontSize: '0.875rem',
+                border: 'none', cursor: 'pointer', transition: 'opacity 0.2s',
+              }}
+              onMouseEnter={e => e.currentTarget.style.opacity = '0.85'}
+              onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+            >
+              Volunteer With Us →
+            </button>
+            <button
+              onClick={() => { const el = document.querySelector('#initiatives'); if (el) el.scrollIntoView({ behavior: 'smooth' }); }}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
+                padding: '0.85rem 1.8rem', borderRadius: 999,
+                background: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(12px)',
+                color: '#fff', fontWeight: 600, fontSize: '0.875rem',
+                border: '1.5px solid rgba(255,255,255,0.3)', cursor: 'pointer',
+                transition: 'border-color 0.2s',
+              }}
+              onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(255,255,255,0.6)'}
+              onMouseLeave={e => e.currentTarget.style.borderColor = 'rgba(255,255,255,0.3)'}
+            >
+              Explore Initiatives ↗
+            </button>
+          </div>
+
+          {/* ── Stats ── */}
+          <div
+            style={{
+              display: 'flex', flexWrap: 'wrap', gap: '1.25rem',
+              marginTop: '1.5rem',
+              opacity: subtitleVisible ? 1 : 0,
+              transform: subtitleVisible ? 'translateY(0)' : 'translateY(14px)',
+              transition: 'opacity 0.65s ease 0.2s, transform 0.65s ease 0.2s',
+            }}
+          >
+            {STATS.map(({ value, suffix, label }) => (
+              <div
+                key={label}
+                style={{
+                  padding: '0.85rem 1.25rem',
+                  borderRadius: 12,
+                  background: 'rgba(255,255,255,0.05)',
+                  backdropFilter: 'blur(12px)',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  minWidth: 100,
+                }}
+              >
+                <div style={{
+                  fontSize: 'clamp(1.5rem,3vw,2.25rem)',
+                  fontWeight: 800, color: '#fff', lineHeight: 1,
+                }}>
+                  <Counter end={value} suffix={suffix} />
+                </div>
+                <div style={{
+                  fontSize: '0.7rem', fontWeight: 600, letterSpacing: '0.1em',
+                  textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)',
+                  marginTop: '0.3rem',
+                }}>
+                  {label}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+      </div>
+
+      {/* ══ Marquee ticker ════════════════════════════════════════════════ */}
+      <div style={{ background: '#000', borderTop: '1px solid rgba(255,255,255,0.06)', overflow: 'hidden', padding: '1rem 0', position: 'relative', zIndex: 10 }}>
+        <div className="kcf-marquee-track">
+          {[...MARQUEE, ...MARQUEE, ...MARQUEE].map((item, i) => (
+            <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: '1rem', margin: '0 1rem', fontSize: '0.75rem', fontWeight: 600, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', whiteSpace: 'nowrap' }}>
+              {item}
+              <span style={{ color: 'rgba(244,63,94,0.4)' }}>◆</span>
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* ══ Styles ════════════════════════════════════════════════════════ */}
       <style>{`
-        @keyframes marquee {
-          from { transform: translateX(0); }
-          to { transform: translateX(-33.333%); }
+        /* badge fade-in */
+        @keyframes kcf-badge-in {
+          from { opacity:0; transform:translateY(-8px); }
+          to   { opacity:1; transform:translateY(0); }
+        }
+        .kcf-badge-in {
+          animation: kcf-badge-in 0.7s ease forwards;
+        }
+
+        /* animated ping dot on badge */
+        .kcf-ping {
+          position: absolute;
+          inset: 0;
+          border-radius: 50%;
+          background: #f43f5e;
+          animation: kcf-ping 1.5s ease-out infinite;
+        }
+        @keyframes kcf-ping {
+          0%   { transform: scale(1); opacity: 0.7; }
+          100% { transform: scale(2.5); opacity: 0; }
+        }
+
+        /* word entrance */
+        @keyframes kcf-word-in {
+          from { opacity:0; transform:translateY(42px); clip-path:inset(0 0 100% 0); }
+          to   { opacity:1; transform:translateY(0);    clip-path:inset(0 0 0%   0); }
+        }
+        .kcf-word-in {
+          animation: kcf-word-in 0.55s cubic-bezier(0.22,1,0.36,1) forwards;
+        }
+
+        /* kinetic cycling word */
+        @keyframes kcf-cycle-word {
+          from { opacity:0; transform:translateY(32px) scaleY(0.8); clip-path:inset(0 0 100% 0); }
+          to   { opacity:1; transform:translateY(0)    scaleY(1);   clip-path:inset(0 0 0%   0); }
+        }
+        .kcf-cycle-word {
+          animation: kcf-cycle-word 0.5s cubic-bezier(0.22,1,0.36,1) forwards;
+        }
+
+        /* marquee */
+        .kcf-marquee-track {
+          display: flex;
+          white-space: nowrap;
+          animation: kcf-marquee 28s linear infinite;
+        }
+        @keyframes kcf-marquee {
+          from { transform:translateX(0); }
+          to   { transform:translateX(-33.333%); }
         }
       `}</style>
     </>
