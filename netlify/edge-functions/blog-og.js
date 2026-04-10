@@ -68,12 +68,14 @@ export default async function handler(request, context) {
   const description = escapeHtml(post.meta_description || post.excerpt || "Read the latest from Kindness Community Foundation.");
 
   // Ensure image URL is absolute; Supabase storage URLs are already absolute.
-  // If empty/relative, fall back to the branded og-image.png.
+  // If empty/relative, fall back to the branded og-image.jpg.
   let rawImage = post.image_url || "";
   if (rawImage && !rawImage.startsWith("http://") && !rawImage.startsWith("https://")) {
     rawImage = BASE_URL + (rawImage.startsWith("/") ? rawImage : "/" + rawImage);
   }
-  const image = escapeHtml(rawImage || FALLBACK_IMAGE);
+  // WhatsApp/Telegram cannot render SVG images — fall back to the JPEG fallback.
+  const isSvg = /\.svg(\?|$)/i.test(rawImage);
+  const image = escapeHtml((!rawImage || isSvg) ? FALLBACK_IMAGE : rawImage);
   const pageUrl     = escapeHtml(`${BASE_URL}/blog/${slug}`);
   const author      = escapeHtml(post.author_name || SITE_NAME);
   const pubDate     = post.created_at ? new Date(post.created_at).toISOString() : "";
