@@ -332,11 +332,10 @@ export default function HeroSection() {
         <div
           style={{
             position: 'absolute', inset: 0, zIndex: 20,
-            display: 'flex', flexDirection: 'column', justifyContent: 'center',
-            padding: 'clamp(5rem,8vw,7rem) clamp(1.5rem,5vw,3rem) 5rem',
+            display: 'flex', flexDirection: 'column', justifyContent: 'flex-start',
+            padding: 'clamp(5.5rem,9vw,7rem) clamp(1.5rem,5vw,3rem) 2rem',
             pointerEvents: 'none',
             maxWidth: 860,
-            overflow: 'hidden',
           }}
         >
           {/* Badge */}
@@ -460,7 +459,7 @@ export default function HeroSection() {
               Volunteer With Us →
             </button>
             <button
-              onClick={() => { const el = document.querySelector('#initiatives'); if (el) el.scrollIntoView({ behavior: 'smooth' }); }}
+              onClick={() => navigate('/hub')}
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
                 padding: '0.85rem 1.8rem', borderRadius: 999,
@@ -472,7 +471,7 @@ export default function HeroSection() {
               onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(255,255,255,0.6)'}
               onMouseLeave={e => e.currentTarget.style.borderColor = 'rgba(255,255,255,0.3)'}
             >
-              Explore Initiatives ↗
+              Explore Team Portal ↗
             </button>
           </div>
 
