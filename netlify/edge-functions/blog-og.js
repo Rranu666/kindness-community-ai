@@ -113,12 +113,11 @@ export default async function handler(request, context) {
   <meta name="twitter:image"       content="${image}" />
   <meta name="twitter:image:alt"   content="${escapeHtml(post.title)}" />
 
-  <!-- Canonical + redirect real users to the SPA -->
   <link rel="canonical" href="${pageUrl}" />
-  <meta http-equiv="refresh" content="0;url=${pageUrl}" />
 </head>
 <body>
   <p><a href="${pageUrl}">${escapeHtml(post.title)}</a></p>
+  <p>${description}</p>
 </body>
 </html>`;
 
