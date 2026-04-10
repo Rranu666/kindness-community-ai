@@ -333,8 +333,8 @@ export default function HeroSection() {
           className="kcf-hero-text"
           style={{
             position: 'absolute', inset: 0, zIndex: 20,
-            display: 'flex', flexDirection: 'column', justifyContent: 'flex-start',
-            padding: 'clamp(3.8rem,6.5vw,5rem) clamp(1.5rem,5vw,3rem) 1rem',
+            display: 'flex', flexDirection: 'column', justifyContent: 'center',
+            padding: 'clamp(4.5rem,8vw,6rem) clamp(1.5rem,5vw,3rem) clamp(4rem,6vw,5rem)',
             pointerEvents: 'none',
             maxWidth: 860,
           }}
@@ -516,6 +516,25 @@ export default function HeroSection() {
           </div>
         </div>
 
+        {/* ── Scroll-down arrow ── */}
+        <button
+          className="kcf-scroll-arrow"
+          onClick={() => window.scrollBy({ top: window.innerHeight, behavior: 'smooth' })}
+          style={{
+            position: 'absolute', bottom: '1.75rem', left: '50%', transform: 'translateX(-50%)',
+            zIndex: 30, background: 'rgba(244,63,94,0.85)', border: 'none', cursor: 'pointer',
+            width: 44, height: 44, borderRadius: '50%',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            boxShadow: '0 0 0 0 rgba(244,63,94,0.5)',
+            pointerEvents: 'auto',
+          }}
+          aria-label="Scroll down"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 5v14M5 12l7 7 7-7" />
+          </svg>
+        </button>
+
       </div>
 
       {/* ══ Marquee ticker ════════════════════════════════════════════════ */}
@@ -534,7 +553,7 @@ export default function HeroSection() {
       <style>{`
         /* mobile compact overrides */
         @media (max-width: 640px) {
-          .kcf-hero-text { padding-top: 3.5rem !important; }
+          .kcf-hero-text { padding: 4rem 1.25rem 4.5rem !important; }
           .kcf-headline  { font-size: clamp(1.6rem,7.5vw,2.4rem) !important; }
           .kcf-desc      { font-size: 0.8rem !important; }
         }
@@ -577,6 +596,15 @@ export default function HeroSection() {
         }
         .kcf-cycle-word {
           animation: kcf-cycle-word 0.5s cubic-bezier(0.22,1,0.36,1) forwards;
+        }
+
+        /* scroll arrow pulse */
+        @keyframes kcf-arrow-pulse {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(244,63,94,0.45); transform: translateX(-50%) translateY(0); }
+          50%       { box-shadow: 0 0 0 10px rgba(244,63,94,0); transform: translateX(-50%) translateY(4px); }
+        }
+        .kcf-scroll-arrow {
+          animation: kcf-arrow-pulse 2s ease-in-out infinite !important;
         }
 
         /* marquee */
