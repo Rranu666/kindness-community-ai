@@ -10,8 +10,8 @@
 
 const BOT_PATTERN = /facebookexternalhit|twitterbot|whatsapp|telegrambot|linkedinbot|slackbot|discordbot|googlebot|bingbot|applebot|duckduckbot|yandexbot|baiduspider|ia_archiver|embedly|outbrain|quora|pinterest|vkshare|w3c_validator|curl|wget|python-requests/i;
 
-const FALLBACK_IMAGE = "https://kindnesscommunityfoundation.com/og-image.png";
-// ^^^ 1200×630 branded PNG in /public/og-image.png
+const FALLBACK_IMAGE = "https://kindnesscommunityfoundation.com/og-image.jpg";
+// ^^^ 1200×630 flat JPEG (no alpha) in /public/og-image.jpg — WhatsApp-safe
 const SITE_NAME     = "Kindness Community Foundation";
 const BASE_URL      = "https://kindnesscommunityfoundation.com";
 
@@ -95,6 +95,7 @@ export default async function handler(request, context) {
   <meta property="og:title"       content="${title}" />
   <meta property="og:description" content="${description}" />
   <meta property="og:image"       content="${image}" />
+  <meta property="og:image:type"   content="image/jpeg" />
   <meta property="og:image:width"  content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:alt"   content="${escapeHtml(post.title)}" />
