@@ -10,8 +10,9 @@
 
 const BOT_PATTERN = /facebookexternalhit|twitterbot|whatsapp|telegrambot|linkedinbot|slackbot|discordbot|googlebot|bingbot|applebot|duckduckbot|yandexbot|baiduspider|ia_archiver|embedly|outbrain|quora|pinterest|vkshare|w3c_validator|curl|wget|python-requests/i;
 
-const FALLBACK_IMAGE = "https://kindnesscommunityfoundation.com/og-image.jpg";
-// ^^^ 1200×630 flat JPEG (no alpha) in /public/og-image.jpg — WhatsApp-safe
+// Hosted on Supabase/Cloudflare CDN — no X-Frame-Options or CSP headers
+// that Netlify's /* rule was injecting and blocking Meta's image proxy.
+const FALLBACK_IMAGE = "https://dwewfplxnemuwwwutfhq.supabase.co/storage/v1/object/public/blog-images/og-image.jpg";
 const SITE_NAME     = "Kindness Community Foundation";
 const BASE_URL      = "https://kindnesscommunityfoundation.com";
 
