@@ -11,6 +11,7 @@
 const BOT_PATTERN = /facebookexternalhit|twitterbot|whatsapp|telegrambot|linkedinbot|slackbot|discordbot|googlebot|bingbot|applebot|duckduckbot|yandexbot|baiduspider|ia_archiver|embedly|outbrain|quora|pinterest|vkshare|w3c_validator|curl|wget|python-requests/i;
 
 const FALLBACK_IMAGE = "https://kindnesscommunityfoundation.com/og-image.png";
+// ^^^ 1200×630 branded PNG in /public/og-image.png
 const SITE_NAME     = "Kindness Community Foundation";
 const BASE_URL      = "https://kindnesscommunityfoundation.com";
 
@@ -65,7 +66,14 @@ export default async function handler(request, context) {
 
   const title       = escapeHtml(post.title) + ` | ${SITE_NAME} Blog`;
   const description = escapeHtml(post.meta_description || post.excerpt || "Read the latest from Kindness Community Foundation.");
-  const image       = escapeHtml(post.image_url || FALLBACK_IMAGE);
+
+  // Ensure image URL is absolute; Supabase storage URLs are already absolute.
+  // If empty/relative, fall back to the branded og-image.png.
+  let rawImage = post.image_url || "";
+  if (rawImage && !rawImage.startsWith("http://") && !rawImage.startsWith("https://")) {
+    rawImage = BASE_URL + (rawImage.startsWith("/") ? rawImage : "/" + rawImage);
+  }
+  const image = escapeHtml(rawImage || FALLBACK_IMAGE);
   const pageUrl     = escapeHtml(`${BASE_URL}/blog/${slug}`);
   const author      = escapeHtml(post.author_name || SITE_NAME);
   const pubDate     = post.created_at ? new Date(post.created_at).toISOString() : "";
