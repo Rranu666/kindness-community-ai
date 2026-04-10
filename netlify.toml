@@ -5,6 +5,11 @@
 [build.environment]
   NODE_VERSION = "20"
 
+# Blog post OG tags edge function — must come before the SPA fallback redirect
+[[edge_functions]]
+  path = "/blog/*"
+  function = "blog-og"
+
 # SPA fallback — all routes served by index.html
 [[redirects]]
   from = "/*"
