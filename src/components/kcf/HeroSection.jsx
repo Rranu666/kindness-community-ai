@@ -330,10 +330,11 @@ export default function HeroSection() {
 
         {/* ── Text overlay ── */}
         <div
+          className="kcf-hero-text"
           style={{
             position: 'absolute', inset: 0, zIndex: 20,
             display: 'flex', flexDirection: 'column', justifyContent: 'flex-start',
-            padding: 'clamp(5.5rem,9vw,7rem) clamp(1.5rem,5vw,3rem) 2rem',
+            padding: 'clamp(3.8rem,6.5vw,5rem) clamp(1.5rem,5vw,3rem) 1rem',
             pointerEvents: 'none',
             maxWidth: 860,
           }}
@@ -343,7 +344,7 @@ export default function HeroSection() {
             className="kcf-badge-in"
             style={{
               display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
-              marginBottom: '1rem',
+              marginBottom: '0.5rem',
             }}
           >
             <span style={{ position: 'relative', display: 'inline-flex' }}>
@@ -362,9 +363,9 @@ export default function HeroSection() {
           </div>
 
           {/* ── Headline 3-line ── */}
-          <div style={{
-            fontSize: 'clamp(2rem,5.5vw,5rem)',
-            fontWeight: 900, lineHeight: 1.02,
+          <div className="kcf-headline" style={{
+            fontSize: 'clamp(1.45rem,4vw,4rem)',
+            fontWeight: 900, lineHeight: 1.05,
             fontFamily: "'Inter',system-ui,sans-serif",
           }}>
 
@@ -415,16 +416,16 @@ export default function HeroSection() {
 
           {/* ── Description ── */}
           <div style={{
-            marginTop: '1rem',
+            marginTop: '0.6rem',
             opacity: subtitleVisible ? 1 : 0,
             transform: subtitleVisible ? 'translateY(0)' : 'translateY(14px)',
             transition: 'opacity 0.65s ease, transform 0.65s ease',
             maxWidth: 540,
           }}>
-            <p style={{
+            <p className="kcf-desc" style={{
               fontSize: 'clamp(0.85rem,1.6vw,1.05rem)',
               color: 'rgba(255,255,255,0.62)',
-              lineHeight: 1.7,
+              lineHeight: 1.6,
               fontWeight: 400,
               margin: 0,
             }}>
@@ -437,8 +438,8 @@ export default function HeroSection() {
           {/* ── CTA Buttons ── */}
           <div
             style={{
-              display: 'flex', flexWrap: 'wrap', gap: '0.75rem',
-              marginTop: '1.25rem', pointerEvents: 'auto',
+              display: 'flex', flexWrap: 'wrap', gap: '0.6rem',
+              marginTop: '0.85rem', pointerEvents: 'auto',
               opacity: subtitleVisible ? 1 : 0,
               transform: subtitleVisible ? 'translateY(0)' : 'translateY(14px)',
               transition: 'opacity 0.65s ease 0.1s, transform 0.65s ease 0.1s',
@@ -448,7 +449,7 @@ export default function HeroSection() {
               onClick={() => navigate('/volunteer')}
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
-                padding: '0.85rem 1.8rem', borderRadius: 999,
+                padding: '0.7rem 1.5rem', borderRadius: 999,
                 background: 'linear-gradient(135deg,#f43f5e,#ec4899)',
                 color: '#fff', fontWeight: 700, fontSize: '0.875rem',
                 border: 'none', cursor: 'pointer', transition: 'opacity 0.2s',
@@ -462,7 +463,7 @@ export default function HeroSection() {
               onClick={() => navigate('/hub')}
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
-                padding: '0.85rem 1.8rem', borderRadius: 999,
+                padding: '0.7rem 1.5rem', borderRadius: 999,
                 background: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(12px)',
                 color: '#fff', fontWeight: 600, fontSize: '0.875rem',
                 border: '1.5px solid rgba(255,255,255,0.3)', cursor: 'pointer',
@@ -478,8 +479,8 @@ export default function HeroSection() {
           {/* ── Stats ── */}
           <div
             style={{
-              display: 'flex', flexWrap: 'wrap', gap: '1.25rem',
-              marginTop: '1.5rem',
+              display: 'flex', flexWrap: 'wrap', gap: '0.65rem',
+              marginTop: '0.9rem',
               opacity: subtitleVisible ? 1 : 0,
               transform: subtitleVisible ? 'translateY(0)' : 'translateY(14px)',
               transition: 'opacity 0.65s ease 0.2s, transform 0.65s ease 0.2s',
@@ -489,16 +490,16 @@ export default function HeroSection() {
               <div
                 key={label}
                 style={{
-                  padding: '0.85rem 1.25rem',
-                  borderRadius: 12,
+                  padding: '0.55rem 0.9rem',
+                  borderRadius: 10,
                   background: 'rgba(255,255,255,0.05)',
                   backdropFilter: 'blur(12px)',
                   border: '1px solid rgba(255,255,255,0.1)',
-                  minWidth: 100,
+                  minWidth: 80,
                 }}
               >
                 <div style={{
-                  fontSize: 'clamp(1.5rem,3vw,2.25rem)',
+                  fontSize: 'clamp(1.25rem,2.5vw,1.9rem)',
                   fontWeight: 800, color: '#fff', lineHeight: 1,
                 }}>
                   <Counter end={value} suffix={suffix} />
@@ -531,6 +532,13 @@ export default function HeroSection() {
 
       {/* ══ Styles ════════════════════════════════════════════════════════ */}
       <style>{`
+        /* mobile compact overrides */
+        @media (max-width: 640px) {
+          .kcf-hero-text { padding-top: 3.5rem !important; }
+          .kcf-headline  { font-size: clamp(1.6rem,7.5vw,2.4rem) !important; }
+          .kcf-desc      { font-size: 0.8rem !important; }
+        }
+
         /* badge fade-in */
         @keyframes kcf-badge-in {
           from { opacity:0; transform:translateY(-8px); }
