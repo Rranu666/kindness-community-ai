@@ -15,7 +15,7 @@
  */
 
 const SUPABASE_URL   = "https://dwewfplxnemuwwwutfhq.supabase.co";
-const FALLBACK_IMAGE = "https://dwewfplxnemuwwwutfhq.supabase.co/storage/v1/object/public/blog-images/og-image.jpg";
+const FALLBACK_IMAGE = "https://kindnesscommunityfoundation.com/og-image.jpg";
 const SITE_NAME      = "Kindness Community Foundation";
 const BASE_URL       = "https://kindnesscommunityfoundation.com";
 
