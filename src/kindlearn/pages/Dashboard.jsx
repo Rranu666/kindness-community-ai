@@ -154,7 +154,7 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <div className="pt-20 pb-16 px-4 md:px-6">
+      <div className="pt-20 pb-16 px-4 md:px-6 kl-page-body">
         <div className="container mx-auto max-w-5xl">
           <Button variant="ghost" onClick={() => navigate('/kindlearn/select-language')} className="mb-4 -ml-2">
             <ArrowLeft className="w-4 h-4 mr-2" /> {t.select_title}

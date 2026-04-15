@@ -28,6 +28,17 @@ import KindCalmUnityPage from './pages/KindCalmUnityPage';
 import Login from './pages/Login';
 import Contact from './pages/Contact';
 
+// Inject Capacitor-specific styles: removes navbar spacing across all KindLearn pages
+if (typeof window !== 'undefined' && window.Capacitor) {
+  const s = document.createElement('style');
+  s.id = 'cap-overrides';
+  s.textContent = `
+    /* Strip the top padding added for the fixed navbar when running as native app */
+    .kl-page-body { padding-top: env(safe-area-inset-top, 0px) !important; }
+  `;
+  document.head.appendChild(s);
+}
+
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
 const MainPage = mainPageKey ? Pages[mainPageKey] : <></>;
@@ -117,7 +128,7 @@ function App() {
             <ErrorBoundary>
               <AppRoutes />
             </ErrorBoundary>
-            <ScrollToggleButton hideOn={['/servekindness', '/kindcalmunity', '/kindwave']} />
+            {!window.Capacitor && <ScrollToggleButton hideOn={['/servekindness', '/kindcalmunity', '/kindwave']} />}
             <PublicBot />
           </Router>
           <Toaster />

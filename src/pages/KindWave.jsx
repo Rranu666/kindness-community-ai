@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import Header from "@/components/kcf/Header";
+import GLSLHills from "@/components/kcf/GLSLHills";
 import {
   Heart, Globe, Flame, Map, Trophy, Star, EyeOff,
   Share2, Zap, Languages, ArrowRight, ChevronDown,
@@ -212,7 +213,7 @@ function OverviewTab() {
       <div>
         <FadeIn className="text-center mb-12">
           <SectionLabel label="What We Do" color="violet" />
-          <h2 className="text-3xl md:text-5xl font-black text-white leading-tight mb-4">
+          <h2 className="kw-heading text-3xl md:text-5xl font-black text-white leading-tight mb-4">
             Kindness as a{" "}
             <span className="text-transparent bg-clip-text" style={{ backgroundImage: "linear-gradient(135deg, #f43f5e, #a78bfa)" }}>
               practice,
@@ -249,7 +250,7 @@ function OverviewTab() {
       <div>
         <FadeIn className="text-center mb-12">
           <SectionLabel label="Competitive Edge" color="amber" />
-          <h2 className="text-3xl md:text-4xl font-black text-white leading-tight">
+          <h2 className="kw-heading text-3xl md:text-4xl font-black text-white leading-tight">
             What{" "}
             <span className="text-transparent bg-clip-text" style={{ backgroundImage: "linear-gradient(135deg, #fbbf24, #f43f5e)" }}>
               nobody else
@@ -419,7 +420,7 @@ function VisionTab() {
     <div className="space-y-8">
       <FadeIn className="text-center mb-10">
         <SectionLabel label="The Vision" color="violet" />
-        <h2 className="text-3xl md:text-5xl font-black text-white leading-tight mb-4">
+        <h2 className="kw-heading text-3xl md:text-5xl font-black text-white leading-tight mb-4">
           Help Others.{" "}
           <span className="text-transparent bg-clip-text" style={{ backgroundImage: "linear-gradient(135deg, #a78bfa, #f43f5e)" }}>
             Heal Yourself.
@@ -453,7 +454,7 @@ function FeaturesTab() {
       <div>
         <FadeIn className="text-center mb-12">
           <SectionLabel label="Platform Features" color="blue" />
-          <h2 className="text-3xl md:text-4xl font-black text-white leading-tight">
+          <h2 className="kw-heading text-3xl md:text-4xl font-black text-white leading-tight">
             Built to{" "}
             <span className="text-transparent bg-clip-text" style={{ backgroundImage: "linear-gradient(135deg, #60a5fa, #a78bfa)" }}>
               scale
@@ -487,7 +488,7 @@ function FeaturesTab() {
       <div>
         <FadeIn className="text-center mb-12">
           <SectionLabel label="Safety & Trust" color="green" />
-          <h2 className="text-3xl md:text-4xl font-black text-white leading-tight">
+          <h2 className="kw-heading text-3xl md:text-4xl font-black text-white leading-tight">
             Built with{" "}
             <span className="text-transparent bg-clip-text" style={{ backgroundImage: "linear-gradient(135deg, #34d399, #60a5fa)" }}>
               dignity
@@ -533,7 +534,7 @@ function JourneyTab() {
       <div>
         <FadeIn className="text-center mb-12">
           <SectionLabel label="Start Where You Are" color="rose" />
-          <h2 className="text-3xl md:text-4xl font-black text-white leading-tight mb-3">
+          <h2 className="kw-heading text-3xl md:text-4xl font-black text-white leading-tight mb-3">
             No pressure.{" "}
             <span className="text-transparent bg-clip-text" style={{ backgroundImage: "linear-gradient(135deg, #f43f5e, #a78bfa)" }}>
               No expectations.
@@ -582,7 +583,7 @@ function JourneyTab() {
       <div>
         <FadeIn className="text-center mb-12">
           <SectionLabel label="Your Journey" color="amber" />
-          <h2 className="text-3xl md:text-4xl font-black text-white leading-tight mb-3">
+          <h2 className="kw-heading text-3xl md:text-4xl font-black text-white leading-tight mb-3">
             Your impact grows.{" "}
             <span className="text-transparent bg-clip-text" style={{ backgroundImage: "linear-gradient(135deg, #fbbf24, #f43f5e)" }}>
               And so do you.
@@ -620,7 +621,7 @@ function JourneyTab() {
       <div>
         <FadeIn className="text-center mb-12">
           <SectionLabel label="Reward System" color="violet" />
-          <h2 className="text-3xl md:text-4xl font-black text-white leading-tight mb-3">
+          <h2 className="kw-heading text-3xl md:text-4xl font-black text-white leading-tight mb-3">
             The real reward is{" "}
             <span className="text-transparent bg-clip-text" style={{ backgroundImage: "linear-gradient(135deg, #a78bfa, #f43f5e)" }}>
               who you become.
@@ -653,7 +654,7 @@ function JourneyTab() {
       <div>
         <FadeIn className="text-center mb-12">
           <SectionLabel label="Community Scale" color="blue" />
-          <h2 className="text-3xl md:text-4xl font-black text-white leading-tight mb-3">
+          <h2 className="kw-heading text-3xl md:text-4xl font-black text-white leading-tight mb-3">
             What starts with one act{" "}
             <span className="text-transparent bg-clip-text" style={{ backgroundImage: "linear-gradient(135deg, #60a5fa, #34d399)" }}>
               transforms entire communities.
@@ -686,7 +687,7 @@ function AppPreview() {
     <div>
       <FadeIn className="text-center mb-12">
         <SectionLabel label="The App" color="rose" />
-        <h2 className="text-3xl md:text-4xl font-black text-white leading-tight">
+        <h2 className="kw-heading text-3xl md:text-4xl font-black text-white leading-tight">
           Your kindness,{" "}
           <span className="text-transparent bg-clip-text" style={{ backgroundImage: "linear-gradient(135deg, #f43f5e, #ec4899)" }}>
             in your pocket.
@@ -797,6 +798,9 @@ export default function KindWave() {
 
   return (
     <div className="min-h-screen" style={{ background: "#030712", fontFamily: "'Inter', system-ui, sans-serif" }}>
+      <style>{`
+        .kw-heading { font-family: 'Syne', 'Inter', system-ui, sans-serif; }
+      `}</style>
       {/* Ambient bg */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[600px]"
@@ -811,18 +815,15 @@ export default function KindWave() {
 
       {/* ── HERO ────────────────────────────────────────────────────────── */}
       <section ref={heroRef} className="relative min-h-screen flex items-center justify-center pt-24 pb-16 px-4 overflow-hidden z-10">
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {[...Array(5)].map((_, i) => (
-            <motion.div key={i} className="absolute rounded-full"
-              style={{
-                width: `${120 + i * 40}px`, height: `${120 + i * 40}px`,
-                left: `${10 + i * 18}%`, top: `${15 + (i % 3) * 22}%`,
-                background: `radial-gradient(circle, ${["rgba(244,63,94,0.08)","rgba(167,139,250,0.06)","rgba(251,146,60,0.06)","rgba(52,211,153,0.05)","rgba(96,165,250,0.06)"][i]} 0%, transparent 70%)`,
-              }}
-              animate={{ y: [0, -18, 0], scale: [1, 1.04, 1] }}
-              transition={{ duration: 4 + i, repeat: Infinity, ease: "easeInOut", delay: i * 0.5 }}
-            />
-          ))}
+        {/* GLSL Hills animation background */}
+        <GLSLHills />
+
+        {/* Radial glow overlay on top of hills */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px]"
+            style={{ background: "radial-gradient(ellipse, rgba(244,63,94,0.10) 0%, transparent 70%)" }} />
+          <div className="absolute bottom-0 inset-x-0 h-64"
+            style={{ background: "linear-gradient(to top, #030712 0%, transparent 100%)" }} />
         </div>
 
         <div className="max-w-4xl mx-auto text-center relative z-10">
@@ -834,7 +835,7 @@ export default function KindWave() {
           </motion.div>
 
           <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.1 }}
-            className="text-6xl sm:text-7xl md:text-8xl font-black text-white leading-none mb-6">
+            className="kw-heading text-6xl sm:text-7xl md:text-8xl font-black text-white leading-none mb-6">
             Kind<span className="text-transparent bg-clip-text"
               style={{ backgroundImage: "linear-gradient(135deg, #f43f5e, #ec4899, #a78bfa)" }}>Wave</span>
           </motion.h1>
@@ -956,7 +957,7 @@ export default function KindWave() {
               <Heart className="w-8 h-8 text-rose-400" />
             </div>
 
-            <h2 className="text-3xl md:text-5xl font-black text-white mb-4 relative z-10">
+            <h2 className="kw-heading text-3xl md:text-5xl font-black text-white mb-4 relative z-10">
               Every wave starts with{" "}
               <span className="text-transparent bg-clip-text"
                 style={{ backgroundImage: "linear-gradient(135deg, #f43f5e, #ec4899)" }}>

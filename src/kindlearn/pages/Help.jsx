@@ -68,7 +68,7 @@ export default function Help() {
     return (
       <div className="min-h-screen bg-background">
         <Navbar />
-        <div className="pt-20 flex items-start justify-center px-4 py-10">
+        <div className="pt-20 kl-page-body flex items-start justify-center px-4 py-10">
           <div className="w-full max-w-2xl bg-card rounded-3xl border shadow-xl overflow-hidden">
             <ContactForm prefillQuery={contactPrefill} onBack={() => setShowContact(false)} />
           </div>

@@ -18,11 +18,19 @@ export function usePageVisibility() {
 export function useUpdatePageVisibility() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async ({ page_slug, updates }) => {
+    mutationFn: async ({ page_slug, page_name, nav_label, updates }) => {
       const { data, error } = await supabase
         .from('page_visibility')
-        .update({ ...updates, updated_at: new Date().toISOString() })
-        .eq('page_slug', page_slug)
+        .upsert(
+          {
+            page_slug,
+            page_name: page_name || page_slug,
+            nav_label: nav_label || page_name || page_slug,
+            ...updates,
+            updated_at: new Date().toISOString(),
+          },
+          { onConflict: 'page_slug' }
+        )
         .select()
         .single();
       if (error) throw error;

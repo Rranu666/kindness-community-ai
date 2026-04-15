@@ -1,0 +1,30 @@
+{
+  "name": "kindlearn-app",
+  "version": "1.0.0",
+  "description": "KindLearn — Learn languages with kindness. Standalone Android & iOS app.",
+  "type": "module",
+  "scripts": {
+    "sync": "npx cap sync",
+    "open:android": "npx cap open android",
+    "open:ios": "npx cap open ios",
+    "build:android": "npx cap build android",
+    "build:ios": "npx cap build ios",
+    "run:android": "npx cap run android",
+    "run:ios": "npx cap run ios",
+    "add:android": "npx cap add android",
+    "add:ios": "npx cap add ios"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.3.0",
+    "@capacitor/cli": "^8.3.0",
+    "@capacitor/core": "^8.3.0",
+    "@capacitor/ios": "^8.3.0",
+    "@capacitor/status-bar": "^8.0.0",
+    "@capacitor/splash-screen": "^8.0.0",
+    "@capacitor/browser": "^8.0.0",
+    "@capacitor/app": "^8.0.0",
+    "@capacitor/haptics": "^8.0.0",
+    "@capacitor/keyboard": "^8.0.0",
+    "@capacitor/network": "^8.0.0"
+  }
+}

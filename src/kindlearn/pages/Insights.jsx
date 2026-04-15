@@ -68,7 +68,7 @@ export default function Insights() {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <div className="pt-20 pb-16 px-4 md:px-6">
+      <div className="pt-20 kl-page-body pb-16 px-4 md:px-6">
         <div className="container mx-auto max-w-4xl">
           {/* Header */}
           <div className="flex items-center gap-3 mb-6">

@@ -1,0 +1,19 @@
+node_modules/
+
+# Android
+android/build/
+android/app/build/
+android/.gradle/
+android/local.properties
+
+# iOS
+ios/App/Pods/
+ios/App/App.xcworkspace/xcuserdata/
+ios/DerivedData/
+*.ipa
+*.apk
+*.aab
+
+# Misc
+.DS_Store
+*.log

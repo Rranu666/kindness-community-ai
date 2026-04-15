@@ -20,7 +20,7 @@ export default function SelectLanguage() {
   return (
     <div className="min-h-screen">
       <Navbar />
-      <div className="pt-24 pb-16 px-6">
+      <div className="pt-24 kl-page-body pb-16 px-6">
         <div className="container mx-auto max-w-4xl">
           <Link to="/kindlearn">
             <Button variant="ghost" className="mb-6 -ml-2">

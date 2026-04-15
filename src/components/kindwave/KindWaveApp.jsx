@@ -12,25 +12,25 @@ import { supabase } from "@/api/supabaseClient";
 
 // ── Design Tokens ─────────────────────────────────────
 const T = {
-  void:     "#02040f",
-  deep:     "#05091a",
-  navy:     "#08122a",
-  panel:    "rgba(8,18,42,0.78)",
-  glass:    "rgba(255,255,255,0.045)",
-  teal:     "#00e8b4",
-  tealDim:  "#00bf94",
-  tealGlow: "rgba(0,232,180,0.22)",
-  gold:     "#ffc43d",
-  goldLow:  "rgba(255,196,61,0.18)",
-  urgent:   "#ff3d5a",
-  warm:     "#ff7b3a",
-  violet:   "#8580ff",
-  emerald:  "#1de99b",
-  rose:     "#ff5e9e",
-  white:    "#eef6ff",
-  muted:    "#4a7a9b",
+  void:     "#030712",
+  deep:     "#030712",
+  navy:     "#0d0d14",
+  panel:    "rgba(3,7,18,0.82)",
+  glass:    "rgba(255,255,255,0.04)",
+  teal:     "#f43f5e",
+  tealDim:  "#ec4899",
+  tealGlow: "rgba(244,63,94,0.18)",
+  gold:     "#fbbf24",
+  goldLow:  "rgba(251,191,36,0.15)",
+  urgent:   "#f43f5e",
+  warm:     "#fb923c",
+  violet:   "#a78bfa",
+  emerald:  "#34d399",
+  rose:     "#f9a8d4",
+  white:    "#f0f4ff",
+  muted:    "rgba(240,244,255,0.45)",
   border:   "rgba(255,255,255,0.07)",
-  borderHi: "rgba(0,232,180,0.28)",
+  borderHi: "rgba(244,63,94,0.3)",
 };
 
 // ── Gamification Data ──────────────────────────────────
@@ -105,15 +105,20 @@ const AVATARS = ["🌟","🌊","🌱","💚","🦋","☀️","🌙","⭐","🔮"
 
 // ── Global CSS ─────────────────────────────────────────
 const CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap');
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
 ::-webkit-scrollbar{width:3px}
-::-webkit-scrollbar-thumb{background:${T.tealDim}44;border-radius:3px}
-input,textarea,button{font-family:'Plus Jakarta Sans',sans-serif}
+::-webkit-scrollbar-thumb{background:rgba(244,63,94,0.25);border-radius:3px}
+input,textarea,button{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
 
 @keyframes fadeUp    {from{opacity:0;transform:translateY(26px)} to{opacity:1;transform:translateY(0)}}
 @keyframes fadeIn    {from{opacity:0} to{opacity:1}}
-@keyframes scaleIn   {from{opacity:0;transform:scale(0.82)} to{opacity:1;transform:scale(1)}}
+@keyframes kwMarqueeV {from{transform:translateY(0)} to{transform:translateY(calc(-100% - 12px))}}
+.kw-marquee-col{animation:kwMarqueeV var(--kw-dur,40s) linear infinite}
+.kw-marquee-col.rev{animation-direction:reverse}
+.kw-marquee-wrap:hover .kw-marquee-col{animation-play-state:paused}
+@keyframes scaleIn   {from{opacity:0;transform:scale(0.94) translateY(10px)} to{opacity:1;transform:scale(1) translateY(0)}}
+.section-hero{background:linear-gradient(180deg,rgba(244,63,94,0.06) 0%,transparent 100%)}
 @keyframes slideL    {from{opacity:0;transform:translateX(36px)} to{opacity:1;transform:translateX(0)}}
 @keyframes slideR    {from{opacity:0;transform:translateX(-36px)} to{opacity:1;transform:translateX(0)}}
 @keyframes float3d   {0%,100%{transform:perspective(500px) rotateX(0deg) rotateY(0deg) translateZ(0px)} 33%{transform:perspective(500px) rotateX(5deg) rotateY(-4deg) translateZ(10px)} 66%{transform:perspective(500px) rotateX(-4deg) rotateY(5deg) translateZ(14px)}}
@@ -121,7 +126,7 @@ input,textarea,button{font-family:'Plus Jakarta Sans',sans-serif}
 @keyframes pulse     {0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.35;transform:scale(1.9)}}
 @keyframes rippleOut {0%{transform:scale(.5);opacity:.9} 100%{transform:scale(4);opacity:0}}
 @keyframes orbFloat  {0%,100%{transform:translate(0,0)} 38%{transform:translate(28px,-20px)} 70%{transform:translate(-18px,14px)}}
-@keyframes glow      {0%,100%{box-shadow:0 0 20px ${T.tealGlow}} 50%{box-shadow:0 0 42px rgba(0,232,180,.42)}}
+@keyframes glow      {0%,100%{box-shadow:0 0 20px rgba(244,63,94,.18)} 50%{box-shadow:0 0 42px rgba(244,63,94,.42)}}
 @keyframes pinBounce {0%{transform:translate(-50%,-100%) scale(0.15);opacity:0} 65%{transform:translate(-50%,-100%) scale(1.12)} 100%{transform:translate(-50%,-100%) scale(1);opacity:1}}
 @keyframes msgIn     {from{opacity:0;transform:scale(.88) translateY(10px)} to{opacity:1;transform:scale(1) translateY(0)}}
 @keyframes xpFill    {from{width:0%} to{width:var(--xp-w,60%)}}
@@ -130,7 +135,7 @@ input,textarea,button{font-family:'Plus Jakarta Sans',sans-serif}
 @keyframes shimmer   {0%{background-position:200% 50%} 100%{background-position:-200% 50%}}
 @keyframes countUp   {from{transform:translateY(12px);opacity:0} to{transform:translateY(0);opacity:1}}
 @keyframes popIn     {0%{transform:scale(0);opacity:0} 70%{transform:scale(1.12)} 100%{transform:scale(1);opacity:1}}
-@keyframes goldShine {0%,100%{text-shadow:0 0 8px ${T.goldLow}} 50%{text-shadow:0 0 22px rgba(255,196,61,.5)}}
+@keyframes goldShine {0%,100%{text-shadow:0 0 8px rgba(251,191,36,.15)} 50%{text-shadow:0 0 22px rgba(251,191,36,.5)}}
 @keyframes tooltipIn {from{opacity:0;transform:translateY(8px) scale(.95)} to{opacity:1;transform:translateY(0) scale(1)}}
 @keyframes fireDance {0%,100%{transform:scale(1) rotate(-2deg)} 33%{transform:scale(1.12) rotate(2deg)} 66%{transform:scale(1.06) rotate(-1deg)}}
 @keyframes sonarRing {0%{transform:scale(.4);opacity:.9} 100%{transform:scale(2.8);opacity:0}}
@@ -142,10 +147,21 @@ input,textarea,button{font-family:'Plus Jakarta Sans',sans-serif}
 .kw-popup .leaflet-popup-content{margin:0}
 .kw-popup .leaflet-popup-tip-container{display:none}
 @keyframes dotBounce {0%,80%,100%{transform:scale(0)} 40%{transform:scale(1)}}
-@keyframes callPulse {0%,100%{box-shadow:0 0 0 0 rgba(29,233,155,.5)} 50%{box-shadow:0 0 0 16px rgba(29,233,155,0)}}
+@keyframes callPulse {0%,100%{box-shadow:0 0 0 0 rgba(52,211,153,.5)} 50%{box-shadow:0 0 0 16px rgba(52,211,153,0)}}
+@keyframes kwFadeSlide {from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)}}
+.kwhi-1{animation:kwFadeSlide .65s .08s both}
+.kwhi-2{animation:kwFadeSlide .65s .22s both}
+.kwhi-3{animation:kwFadeSlide .65s .36s both}
+.kwhi-4{animation:kwFadeSlide .65s .50s both}
+.kwhi-5{animation:kwFadeSlide .65s .64s both}
+.kw-cosmos{background:linear-gradient(rgba(3,7,18,0.80),rgba(3,7,18,0.80)),url('https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/0e2dbea0-c0a9-413f-a57b-af279633c0df_3840w.jpg') center/cover fixed}
+.kw-ob-grid{display:grid;grid-template-columns:1fr 1fr;min-height:100vh}
+@media(max-width:768px){.kw-ob-grid{grid-template-columns:1fr}.kw-ob-left{display:none!important}.kw-ob-right{padding:100px 24px 48px!important}}
 @keyframes shieldFloat{0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)}}
 @keyframes heatIn    {from{opacity:0;transform:scale(.7)} to{opacity:1;transform:scale(1)}}
-@keyframes pulseRing {0%{box-shadow:0 0 0 0 rgba(0,232,180,.55),0 4px 26px rgba(0,232,180,.22)} 70%{box-shadow:0 0 0 18px rgba(0,232,180,0),0 4px 26px rgba(0,232,180,.22)} 100%{box-shadow:0 0 0 0 rgba(0,232,180,0),0 4px 26px rgba(0,232,180,.22)}}
+@keyframes bounceY   {0%,100%{transform:translateY(0)} 50%{transform:translateY(8px)}}
+@keyframes gradShift {0%,100%{background-position:0% 50%} 50%{background-position:100% 50%}}
+@keyframes pulseRing {0%{box-shadow:0 0 0 0 rgba(244,63,94,.55),0 4px 26px rgba(244,63,94,.22)} 70%{box-shadow:0 0 0 18px rgba(244,63,94,0),0 4px 26px rgba(244,63,94,.22)} 100%{box-shadow:0 0 0 0 rgba(244,63,94,0),0 4px 26px rgba(244,63,94,.22)}}
 
 .fu{animation:fadeUp  .52s cubic-bezier(.22,1,.36,1) both}
 .si{animation:scaleIn .4s  cubic-bezier(.22,1,.36,1) both}
@@ -154,22 +170,22 @@ input,textarea,button{font-family:'Plus Jakarta Sans',sans-serif}
 .d1{animation-delay:.06s}.d2{animation-delay:.14s}.d3{animation-delay:.22s}
 .d4{animation-delay:.30s}.d5{animation-delay:.40s}.d6{animation-delay:.52s}
 
-.glass   {background:${T.panel};backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid ${T.border}}
-.glassHi {background:rgba(8,18,42,.92);backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);border:1px solid ${T.borderHi}}
-.neu     {background:linear-gradient(145deg,rgba(14,28,65,.92),rgba(5,9,26,.96));box-shadow:6px 6px 16px rgba(0,0,0,.55),-3px -3px 8px rgba(255,255,255,.022)}
+.glass   {background:rgba(3,7,18,0.82);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.07)}
+.glassHi {background:rgba(3,7,18,0.94);backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);border:1px solid rgba(244,63,94,0.3)}
+.neu     {background:linear-gradient(145deg,rgba(15,15,22,.92),rgba(3,7,18,.96));box-shadow:6px 6px 16px rgba(0,0,0,.55),-3px -3px 8px rgba(255,255,255,.022)}
 .press   {transition:transform .12s;cursor:pointer}
 .press:active{transform:scale(.955)}
 .hov     {transition:transform .22s,box-shadow .22s}
 .hov:hover{transform:translateY(-3px)}
-.btn-p   {background:linear-gradient(135deg,${T.teal},${T.tealDim});color:${T.deep};border:none;border-radius:16px;padding:16px 28px;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 4px 26px ${T.tealGlow};transition:transform .12s,box-shadow .15s;width:100%}
-.btn-p:hover{transform:translateY(-1px);box-shadow:0 8px 34px rgba(0,232,180,.42),0 0 0 1px rgba(0,232,180,.2)}
+.btn-p   {background:linear-gradient(135deg,#f43f5e,#ec4899);color:#fff;border:none;border-radius:16px;padding:16px 28px;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 4px 26px rgba(244,63,94,0.35);transition:transform .12s,box-shadow .15s;width:100%}
+.btn-p:hover{transform:translateY(-1px);box-shadow:0 8px 34px rgba(244,63,94,.48),0 0 0 1px rgba(244,63,94,.2)}
 .btn-p:active{transform:scale(.962)}
 .btn-pulse{animation:pulseRing 2.2s ease-out infinite}
-.btn-s   {background:rgba(255,255,255,.05);border:1px solid ${T.border};border-radius:16px;padding:15px 28px;font-size:15px;font-weight:600;color:${T.muted};cursor:pointer;width:100%;transition:all .2s}
-.btn-s:hover{border-color:${T.borderHi};color:${T.white};background:rgba(0,232,180,.08)}
-.inp     {width:100%;background:rgba(255,255,255,.04);border:1px solid ${T.border};border-radius:14px;padding:14px 18px;color:${T.white};font-size:15px;outline:none;transition:border-color .2s,box-shadow .2s}
-.inp:focus{border-color:${T.tealDim};box-shadow:0 0 0 3px rgba(0,232,180,.15)}
-.inp::placeholder{color:${T.muted}}
+.btn-s   {background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:15px 28px;font-size:15px;font-weight:600;color:rgba(240,244,255,0.45);cursor:pointer;width:100%;transition:all .2s}
+.btn-s:hover{border-color:rgba(244,63,94,0.3);color:#f0f4ff;background:rgba(244,63,94,.08)}
+.inp     {width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:14px 18px;color:#f0f4ff;font-size:15px;outline:none;transition:border-color .2s,box-shadow .2s}
+.inp:focus{border-color:#ec4899;box-shadow:0 0 0 3px rgba(244,63,94,.15)}
+.inp::placeholder{color:rgba(240,244,255,0.35)}
 `;
 
 // ── Utilities ──────────────────────────────────────────
@@ -208,7 +224,7 @@ function ParticleCanvas() {
         if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
         const op = (Math.sin(p.a) + 1) / 2 * .52;
         ctx.beginPath(); ctx.arc(p.x % W, p.y % H, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(0,232,180,${op})`; ctx.fill();
+        ctx.fillStyle = `rgba(244,63,94,${op})`; ctx.fill();
       });
       for (let i = 0; i < pts.length; i++) {
         for (let j = i + 1; j < pts.length; j++) {
@@ -216,7 +232,7 @@ function ParticleCanvas() {
           const d = Math.sqrt(dx * dx + dy * dy);
           if (d < 105) {
             ctx.beginPath(); ctx.moveTo(pts[i].x, pts[i].y); ctx.lineTo(pts[j].x, pts[j].y);
-            ctx.strokeStyle = `rgba(0,232,180,${.11 * (1 - d / 105)})`; ctx.lineWidth = .5; ctx.stroke();
+            ctx.strokeStyle = `rgba(244,63,94,${.11 * (1 - d / 105)})`; ctx.lineWidth = .5; ctx.stroke();
           }
         }
       }
@@ -296,7 +312,7 @@ function BadgeUnlock({ badge, onDone }) {
     <div style={{ position: "fixed", inset: 0, zIndex: 9000, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(2,4,15,.82)", backdropFilter: "blur(18px)", animation: "fadeIn .3s both" }}>
       <div style={{ textAlign: "center", padding: 32 }}>
         <div style={{ fontSize: 88, animation: "badgeIn .7s cubic-bezier(.22,1,.36,1) both", display: "block", marginBottom: 20 }}>{badge.emoji}</div>
-        <div style={{ color: T.gold, fontFamily: "'Syne',sans-serif", fontSize: 22, fontWeight: 800, marginBottom: 6, animation: "goldShine 2s infinite" }}>{badge.name}</div>
+        <div style={{ color: T.gold, fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 22, fontWeight: 800, marginBottom: 6, animation: "goldShine 2s infinite" }}>{badge.name}</div>
         <div style={{ color: T.muted, fontSize: 14, marginBottom: 20 }}>{badge.desc}</div>
         <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: T.goldLow, border: `1px solid ${T.gold}44`, borderRadius: 20, padding: "8px 20px", color: T.gold, fontWeight: 700, fontSize: 15, animation: "popIn .5s .4s both" }}>
           +{badge.xp} XP earned!
@@ -341,81 +357,60 @@ function ToggleSwitch({ def }) {
 
 // Step 0 — Cinematic Splash
 function OnboardSplash({ onNext }) {
-  const [show, setShow] = useState(false);
-  useEffect(() => { const t = setTimeout(() => setShow(true), 200); return () => clearTimeout(t); }, []);
   return (
-    <div style={{ position: "relative", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-start", minHeight: "100%", padding: "48px 28px 40px", textAlign: "center" }}>
-      <ParticleCanvas />
-      <OrbBg />
-      <div style={{ position: "relative", zIndex: 1, opacity: show ? 1 : 0, transition: "opacity .6s" }}>
-        {/* 3D floating logo */}
-        {/* KCF Logo */}
-        <div style={{ animation: "float3d 7s ease-in-out infinite", marginBottom: 32, display: "inline-block", filter: `drop-shadow(0 0 28px rgba(0,232,180,.45))` }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 16 }}>
-            {/* Icon mark */}
-            <svg viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" style={{ width: 72, height: 72, overflow: "visible" }}>
-              <style>{`
-                .kcf-bg2   { animation: kcfSquarePop2 .7s cubic-bezier(.34,1.56,.64,1) both; transform-origin:50% 50%; }
-                .kcf-stem2 { animation: kcfStemGrow2  .45s .5s cubic-bezier(.22,1,.36,1) both; transform-origin:50% 100%; }
-                .kcf-armu2 { animation: kcfArmIn2 .4s .72s cubic-bezier(.22,1,.36,1) both; transform-origin:left center; }
-                .kcf-armd2 { animation: kcfArmIn2 .4s .84s cubic-bezier(.22,1,.36,1) both; transform-origin:left center; }
-                .kcf-dot2  { animation: kcfDotPop2 .35s 1s cubic-bezier(.34,1.56,.64,1) both; transform-origin:50% 50%; }
-                .kcf-hrt2  { transform-origin:50% 58%; animation: kcfHrtIn2 .5s 1.15s cubic-bezier(.34,1.56,.64,1) both, kcfHrtBeat2 2.4s 2s ease-in-out infinite; }
-                @keyframes kcfSquarePop2 { 0%{transform:scale(0) rotate(-12deg);opacity:0} 100%{transform:scale(1) rotate(0);opacity:1} }
-                @keyframes kcfStemGrow2  { 0%{transform:scaleY(0);opacity:0} 100%{transform:scaleY(1);opacity:1} }
-                @keyframes kcfArmIn2     { 0%{transform:translateX(-10px) scaleX(0);opacity:0} 100%{transform:translateX(0) scaleX(1);opacity:1} }
-                @keyframes kcfDotPop2    { 0%{transform:scale(0);opacity:0} 100%{transform:scale(1);opacity:1} }
-                @keyframes kcfHrtIn2     { 0%{transform:scale(0) rotate(-20deg);opacity:0} 100%{transform:scale(1) rotate(0);opacity:1} }
-                @keyframes kcfHrtBeat2   { 0%,100%{transform:scale(1)} 14%{transform:scale(1.28)} 28%{transform:scale(1)} 42%{transform:scale(1.16)} 56%{transform:scale(1)} }
-              `}</style>
-              <rect className="kcf-bg2"   x="0" y="0" width="96" height="96" rx="17" fill="#00e8b4" />
-              <rect className="kcf-stem2" x="22" y="19" width="17" height="58" rx="4" fill="#04091a" />
-              <polygon className="kcf-armu2" points="39,48 72,19 83,19 83,31 50,52" fill="#04091a" />
-              <polygon className="kcf-armd2" points="39,52 72,77 83,77 83,65 50,46" fill="#04091a" />
-              <circle  className="kcf-dot2"  cx="68" cy="27" r="5" fill="#00e8b4" />
-              <path    className="kcf-hrt2"
-                d="M50,50 C50,50 40,43 40,49 C40,55 50,62 50,62 C50,62 60,55 60,49 C60,43 50,50 50,50Z"
-                fill="#04091a" />
-            </svg>
-            {/* Wordmark */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-              <div style={{ fontFamily: "'Syne',sans-serif", fontSize: 32, fontWeight: 800, color: T.white, letterSpacing: -1, lineHeight: 1 }}>
-                {"kindness".split("").map((ch, i) => (
-                  <span key={i} style={{ display: "inline-block", animation: `fadeUp .45s ${.55 + i * .06}s cubic-bezier(.22,1,.36,1) both` }}>{ch}</span>
-                ))}
-              </div>
-              <div style={{ height: 1.5, background: T.teal, opacity: .35, transformOrigin: "left", animation: "xpFill .55s 1.05s cubic-bezier(.22,1,.36,1) both", "--xp-w": "100%" }} className="xp-bar-fill" />
-              <div style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontSize: 9, letterSpacing: 3, color: T.tealDim, textTransform: "uppercase", animation: "fadeUp .55s 1.28s ease both" }}>
-                Community Foundation
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <h1 className="fu" style={{ fontFamily: "'Syne',sans-serif", fontSize: 56, fontWeight: 800, lineHeight: 1.05, letterSpacing: -1.5, color: T.white, marginBottom: 6, textShadow: `0 0 40px rgba(0,232,180,.18)` }}>
-          Help Others
-        </h1>
-        <h1 className="fu d1" style={{ fontFamily: "'Syne',sans-serif", fontSize: 56, fontWeight: 800, lineHeight: 1.05, letterSpacing: -1.5, background: `linear-gradient(90deg,${T.teal},${T.violet})`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", marginBottom: 28 }}>
-          Heal Yourself
-        </h1>
-
-        <p className="fu d2" style={{ color: "#6b9fc2", fontSize: 17, lineHeight: 1.72, maxWidth: 300, margin: "0 auto 36px" }}>
-          A GPS-powered community of kindness — where giving is the fastest path to healing.
-        </p>
-
-        {/* Category dots */}
-        <div className="fu d3" style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap", marginBottom: 40 }}>
-          {CATS.map(c => (
-            <span key={c.id} style={{ display: "flex", alignItems: "center", gap: 6, background: `${c.color}18`, border: `1px solid ${c.color}50`, borderRadius: 20, padding: "8px 16px", color: c.color, fontSize: 13, fontWeight: 600, boxShadow: `0 0 12px ${c.color}25` }}>
-              {c.emoji} {c.id}
-            </span>
-          ))}
-        </div>
-
-        <button className="btn-p press btn-pulse fu d4" onClick={onNext} style={{ marginBottom: 14 }}>
+    <div style={{ padding: "60px 0", display: "flex", flexDirection: "column", gap: 20 }}>
+      <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: `${T.teal}18`, border: `1px solid ${T.borderHi}`, borderRadius: 20, padding: "7px 18px", width: "fit-content", animation: "fadeUp .4s both" }}>
+        <span style={{ width: 7, height: 7, borderRadius: "50%", background: T.teal, display: "inline-block", animation: "pulse 2s infinite" }} />
+        <span style={{ color: T.teal, fontSize: 12, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase" }}>Live · Real-Time Community Kindness</span>
+      </div>
+      <h2 className="fu d1" style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: "clamp(2rem,3.5vw,3rem)", fontWeight: 800, color: T.white, lineHeight: 1.1, letterSpacing: -1 }}>
+        Welcome to<br /><span style={{ background: `linear-gradient(135deg,${T.teal},${T.violet})`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>KindWave</span>
+      </h2>
+      <p className="fu d2" style={{ color: T.muted, fontSize: 17, lineHeight: 1.75, maxWidth: 420 }}>
+        A GPS-powered platform where finding and giving help happens in real time — for everyone in your community.
+      </p>
+      <div style={{ display: "flex", gap: 10, flexWrap: "wrap", animation: "fadeUp .5s .2s both" }}>
+        {CATS.map(c => (
+          <span key={c.id} style={{ display: "flex", alignItems: "center", gap: 5, background: `${c.color}15`, border: `1px solid ${c.color}40`, borderRadius: 20, padding: "6px 14px", color: c.color, fontSize: 13, fontWeight: 600 }}>
+            {c.emoji} {c.id}
+          </span>
+        ))}
+      </div>
+      <div style={{ animation: "fadeUp .5s .3s both" }}>
+        <button className="btn-p press btn-pulse" onClick={onNext} style={{ marginBottom: 10 }}>
           Begin Your Journey ✦
         </button>
-        <p className="fu d5" style={{ color: "#6b9fc2", fontSize: 11 }}>KCF LLC · California, USA · v3.0</p>
+        <p style={{ color: T.muted, fontSize: 12, marginTop: 12 }}>Free forever · No credit card · Available worldwide</p>
+      </div>
+
+      {/* Feature highlights */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, animation: "fadeUp .5s .45s both" }}>
+        {[
+          { emoji: "🗺️", title: "Live Map",       desc: "See who needs help near you in real time" },
+          { emoji: "📹", title: "Video Help",      desc: "Instant 60-second video calls for urgent support" },
+          { emoji: "🏆", title: "Earn Badges",     desc: "Track streaks and grow your kindness impact" },
+        ].map((f, i) => (
+          <div key={i} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 16, padding: "18px 14px", textAlign: "center" }}>
+            <div style={{ fontSize: 28, marginBottom: 8 }}>{f.emoji}</div>
+            <div style={{ color: T.white, fontWeight: 700, fontSize: 13, marginBottom: 5 }}>{f.title}</div>
+            <div style={{ color: T.muted, fontSize: 11, lineHeight: 1.5 }}>{f.desc}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Testimonial */}
+      <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "20px", animation: "fadeUp .5s .55s both" }}>
+        <p style={{ color: "rgba(240,244,255,0.7)", fontSize: 14, lineHeight: 1.7, fontStyle: "italic", marginBottom: 12 }}>
+          "Helped a stranger get to their chemo appointment. Got a thank-you that changed my whole week. KindWave is something different."
+        </p>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{ width: 32, height: 32, borderRadius: "50%", background: `linear-gradient(135deg,${T.teal},${T.violet})`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}>🌟</div>
+          <div>
+            <div style={{ color: T.white, fontSize: 13, fontWeight: 600 }}>Marcus T.</div>
+            <div style={{ color: T.muted, fontSize: 11 }}>KindWave member · Oakland, CA</div>
+          </div>
+          <div style={{ marginLeft: "auto", color: T.gold, fontSize: 13 }}>★★★★★</div>
+        </div>
       </div>
     </div>
   );
@@ -432,35 +427,27 @@ function OnboardValueProp({ onNext }) {
   const go = (n) => { if (n >= cards.length) { onNext(); return; } setIdx(n); };
   const c = cards[idx];
   return (
-    <div style={{ display: "flex", flexDirection: "column", padding: "48px 24px 32px", minHeight: "100%", position: "relative" }}>
-      <OrbBg cols={[c.color, T.teal, T.violet]} />
+    <div style={{ padding: "48px 0", display: "flex", flexDirection: "column" }}>
       {/* Progress dots */}
-      <div style={{ display: "flex", gap: 6, marginBottom: 36, position: "relative", zIndex: 1 }}>
+      <div style={{ display: "flex", gap: 6, marginBottom: 32 }}>
         {cards.map((_, i) => (
-          <div key={i} style={{ flex: i === idx ? 2 : 1, height: 6, borderRadius: 3, background: i <= idx ? T.teal : T.border, transition: "all .4s", boxShadow: i === idx ? `0 0 10px ${T.teal}` : "none" }} />
+          <div key={i} style={{ flex: i === idx ? 2 : 1, height: 5, borderRadius: 3, background: i <= idx ? T.teal : T.border, transition: "all .4s", boxShadow: i === idx ? `0 0 10px ${T.teal}` : "none" }} />
         ))}
       </div>
-
-      <div style={{ flex: 1, position: "relative", zIndex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>
-        <TiltCard key={idx} style={{ background: T.panel, border: `1.5px solid ${c.color}60`, borderRadius: 26, padding: "40px 28px", textAlign: "center", marginBottom: 32, boxShadow: `0 24px 60px rgba(0,0,0,.55), 0 0 50px ${c.color}18, inset 0 1px 0 rgba(255,255,255,.06)` }}>
-          <div style={{ fontSize: 84, marginBottom: 24, animation: "float3d 6s ease-in-out infinite", display: "inline-block", filter: `drop-shadow(0 0 28px ${c.color}80)` }}>{c.emoji}</div>
-          <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: 30, fontWeight: 800, color: T.white, marginBottom: 14, lineHeight: 1.2 }}>{c.title}</h2>
-          <p style={{ color: "#6b9fc2", fontSize: 15, lineHeight: 1.75 }}>{c.body}</p>
-        </TiltCard>
-
-        <div style={{ display: "flex", gap: 10 }}>
-          {idx > 0 && (
-            <button className="btn-s press" onClick={() => go(idx - 1)} style={{ width: "auto", padding: "15px 22px", flex: 0 }}>←</button>
-          )}
-          <button className="btn-p press" onClick={() => go(idx + 1)}>
-            {idx < cards.length - 1 ? "Next →" : "Got it! Let's go →"}
-          </button>
-        </div>
+      <TiltCard key={idx} style={{ background: T.panel, border: `1.5px solid ${c.color}60`, borderRadius: 24, padding: "32px 24px", textAlign: "center", marginBottom: 24, boxShadow: `0 16px 48px rgba(0,0,0,.45), 0 0 40px ${c.color}14` }}>
+        <div style={{ fontSize: 72, marginBottom: 20, animation: "float3d 6s ease-in-out infinite", display: "inline-block", filter: `drop-shadow(0 0 24px ${c.color}80)` }}>{c.emoji}</div>
+        <h2 style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: "clamp(1.4rem,2.5vw,1.9rem)", fontWeight: 800, color: T.white, marginBottom: 12, lineHeight: 1.2 }}>{c.title}</h2>
+        <p style={{ color: T.muted, fontSize: 15, lineHeight: 1.75 }}>{c.body}</p>
+      </TiltCard>
+      <div style={{ display: "flex", gap: 10 }}>
+        {idx > 0 && (
+          <button className="btn-s press" onClick={() => go(idx - 1)} style={{ width: "auto", padding: "15px 22px", flex: 0 }}>←</button>
+        )}
+        <button className="btn-p press" onClick={() => go(idx + 1)}>
+          {idx < cards.length - 1 ? "Next →" : "Got it! Let's go →"}
+        </button>
       </div>
-
-      <button onClick={onNext} style={{ background: "none", border: "none", color: T.muted, fontSize: 13, cursor: "pointer", textAlign: "center", marginTop: 16, position: "relative", zIndex: 1 }}>
-        Skip intro
-      </button>
+      <button onClick={onNext} style={{ background: "none", border: "none", color: T.muted, fontSize: 13, cursor: "pointer", marginTop: 14 }}>Skip intro</button>
     </div>
   );
 }
@@ -477,46 +464,38 @@ function OnboardAuth({ onNext, profile, setProfile }) {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", padding: "48px 24px 32px", minHeight: "100%", position: "relative" }}>
-      <OrbBg cols={[T.teal, T.emerald]} />
-      <div style={{ position: "relative", zIndex: 1, flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>
-        <p className="fu" style={{ color: T.tealDim, fontSize: 12, fontWeight: 700, letterSpacing: 1.6, textTransform: "uppercase", marginBottom: 8 }}>Step 1 of 4</p>
-        <h2 className="fu d1" style={{ fontFamily: "'Syne',sans-serif", fontSize: 32, fontWeight: 800, color: T.white, marginBottom: 8 }}>How would you<br />like to continue?</h2>
-        <p className="fu d2" style={{ color: "#6b9fc2", fontSize: 14, marginBottom: 36 }}>No passwords required. We respect your privacy.</p>
+    <div style={{ padding: "48px 0", display: "flex", flexDirection: "column", gap: 0 }}>
+      <p className="fu" style={{ color: T.teal, fontSize: 12, fontWeight: 700, letterSpacing: 1.6, textTransform: "uppercase", marginBottom: 12 }}>Step 1 of 4</p>
+      <h2 className="fu d1" style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: "clamp(1.8rem,3vw,2.4rem)", fontWeight: 800, color: T.white, marginBottom: 8, lineHeight: 1.1 }}>How would you<br />like to continue?</h2>
+      <p className="fu d2" style={{ color: T.muted, fontSize: 15, marginBottom: 32 }}>No passwords required. We respect your privacy.</p>
 
-        {mode === "options" && (
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            <TiltCard className="fu d2" onClick={() => setMode("email")} style={{ background: T.panel, border: `1px solid ${T.borderHi}`, borderRadius: 18, padding: "18px 22px", cursor: "pointer", display: "flex", alignItems: "center", gap: 14, boxShadow: `0 8px 30px rgba(0,0,0,.3)` }}>
-              <div style={{ width: 44, height: 44, borderRadius: 12, background: `${T.teal}20`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, flexShrink: 0, boxShadow: `0 0 14px ${T.tealGlow}` }}>📧</div>
-              <div>
-                <div style={{ color: T.white, fontWeight: 700, fontSize: 15 }}>Continue with Email</div>
-                <div style={{ color: T.muted, fontSize: 12, marginTop: 2 }}>Quick & secure one-time code</div>
-              </div>
-            </TiltCard>
-
-            <TiltCard className="fu d3" onClick={onNext} style={{ background: T.panel, border: `1px solid ${T.border}`, borderRadius: 18, padding: "18px 22px", cursor: "pointer", display: "flex", alignItems: "center", gap: 14, boxShadow: `0 8px 30px rgba(0,0,0,.3)` }}>
-              <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(255,255,255,.06)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, flexShrink: 0 }}>📱</div>
-              <div>
-                <div style={{ color: T.white, fontWeight: 700, fontSize: 15 }}>Continue with Phone</div>
-                <div style={{ color: T.muted, fontSize: 12, marginTop: 2 }}>Verified & trusted in community</div>
-              </div>
-            </TiltCard>
-
-            <button className="btn-s press fu d4" onClick={onNext} style={{ marginTop: 8 }}>
-              Skip for now — explore first
-            </button>
-          </div>
-        )}
-
-        {mode === "email" && (
-          <div style={{ animation: "slideL .38s both" }}>
-            <label style={{ color: T.muted, fontSize: 11, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", display: "block", marginBottom: 8 }}>Email Address</label>
-            <input className="inp" placeholder="you@example.com" value={email} onChange={e => setEmail(e.target.value)} onKeyDown={e => e.key === "Enter" && continueEmail()} style={{ marginBottom: 14 }} />
-            <button className="btn-p press" onClick={continueEmail} style={{ opacity: email.includes("@") ? 1 : .4 }}>Send Magic Link →</button>
-            <button className="btn-s press" onClick={() => setMode("options")} style={{ marginTop: 10 }}>← Back</button>
-          </div>
-        )}
-      </div>
+      {mode === "options" && (
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <TiltCard className="fu d2" onClick={() => setMode("email")} style={{ background: T.panel, border: `1px solid ${T.borderHi}`, borderRadius: 18, padding: "18px 22px", cursor: "pointer", display: "flex", alignItems: "center", gap: 14, boxShadow: `0 8px 30px rgba(0,0,0,.3)` }}>
+            <div style={{ width: 44, height: 44, borderRadius: 12, background: `${T.teal}20`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, flexShrink: 0, boxShadow: `0 0 14px ${T.tealGlow}` }}>📧</div>
+            <div>
+              <div style={{ color: T.white, fontWeight: 700, fontSize: 15 }}>Continue with Email</div>
+              <div style={{ color: T.muted, fontSize: 12, marginTop: 2 }}>Quick & secure one-time code</div>
+            </div>
+          </TiltCard>
+          <TiltCard className="fu d3" onClick={onNext} style={{ background: T.panel, border: `1px solid ${T.border}`, borderRadius: 18, padding: "18px 22px", cursor: "pointer", display: "flex", alignItems: "center", gap: 14, boxShadow: `0 8px 30px rgba(0,0,0,.3)` }}>
+            <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(255,255,255,.06)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, flexShrink: 0 }}>📱</div>
+            <div>
+              <div style={{ color: T.white, fontWeight: 700, fontSize: 15 }}>Continue with Phone</div>
+              <div style={{ color: T.muted, fontSize: 12, marginTop: 2 }}>Verified & trusted in community</div>
+            </div>
+          </TiltCard>
+          <button className="btn-s press fu d4" onClick={onNext} style={{ marginTop: 8 }}>Skip for now — explore first</button>
+        </div>
+      )}
+      {mode === "email" && (
+        <div style={{ animation: "slideL .38s both" }}>
+          <label style={{ color: T.muted, fontSize: 11, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", display: "block", marginBottom: 8 }}>Email Address</label>
+          <input className="inp" placeholder="you@example.com" value={email} onChange={e => setEmail(e.target.value)} onKeyDown={e => e.key === "Enter" && continueEmail()} style={{ marginBottom: 14 }} />
+          <button className="btn-p press" onClick={continueEmail} style={{ opacity: email.includes("@") ? 1 : .4 }}>Send Magic Link →</button>
+          <button className="btn-s press" onClick={() => setMode("options")} style={{ marginTop: 10 }}>← Back</button>
+        </div>
+      )}
     </div>
   );
 }
@@ -535,30 +514,26 @@ function OnboardGoal({ onNext, profile, setProfile }) {
     setTimeout(onNext, 380);
   };
   return (
-    <div style={{ display: "flex", flexDirection: "column", padding: "48px 24px 32px", minHeight: "100%", position: "relative" }}>
-      <OrbBg cols={[T.violet, T.teal, T.warm]} />
-      <div style={{ position: "relative", zIndex: 1, flex: 1 }}>
-        <p className="fu" style={{ color: T.tealDim, fontSize: 12, fontWeight: 700, letterSpacing: 1.6, textTransform: "uppercase", marginBottom: 8 }}>Step 2 of 4</p>
-        <h2 className="fu d1" style={{ fontFamily: "'Syne',sans-serif", fontSize: 30, fontWeight: 800, color: T.white, marginBottom: 8, lineHeight: 1.2 }}>What brings you<br />to KindWave?</h2>
-        <p className="fu d2" style={{ color: "#6b9fc2", fontSize: 14, marginBottom: 32 }}>We'll personalise your experience.</p>
-
-        <div style={{ display: "flex", flexDirection: "column", gap: 13 }}>
-          {goals.map((g, i) => {
-            const isSel = sel === g.id;
-            return (
-              <TiltCard key={g.id} className={`fu d${i + 2} press`} onClick={() => pick(g.id)} style={{ background: isSel ? `${g.color}18` : T.panel, border: `2px solid ${isSel ? g.color : T.border}`, borderRadius: 20, padding: "20px 22px", display: "flex", gap: 16, alignItems: "center", boxShadow: isSel ? `0 0 30px ${g.color}28, 0 10px 30px rgba(0,0,0,.3)` : `0 8px 28px rgba(0,0,0,.28)`, transition: "border-color .25s, background .25s, box-shadow .25s" }}>
-                <div style={{ width: 56, height: 56, borderRadius: 16, background: isSel ? `${g.color}28` : `${g.color}12`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 28, flexShrink: 0, boxShadow: isSel ? `0 0 18px ${g.color}44` : "none", transition: "all .25s" }}>{g.emoji}</div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ color: isSel ? g.color : T.white, fontWeight: 700, fontSize: 16, marginBottom: 4, transition: "color .25s" }}>{g.title}</div>
-                  <div style={{ color: T.muted, fontSize: 13 }}>{g.sub}</div>
-                </div>
-                <div style={{ width: 24, height: 24, borderRadius: "50%", background: isSel ? g.color : "transparent", border: `2px solid ${isSel ? g.color : T.border}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, transition: "all .25s" }}>
-                  {isSel && <span style={{ color: T.deep, fontSize: 13, fontWeight: 800 }}>✓</span>}
-                </div>
-              </TiltCard>
-            );
-          })}
-        </div>
+    <div style={{ padding: "48px 0" }}>
+      <p className="fu" style={{ color: T.teal, fontSize: 12, fontWeight: 700, letterSpacing: 1.6, textTransform: "uppercase", marginBottom: 12 }}>Step 2 of 4</p>
+      <h2 className="fu d1" style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: "clamp(1.8rem,3vw,2.4rem)", fontWeight: 800, color: T.white, marginBottom: 8, lineHeight: 1.1 }}>What brings you<br />to KindWave?</h2>
+      <p className="fu d2" style={{ color: T.muted, fontSize: 15, marginBottom: 28 }}>We'll personalise your experience.</p>
+      <div style={{ display: "flex", flexDirection: "column", gap: 13 }}>
+        {goals.map((g, i) => {
+          const isSel = sel === g.id;
+          return (
+            <TiltCard key={g.id} className={`fu d${i + 2} press`} onClick={() => pick(g.id)} style={{ background: isSel ? `${g.color}18` : T.panel, border: `2px solid ${isSel ? g.color : T.border}`, borderRadius: 20, padding: "20px 22px", display: "flex", gap: 16, alignItems: "center", boxShadow: isSel ? `0 0 30px ${g.color}28, 0 10px 30px rgba(0,0,0,.3)` : `0 8px 28px rgba(0,0,0,.28)`, transition: "border-color .25s, background .25s, box-shadow .25s" }}>
+              <div style={{ width: 56, height: 56, borderRadius: 16, background: isSel ? `${g.color}28` : `${g.color}12`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 28, flexShrink: 0, boxShadow: isSel ? `0 0 18px ${g.color}44` : "none", transition: "all .25s" }}>{g.emoji}</div>
+              <div style={{ flex: 1 }}>
+                <div style={{ color: isSel ? g.color : T.white, fontWeight: 700, fontSize: 16, marginBottom: 4, transition: "color .25s" }}>{g.title}</div>
+                <div style={{ color: T.muted, fontSize: 13 }}>{g.sub}</div>
+              </div>
+              <div style={{ width: 24, height: 24, borderRadius: "50%", background: isSel ? g.color : "transparent", border: `2px solid ${isSel ? g.color : T.border}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, transition: "all .25s" }}>
+                {isSel && <span style={{ color: T.deep, fontSize: 13, fontWeight: 800 }}>✓</span>}
+              </div>
+            </TiltCard>
+          );
+        })}
       </div>
     </div>
   );
@@ -575,34 +550,28 @@ function OnboardCategories({ onNext, profile, setProfile }) {
     onNext();
   };
   return (
-    <div style={{ display: "flex", flexDirection: "column", padding: "48px 24px 24px", minHeight: "100%", position: "relative", overflow: "hidden" }}>
-      <OrbBg cols={[T.warm, T.emerald, T.violet]} />
-      <div style={{ position: "relative", zIndex: 1, flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
-        <p className="fu" style={{ color: T.tealDim, fontSize: 12, fontWeight: 700, letterSpacing: 1.6, textTransform: "uppercase", marginBottom: 8 }}>Step 3 of 4</p>
-        <h2 className="fu d1" style={{ fontFamily: "'Syne',sans-serif", fontSize: 30, fontWeight: 800, color: T.white, marginBottom: 8 }}>What kinds of help<br />resonate with you?</h2>
-        <p className="fu d2" style={{ color: "#6b9fc2", fontSize: 14, marginBottom: 20 }}>Pick all that apply — you can change anytime.</p>
-
-        <div style={{ display: "flex", flexDirection: "column", gap: 10, flex: 1, overflowY: "auto", paddingBottom: 4 }}>
-          {CATS.map((c, i) => {
-            const on = sel.includes(c.id);
-            return (
-              <button key={c.id} className="press" onClick={() => toggle(c.id)} style={{ display: "flex", alignItems: "center", gap: 14, background: on ? `linear-gradient(135deg,${c.color}22,${c.color}0a)` : "rgba(255,255,255,.025)", border: `1px solid ${on ? c.color : T.border}`, borderRadius: 16, padding: "14px 18px", animation: `fadeUp .45s ${.06 + i * .08}s both`, transition: "background .2s, border-color .2s, box-shadow .2s", boxShadow: on ? `0 0 24px ${c.color}30, inset 0 0 12px ${c.color}08` : "none", textAlign: "left", width: "100%", flexShrink: 0 }}>
-                <div style={{ width: 44, height: 44, borderRadius: 12, background: on ? `${c.color}35` : `${c.color}10`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, flexShrink: 0, transition: "all .2s", boxShadow: on ? `0 0 16px ${c.color}50` : "none" }}>{c.emoji}</div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ color: on ? c.color : T.white, fontWeight: 700, fontSize: 15, transition: "color .2s" }}>{c.label}</div>
-                  <div style={{ color: "#6b9fc2", fontSize: 12, marginTop: 2 }}>{c.desc}</div>
-                </div>
-                <div style={{ width: 24, height: 24, borderRadius: "50%", background: on ? c.color : "transparent", border: `2px solid ${on ? c.color : T.border}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, transition: "all .22s" }}>
-                  {on && <span style={{ color: T.deep, fontSize: 13, fontWeight: 800 }}>✓</span>}
-                </div>
-              </button>
-            );
-          })}
-        </div>
+    <div style={{ padding: "48px 0", display: "flex", flexDirection: "column" }}>
+      <p className="fu" style={{ color: T.teal, fontSize: 12, fontWeight: 700, letterSpacing: 1.6, textTransform: "uppercase", marginBottom: 12 }}>Step 3 of 4</p>
+      <h2 className="fu d1" style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: "clamp(1.8rem,3vw,2.4rem)", fontWeight: 800, color: T.white, marginBottom: 8, lineHeight: 1.1 }}>What kinds of help<br />resonate with you?</h2>
+      <p className="fu d2" style={{ color: T.muted, fontSize: 15, marginBottom: 20 }}>Pick all that apply — you can change anytime.</p>
+      <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 16 }}>
+        {CATS.map((c, i) => {
+          const on = sel.includes(c.id);
+          return (
+            <button key={c.id} className="press" onClick={() => toggle(c.id)} style={{ display: "flex", alignItems: "center", gap: 14, background: on ? `linear-gradient(135deg,${c.color}22,${c.color}0a)` : "rgba(255,255,255,.025)", border: `1px solid ${on ? c.color : T.border}`, borderRadius: 16, padding: "14px 18px", animation: `fadeUp .45s ${.06 + i * .08}s both`, transition: "background .2s, border-color .2s, box-shadow .2s", boxShadow: on ? `0 0 24px ${c.color}30` : "none", textAlign: "left", width: "100%" }}>
+              <div style={{ width: 44, height: 44, borderRadius: 12, background: on ? `${c.color}35` : `${c.color}10`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, flexShrink: 0, transition: "all .2s", boxShadow: on ? `0 0 16px ${c.color}50` : "none" }}>{c.emoji}</div>
+              <div style={{ flex: 1 }}>
+                <div style={{ color: on ? c.color : T.white, fontWeight: 700, fontSize: 15, transition: "color .2s" }}>{c.label}</div>
+                <div style={{ color: T.muted, fontSize: 12, marginTop: 2 }}>{c.desc}</div>
+              </div>
+              <div style={{ width: 24, height: 24, borderRadius: "50%", background: on ? c.color : "transparent", border: `2px solid ${on ? c.color : T.border}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, transition: "all .22s" }}>
+                {on && <span style={{ color: T.deep, fontSize: 13, fontWeight: 800 }}>✓</span>}
+              </div>
+            </button>
+          );
+        })}
       </div>
-      <button className="btn-p press" onClick={next} style={{ marginTop: 16, position: "relative", zIndex: 1, flexShrink: 0 }}>
-        {sel.length > 0 ? `Continue (${sel.length} selected) →` : "Skip for now →"}
-      </button>
+      <button className="btn-p press" onClick={next}>{sel.length > 0 ? `Continue (${sel.length} selected) →` : "Skip for now →"}</button>
     </div>
   );
 }
@@ -616,43 +585,32 @@ function OnboardProfile({ onNext, profile, setProfile }) {
     onNext();
   };
   return (
-    <div style={{ display: "flex", flexDirection: "column", padding: "48px 24px 24px", minHeight: "100%", position: "relative" }}>
-      <OrbBg cols={[T.teal, T.emerald]} />
-      <div style={{ position: "relative", zIndex: 1, flex: 1 }}>
-        <p className="fu" style={{ color: T.tealDim, fontSize: 12, fontWeight: 700, letterSpacing: 1.6, textTransform: "uppercase", marginBottom: 8 }}>Step 4 of 4</p>
-        <h2 className="fu d1" style={{ fontFamily: "'Syne',sans-serif", fontSize: 30, fontWeight: 800, color: T.white, marginBottom: 8 }}>Create your<br />identity</h2>
-        <p className="fu d2" style={{ color: "#6b9fc2", fontSize: 14, marginBottom: 28 }}>Quick and optional — you can update anytime.</p>
-
-        {/* Avatar selection */}
-        <div className="fu d2" style={{ marginBottom: 24 }}>
-          <label style={{ color: T.muted, fontSize: 11, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", display: "block", marginBottom: 12 }}>Choose your avatar</label>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(6,1fr)", gap: 10 }}>
-            {AVATARS.map(a => (
-              <button key={a} className="press" onClick={() => setAvatar(a)} style={{ fontSize: 30, background: avatar === a ? `${T.teal}20` : "rgba(255,255,255,.03)", border: `2px solid ${avatar === a ? T.teal : T.border}`, borderRadius: 14, aspectRatio: "1", display: "flex", alignItems: "center", justifyContent: "center", transition: "all .2s", boxShadow: avatar === a ? `0 0 14px ${T.tealGlow}` : "none" }}>{a}</button>
-            ))}
-          </div>
+    <div style={{ padding: "48px 0" }}>
+      <p className="fu" style={{ color: T.teal, fontSize: 12, fontWeight: 700, letterSpacing: 1.6, textTransform: "uppercase", marginBottom: 12 }}>Step 4 of 4</p>
+      <h2 className="fu d1" style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: "clamp(1.8rem,3vw,2.4rem)", fontWeight: 800, color: T.white, marginBottom: 8, lineHeight: 1.1 }}>Create your<br />identity</h2>
+      <p className="fu d2" style={{ color: T.muted, fontSize: 15, marginBottom: 28 }}>Quick and optional — you can update anytime.</p>
+      <div className="fu d2" style={{ marginBottom: 24 }}>
+        <label style={{ color: T.muted, fontSize: 11, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", display: "block", marginBottom: 12 }}>Choose your avatar</label>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(6,1fr)", gap: 10 }}>
+          {AVATARS.map(a => (
+            <button key={a} className="press" onClick={() => setAvatar(a)} style={{ fontSize: 30, background: avatar === a ? `${T.teal}20` : "rgba(255,255,255,.03)", border: `2px solid ${avatar === a ? T.teal : T.border}`, borderRadius: 14, aspectRatio: "1", display: "flex", alignItems: "center", justifyContent: "center", transition: "all .2s", boxShadow: avatar === a ? `0 0 14px ${T.tealGlow}` : "none" }}>{a}</button>
+          ))}
         </div>
-
-        <div className="fu d3">
-          <label style={{ color: T.muted, fontSize: 11, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", display: "block", marginBottom: 8 }}>Your Name</label>
-          <input className="inp" placeholder="What should we call you?" value={name} onChange={e => setName(e.target.value)} onKeyDown={e => e.key === "Enter" && next()} />
-        </div>
-
-        {/* XP Preview */}
-        <div className="fu d4" style={{ background: T.panel, border: `1px solid ${T.border}`, borderRadius: 16, padding: "16px 18px", marginTop: 20 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <div style={{ fontSize: 32 }}>{avatar}</div>
-            <div style={{ flex: 1 }}>
-              <div style={{ color: T.white, fontWeight: 700, fontSize: 15 }}>{name || "Your Name"}</div>
-              <div style={{ color: T.teal, fontSize: 12, marginTop: 2 }}>🌱 Seedling · 0 XP</div>
-            </div>
-            <div style={{ fontSize: 11, color: T.muted }}>Your profile</div>
+      </div>
+      <div className="fu d3" style={{ marginBottom: 20 }}>
+        <label style={{ color: T.muted, fontSize: 11, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", display: "block", marginBottom: 8 }}>Your Name</label>
+        <input className="inp" placeholder="What should we call you?" value={name} onChange={e => setName(e.target.value)} onKeyDown={e => e.key === "Enter" && next()} />
+      </div>
+      <div className="fu d4" style={{ background: T.panel, border: `1px solid ${T.border}`, borderRadius: 16, padding: "16px 18px", marginBottom: 24 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <div style={{ fontSize: 32 }}>{avatar}</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ color: T.white, fontWeight: 700, fontSize: 15 }}>{name || "Your Name"}</div>
+            <div style={{ color: T.teal, fontSize: 12, marginTop: 2 }}>🌱 Seedling · 0 XP</div>
           </div>
         </div>
       </div>
-      <button className="btn-p press" onClick={next} style={{ marginTop: 28, position: "relative", zIndex: 1 }}>
-        {name ? "Let's go! →" : "Skip — continue anonymously →"}
-      </button>
+      <button className="btn-p press" onClick={next}>{name ? "Let's go! →" : "Skip — continue anonymously →"}</button>
     </div>
   );
 }
@@ -672,61 +630,45 @@ function OnboardAha({ onNext, onXP, profile }) {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", padding: "40px 24px 24px", minHeight: "100%", position: "relative", overflow: "hidden" }}>
-      <OrbBg cols={[T.urgent, T.teal]} />
-      <div style={{ position: "relative", zIndex: 1, flex: 1, display: "flex", flexDirection: "column" }}>
-        <div className="fu" style={{ display: "flex", align: "center", gap: 10, marginBottom: 28 }}>
-          <div style={{ width: 8, height: 8, borderRadius: "50%", background: T.urgent, boxShadow: `0 0 8px ${T.urgent}`, animation: "pulse 1.5s infinite", marginTop: 6 }} />
-          <div>
-            <div style={{ color: T.urgent, fontSize: 12, fontWeight: 700, letterSpacing: 1 }}>HAPPENING RIGHT NOW NEAR YOU</div>
-          </div>
-        </div>
-
-        <h2 className="fu d1" style={{ fontFamily: "'Syne',sans-serif", fontSize: 26, fontWeight: 800, color: T.white, lineHeight: 1.22, marginBottom: 6 }}>
-          Someone needs you
-        </h2>
-        <p className="fu d2" style={{ color: T.muted, fontSize: 14, marginBottom: 24 }}>This is why KindWave exists. Send a quick note.</p>
-
-        {/* Request card — flies in */}
-        <TiltCard className="fu d2" style={{ background: T.panel, border: `2px solid ${c.color}44`, borderLeft: `4px solid ${c.color}`, borderRadius: 20, padding: 22, marginBottom: 22, boxShadow: `0 16px 48px rgba(0,0,0,.45), 0 0 30px ${c.color}14` }}>
-          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
-            <span style={{ color: c.color, fontSize: 11, fontWeight: 700, letterSpacing: .6 }}>{c.emoji} {c.label.toUpperCase()}</span>
-            <span style={{ color: T.urgent, fontSize: 10, background: `${T.urgent}18`, border: `1px solid ${T.urgent}35`, padding: "2px 8px", borderRadius: 20, fontWeight: 700 }}>URGENT</span>
-          </div>
-          <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, color: T.white, fontSize: 18, marginBottom: 8 }}>{urgentPin.title}</div>
-          <p style={{ color: T.muted, fontSize: 14, lineHeight: 1.65 }}>{urgentPin.desc}</p>
-          <div style={{ display: "flex", justifyContent: "space-between", marginTop: 14, paddingTop: 12, borderTop: `1px solid ${T.border}` }}>
-            <span style={{ color: T.muted, fontSize: 12 }}>👤 {urgentPin.user}</span>
-            <span style={{ color: T.urgent, fontSize: 12, fontWeight: 600 }}>🕐 {urgentPin.time} ago</span>
-          </div>
-        </TiltCard>
-
-        {!sent ? (
-          <div className="fu d3">
-            <label style={{ color: T.muted, fontSize: 11, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", display: "block", marginBottom: 8 }}>Send {urgentPin.user} a quick note</label>
-            <div style={{ display: "flex", gap: 10 }}>
-              <input className="inp" placeholder="Hi, I can help! I'm nearby..." value={msg} onChange={e => setMsg(e.target.value)} onKeyDown={e => e.key === "Enter" && send()} style={{ flex: 1 }} />
-              <button className="press" onClick={send} style={{ background: `linear-gradient(135deg,${T.teal},${T.tealDim})`, border: "none", borderRadius: 12, width: 48, height: 48, display: "flex", alignItems: "center", justifyContent: "center", color: T.deep, fontSize: 20, flexShrink: 0, boxShadow: `0 4px 14px ${T.tealGlow}`, opacity: msg.trim() ? 1 : .5 }}>↑</button>
-            </div>
-            <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
-              {["Hi, I can help!", "On my way!", "Sending support 🙏"].map(quick => (
-                <button key={quick} className="press" onClick={() => { setMsg(quick); }} style={{ background: "rgba(255,255,255,.04)", border: `1px solid ${T.border}`, borderRadius: 20, padding: "6px 12px", color: T.muted, fontSize: 12, whiteSpace: "nowrap" }}>{quick}</button>
-              ))}
-            </div>
-          </div>
-        ) : (
-          <div style={{ background: `${T.teal}14`, border: `1px solid ${T.teal}44`, borderRadius: 16, padding: 18, textAlign: "center", animation: "scaleIn .4s both" }}>
-            <div style={{ fontSize: 36, marginBottom: 8 }}>🌊</div>
-            <div style={{ color: T.teal, fontWeight: 700, fontSize: 17 }}>Message sent! Your first ripple.</div>
-            <div style={{ color: T.muted, fontSize: 13, marginTop: 4 }}>+25 XP earned</div>
-          </div>
-        )}
+    <div style={{ padding: "40px 0" }}>
+      <div className="fu" style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 24 }}>
+        <div style={{ width: 8, height: 8, borderRadius: "50%", background: T.urgent, boxShadow: `0 0 8px ${T.urgent}`, animation: "pulse 1.5s infinite" }} />
+        <div style={{ color: T.urgent, fontSize: 12, fontWeight: 700, letterSpacing: 1 }}>HAPPENING RIGHT NOW NEAR YOU</div>
       </div>
-
-      {!sent && (
-        <button onClick={onNext} style={{ background: "none", border: "none", color: T.muted, fontSize: 13, cursor: "pointer", textAlign: "center", marginTop: 16, position: "relative", zIndex: 1 }}>
-          Skip for now — go to map
-        </button>
+      <h2 className="fu d1" style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: "clamp(1.6rem,3vw,2.2rem)", fontWeight: 800, color: T.white, lineHeight: 1.2, marginBottom: 6 }}>Someone needs you</h2>
+      <p className="fu d2" style={{ color: T.muted, fontSize: 15, marginBottom: 24 }}>This is why KindWave exists. Send a quick note.</p>
+      <TiltCard className="fu d2" style={{ background: T.panel, border: `2px solid ${c.color}44`, borderLeft: `4px solid ${c.color}`, borderRadius: 20, padding: 22, marginBottom: 22, boxShadow: `0 16px 48px rgba(0,0,0,.45)` }}>
+        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
+          <span style={{ color: c.color, fontSize: 11, fontWeight: 700 }}>{c.emoji} {c.label.toUpperCase()}</span>
+          <span style={{ color: T.urgent, fontSize: 10, background: `${T.urgent}18`, border: `1px solid ${T.urgent}35`, padding: "2px 8px", borderRadius: 20, fontWeight: 700 }}>URGENT</span>
+        </div>
+        <div style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontWeight: 700, color: T.white, fontSize: 18, marginBottom: 8 }}>{urgentPin.title}</div>
+        <p style={{ color: T.muted, fontSize: 14, lineHeight: 1.65 }}>{urgentPin.desc}</p>
+        <div style={{ display: "flex", justifyContent: "space-between", marginTop: 14, paddingTop: 12, borderTop: `1px solid ${T.border}` }}>
+          <span style={{ color: T.muted, fontSize: 12 }}>👤 {urgentPin.user}</span>
+          <span style={{ color: T.urgent, fontSize: 12, fontWeight: 600 }}>🕐 {urgentPin.time} ago</span>
+        </div>
+      </TiltCard>
+      {!sent ? (
+        <div className="fu d3">
+          <label style={{ color: T.muted, fontSize: 11, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", display: "block", marginBottom: 8 }}>Send {urgentPin.user} a quick note</label>
+          <div style={{ display: "flex", gap: 10, marginBottom: 10 }}>
+            <input className="inp" placeholder="Hi, I can help! I'm nearby..." value={msg} onChange={e => setMsg(e.target.value)} onKeyDown={e => e.key === "Enter" && send()} style={{ flex: 1 }} />
+            <button className="press" onClick={send} style={{ background: `linear-gradient(135deg,${T.teal},${T.tealDim})`, border: "none", borderRadius: 12, width: 48, height: 48, display: "flex", alignItems: "center", justifyContent: "center", color: T.deep, fontSize: 20, flexShrink: 0, opacity: msg.trim() ? 1 : .5 }}>↑</button>
+          </div>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            {["Hi, I can help!", "On my way!", "Sending support 🙏"].map(q => (
+              <button key={q} className="press" onClick={() => setMsg(q)} style={{ background: "rgba(255,255,255,.04)", border: `1px solid ${T.border}`, borderRadius: 20, padding: "6px 12px", color: T.muted, fontSize: 12 }}>{q}</button>
+            ))}
+          </div>
+          <button onClick={onNext} style={{ background: "none", border: "none", color: T.muted, fontSize: 13, cursor: "pointer", marginTop: 16, display: "block" }}>Skip for now — go to map</button>
+        </div>
+      ) : (
+        <div style={{ background: `${T.teal}14`, border: `1px solid ${T.teal}44`, borderRadius: 16, padding: 18, textAlign: "center", animation: "scaleIn .4s both" }}>
+          <div style={{ fontSize: 36, marginBottom: 8 }}>🌊</div>
+          <div style={{ color: T.teal, fontWeight: 700, fontSize: 17 }}>Message sent! Your first ripple.</div>
+          <div style={{ color: T.muted, fontSize: 13, marginTop: 4 }}>+25 XP earned</div>
+        </div>
       )}
     </div>
   );
@@ -746,10 +688,8 @@ function OnboardComplete({ onFinish, profile, totalXP }) {
   const lv = levelOf(totalXP);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "100%", padding: "40px 28px", textAlign: "center", position: "relative", overflow: "hidden" }}>
-      <ParticleCanvas />
-      <OrbBg cols={[T.gold, T.teal, T.violet]} />
-      <div style={{ position: "relative", zIndex: 1, width: "100%", maxWidth: 340 }}>
+    <div style={{ padding: "48px 0", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center" }}>
+      <div style={{ width: "100%", maxWidth: 380 }}>
 
         {phase >= 1 && (
           <div style={{ marginBottom: 28, animation: "badgeIn .7s cubic-bezier(.22,1,.36,1) both" }}>
@@ -759,10 +699,10 @@ function OnboardComplete({ onFinish, profile, totalXP }) {
 
         {phase >= 1 && (
           <div style={{ animation: "fadeUp .5s .1s both" }}>
-            <div style={{ color: T.gold, fontFamily: "'Syne',sans-serif", fontSize: 24, fontWeight: 800, marginBottom: 6, animation: "goldShine 2s infinite" }}>
+            <div style={{ color: T.gold, fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 24, fontWeight: 800, marginBottom: 6, animation: "goldShine 2s infinite" }}>
               Badge Unlocked!
             </div>
-            <div style={{ color: T.white, fontFamily: "'Syne',sans-serif", fontSize: 20, fontWeight: 700, marginBottom: 4 }}>{badge.name}</div>
+            <div style={{ color: T.white, fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 20, fontWeight: 700, marginBottom: 4 }}>{badge.name}</div>
             <div style={{ color: T.muted, fontSize: 14, marginBottom: 28 }}>{badge.desc}</div>
           </div>
         )}
@@ -775,7 +715,7 @@ function OnboardComplete({ onFinish, profile, totalXP }) {
                 <div style={{ color: T.white, fontWeight: 700, fontSize: 16 }}>{profile.name || "Friend"}</div>
                 <div style={{ color: T.teal, fontSize: 13 }}>{lv.emoji} {lv.name}</div>
               </div>
-              <div style={{ color: T.gold, fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 22, animation: "countUp .5s both" }}>{totalXP} XP</div>
+              <div style={{ color: T.gold, fontFamily: "'Bricolage Grotesque',sans-serif", fontWeight: 800, fontSize: 22, animation: "countUp .5s both" }}>{totalXP} XP</div>
             </div>
             <div style={{ height: 10, background: "rgba(255,255,255,.07)", borderRadius: 5, overflow: "hidden" }}>
               <div style={{ "--xp-w": xpPct(totalXP) + "%", height: "100%", background: `linear-gradient(90deg,${T.gold},${T.teal})`, borderRadius: 5 }} className="xp-bar-fill" />
@@ -814,24 +754,93 @@ function Onboarding({ onComplete }) {
     <OnboardComplete     onFinish={() => onComplete(profile, xp)} profile={profile} totalXP={xp} key="s7" />,
   ];
 
-  // Skip button (shown on steps 2-6)
-  const showSkip = step >= 2 && step <= 5;
+  const LEFT_CONTENT = [
+    { headline: "Help Others.", sub: "Heal Yourself.", body: "A GPS-powered community where every act of kindness creates a ripple that heals both giver and receiver.", emoji: "🌊" },
+    { headline: "Three ways", sub: "to give.", body: "A live GPS map, instant video help, and an emotional support feed — all in one platform.", emoji: "🗺️" },
+    { headline: "No passwords.", sub: "No friction.", body: "Join with email or phone in seconds. Your privacy is protected throughout.", emoji: "🔒" },
+    { headline: "Give, receive,", sub: "or both.", body: "KindWave meets you wherever you are — whether you need help today or want to offer it.", emoji: "💚" },
+    { headline: "Your skills", sub: "are needed.", body: "From urgent rides to emotional support — your unique abilities can change someone's day.", emoji: "✦" },
+    { headline: "Your face,", sub: "your name.", body: "Pick an avatar and set your display name. Your real identity stays private until you choose.", emoji: "👤" },
+    { headline: "Every act", sub: "earns XP.", body: "Track streaks, earn badges, and watch your kindness ripple outward across your community.", emoji: "🏆" },
+    { headline: "You're in.", sub: "Let's go.", body: "The map is live. People nearby are waiting for your kindness right now.", emoji: "🎉" },
+  ];
+  const lc = LEFT_CONTENT[step] || LEFT_CONTENT[0];
 
   return (
-    <div style={{ height: "calc(100vh - var(--kw-offset, 0px))", display: "flex", flexDirection: "column", fontFamily: "'Plus Jakarta Sans',sans-serif", color: T.white, width: "100%", overflow: "hidden" }}>
+    <div className="kw-cosmos kw-ob-grid" style={{ fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif", color: T.white }}>
       <style>{CSS}</style>
 
-      {/* Top progress bar (steps 2–6) */}
-      {step >= 2 && step <= 6 && (
-        <div style={{ display: "flex", gap: 4, padding: "14px 24px 0", position: "relative", zIndex: 10 }}>
-          {[2, 3, 4, 5, 6].map(i => (
-            <div key={i} style={{ flex: 1, height: 3, borderRadius: 2, background: step >= i ? T.teal : T.border, transition: "background .4s", boxShadow: step >= i ? `0 0 6px ${T.tealGlow}` : "none" }} />
-          ))}
-        </div>
-      )}
+      {/* ── LEFT BRANDED PANEL ── */}
+      <div className="kw-ob-left" style={{ position: "relative", overflow: "hidden", borderRight: "1px solid rgba(255,255,255,0.06)", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", padding: "80px 64px" }}>
+        <div style={{ position: "relative", zIndex: 1, maxWidth: 480 }}>
+          {/* KCF wordmark */}
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 64 }}>
+            <div style={{ width: 40, height: 40, borderRadius: 10, background: `linear-gradient(135deg,${T.teal},${T.violet})`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <span style={{ color: "#fff", fontFamily: "'Bricolage Grotesque',sans-serif", fontWeight: 800, fontSize: 18 }}>K</span>
+            </div>
+            <div>
+              <div style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontWeight: 800, fontSize: 16, color: T.white }}>KindWave</div>
+              <div style={{ fontSize: 11, color: T.muted, letterSpacing: 1.5, textTransform: "uppercase" }}>by KCF</div>
+            </div>
+          </div>
 
-      <div key={k} style={{ flex: 1, overflowY: "auto", display: "flex", flexDirection: "column", animation: "fadeUp .45s cubic-bezier(.22,1,.36,1) both" }}>
-        {screens[step]}
+          {/* Dynamic headline */}
+          <div key={`lc-${step}`} style={{ animation: "fadeUp .5s both" }}>
+            <div style={{ fontSize: 72, marginBottom: 24, filter: `drop-shadow(0 0 24px ${T.teal}66)`, display: "inline-block", animation: "float3d 6s ease-in-out infinite" }}>{lc.emoji}</div>
+            <h1 style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: "clamp(2.4rem,4vw,3.6rem)", fontWeight: 800, lineHeight: 1.05, letterSpacing: "-1.5px", marginBottom: 16 }}>
+              <span style={{ color: T.white }}>{lc.headline}</span><br />
+              <span style={{ background: `linear-gradient(135deg,${T.teal},${T.violet})`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>{lc.sub}</span>
+            </h1>
+            <p style={{ color: T.muted, fontSize: 17, lineHeight: 1.75, marginBottom: 48 }}>{lc.body}</p>
+          </div>
+
+          {/* Social proof */}
+          <div style={{ display: "flex", gap: 32, flexWrap: "wrap", marginBottom: 40 }}>
+            {[["47K+", "Kind acts"], ["91", "Countries"], ["Free", "Forever"]].map(([v, l]) => (
+              <div key={l}>
+                <div style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontWeight: 800, fontSize: 22, color: T.teal }}>{v}</div>
+                <div style={{ color: T.muted, fontSize: 12, marginTop: 3 }}>{l}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* Live activity feed */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            <div style={{ fontSize: 11, color: T.muted, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 4, display: "flex", alignItems: "center", gap: 6 }}>
+              <span style={{ width: 6, height: 6, borderRadius: "50%", background: T.teal, display: "inline-block", animation: "pulse 2s infinite" }} />
+              Happening right now
+            </div>
+            {[
+              { emoji: "🚨", cat: "URGENT",    catColor: T.warm,   title: "Need a ride to the hospital",   time: "2m ago",  loc: "San Francisco" },
+              { emoji: "💬", cat: "EMOTIONAL", catColor: T.violet, title: "Someone to talk to tonight",     time: "5m ago",  loc: "Oakland" },
+              { emoji: "✅", cat: "GENERAL",   catColor: T.teal,   title: "Help carrying groceries",        time: "11m ago", loc: "Berkeley" },
+            ].map((p, i) => (
+              <div key={i} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 14, padding: "12px 16px", display: "flex", alignItems: "center", gap: 12, animation: `fadeUp .5s ${0.1 + i * 0.12}s both`, backdropFilter: "blur(8px)" }}>
+                <span style={{ fontSize: 22, flexShrink: 0 }}>{p.emoji}</span>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ color: T.white, fontSize: 13, fontWeight: 600, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{p.title}</div>
+                  <div style={{ color: T.muted, fontSize: 11, marginTop: 2 }}>{p.time} · {p.loc}</div>
+                </div>
+                <span style={{ flexShrink: 0, background: p.catColor + "20", border: `1px solid ${p.catColor}40`, borderRadius: 6, padding: "2px 8px", fontSize: 10, color: p.catColor, fontWeight: 700, letterSpacing: 0.5 }}>{p.cat}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ── RIGHT FORM PANEL ── */}
+      <div className="kw-ob-right" style={{ display: "flex", flexDirection: "column", overflowY: "auto" }}>
+        {/* Progress bar (steps 2–6) */}
+        {step >= 2 && step <= 6 && (
+          <div style={{ display: "flex", gap: 4, padding: "24px 48px 0", flexShrink: 0 }}>
+            {[2, 3, 4, 5, 6].map(i => (
+              <div key={i} style={{ flex: 1, height: 3, borderRadius: 2, background: step >= i ? T.teal : T.border, transition: "background .4s", boxShadow: step >= i ? `0 0 6px ${T.tealGlow}` : "none" }} />
+            ))}
+          </div>
+        )}
+        <div key={k} style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", padding: "0 48px", animation: "fadeUp .45s cubic-bezier(.22,1,.36,1) both", minHeight: 0 }}>
+          {screens[step]}
+        </div>
       </div>
     </div>
   );
@@ -852,11 +861,38 @@ function TooltipGuide({ tab, onDismiss }) {
   const tip = tips[tab];
   if (!tip) return null;
   return (
-    <div style={{ position: "absolute", inset: 0, zIndex: 200, pointerEvents: "none" }}>
-      <div style={{ position: "absolute", left: "50%", top: tip.y, transform: "translate(-50%,-50%)", background: "rgba(8,18,42,.95)", border: `1px solid ${T.borderHi}`, borderRadius: 16, padding: "14px 20px", width: 260, textAlign: "center", animation: "tooltipIn .35s both", backdropFilter: "blur(20px)", pointerEvents: "auto" }}>
+    <div style={{ position: "fixed", inset: 0, zIndex: 200, pointerEvents: "none" }}>
+      <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%,-50%)", background: "rgba(3,7,18,.95)", border: `1px solid ${T.borderHi}`, borderRadius: 16, padding: "14px 20px", width: 260, textAlign: "center", animation: "tooltipIn .35s both", backdropFilter: "blur(20px)", pointerEvents: "auto" }}>
         <div style={{ fontSize: 24, marginBottom: 6 }}>{tip.emoji}</div>
         <div style={{ color: T.white, fontSize: 13, lineHeight: 1.6 }}>{tip.text}</div>
         <button onClick={onDismiss} style={{ background: "none", border: `1px solid ${T.borderHi}`, borderRadius: 10, color: T.teal, fontSize: 12, fontWeight: 700, padding: "6px 16px", marginTop: 10, cursor: "pointer" }}>Got it ✓</button>
+      </div>
+    </div>
+  );
+}
+
+// ── Modal overlay ─────────────────────────────────────
+function Modal({ children, onClose }) {
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = ""; };
+  }, []);
+  return (
+    <div style={{
+      position: "fixed", inset: 0, zIndex: 2000,
+      background: "rgba(3,7,18,0.88)", backdropFilter: "blur(12px)",
+      WebkitBackdropFilter: "blur(12px)",
+      display: "flex", alignItems: "center", justifyContent: "center",
+      padding: "24px", animation: "fadeIn .2s both"
+    }} onClick={e => e.target === e.currentTarget && onClose()}>
+      <div style={{
+        background: "#0d0d18", border: "1px solid rgba(255,255,255,0.08)",
+        borderRadius: 24, width: "100%", maxWidth: 700,
+        maxHeight: "88vh", overflowY: "auto",
+        animation: "scaleIn .25s cubic-bezier(.22,1,.36,1) both",
+        boxShadow: "0 40px 120px rgba(0,0,0,0.7), 0 0 0 1px rgba(244,63,94,0.08)"
+      }}>
+        {children}
       </div>
     </div>
   );
@@ -910,7 +946,7 @@ function useUserLocation() {
 // Build a coloured SVG inline divIcon for Leaflet
 function makePinIcon(color) {
   return L.divIcon({
-    html: `<svg width="34" height="44" viewBox="0 0 34 44" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 3px 5px ${color}aa);display:block"><path d="M17 0C7.6 0 0 7.6 0 17c0 11 17 27 17 27s17-16 17-27C34 7.6 26.4 0 17 0z" fill="${color}"/><circle cx="17" cy="16" r="7" fill="#05091a" opacity=".85"/></svg>`,
+    html: `<svg width="34" height="44" viewBox="0 0 34 44" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 3px 5px ${color}aa);display:block"><path d="M17 0C7.6 0 0 7.6 0 17c0 11 17 27 17 27s17-16 17-27C34 7.6 26.4 0 17 0z" fill="${color}"/><circle cx="17" cy="16" r="7" fill="#030712" opacity=".85"/></svg>`,
     iconSize: [34, 44],
     iconAnchor: [17, 44],
     popupAnchor: [0, -48],
@@ -920,7 +956,7 @@ function makePinIcon(color) {
 
 // "My location" pulse icon
 const MY_LOC_ICON = L.divIcon({
-  html: `<div style="position:relative;width:18px;height:18px"><div style="position:absolute;inset:-14px;border-radius:50%;background:rgba(0,232,180,.12);animation:pulse 2.2s infinite"></div><div style="width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#00e8b4,#00bf94);border:3px solid rgba(255,255,255,.92);box-shadow:0 0 0 4px rgba(0,232,180,.22),0 4px 14px rgba(0,232,180,.22)"></div></div>`,
+  html: `<div style="position:relative;width:18px;height:18px"><div style="position:absolute;inset:-14px;border-radius:50%;background:rgba(244,63,94,.12);animation:pulse 2.2s infinite"></div><div style="width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#f43f5e,#ec4899);border:3px solid rgba(255,255,255,.92);box-shadow:0 0 0 4px rgba(244,63,94,.22),0 4px 14px rgba(244,63,94,.22)"></div></div>`,
   iconSize: [18, 18],
   iconAnchor: [9, 9],
   className: "",
@@ -943,7 +979,6 @@ function MapAutoCenter({ loc }) {
 
 // Map View
 function MapView({ pins, onPin, onAdd, filterCats, setFilterCats }) {
-  const [showF, setShowF] = useState(false);
   const { loc, city, loading } = useUserLocation();
   const vis = pins.filter(p => filterCats.length === 0 || filterCats.includes(p.cat));
 
@@ -957,39 +992,42 @@ function MapView({ pins, onPin, onAdd, filterCats, setFilterCats }) {
   }, [vis, loc]);
 
   return (
-    <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
-      {/* Header */}
-      <div className="glass" style={{ padding: "16px 18px 13px", display: "flex", alignItems: "center", justifyContent: "space-between", zIndex: 10 }}>
-        <div>
-          <div style={{ color: T.muted, fontSize: 12, fontWeight: 500 }}>
-            📍 {loading ? "Locating…" : city}
+    <div style={{ width: "100%" }}>
+      {/* Hero bar */}
+      <div className="section-hero" style={{ padding: "52px 32px 28px", maxWidth: 1280, margin: "0 auto" }}>
+        <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: 20 }}>
+          <div>
+            <div style={{ color: T.muted, fontSize: 13, fontWeight: 500, marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}>
+              <span style={{ width: 7, height: 7, borderRadius: "50%", background: T.teal, display: "inline-block", animation: "pulse 2s infinite" }} />
+              📍 {loading ? "Locating…" : city}
+            </div>
+            <h2 style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 40, fontWeight: 800, color: T.white, lineHeight: 1.1, letterSpacing: -1, marginBottom: 10 }}>
+              Find Help Near You
+            </h2>
+            <p style={{ color: T.muted, fontSize: 15, marginBottom: 20 }}>
+              <span style={{ color: T.teal, fontWeight: 700, fontFamily: "'Bricolage Grotesque',sans-serif" }}>{pins.length}</span> active requests nearby · tap any pin to view details
+            </p>
+            {/* Filter chips */}
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+              <button className="press" onClick={() => setFilterCats([])} style={{ borderRadius: 20, padding: "7px 16px", background: filterCats.length === 0 ? `${T.teal}18` : "rgba(255,255,255,.04)", border: `1px solid ${filterCats.length === 0 ? T.tealDim : T.border}`, color: filterCats.length === 0 ? T.teal : T.muted, fontSize: 13, fontWeight: 600, whiteSpace: "nowrap" }}>All</button>
+              {CATS.map(c => {
+                const on = filterCats.includes(c.id);
+                return (
+                  <button key={c.id} className="press" onClick={() => setFilterCats(f => on ? f.filter(x => x !== c.id) : [...f, c.id])} style={{ display: "flex", alignItems: "center", gap: 6, borderRadius: 20, padding: "7px 15px", background: on ? `${c.color}18` : "rgba(255,255,255,.04)", border: `1px solid ${on ? c.color : T.border}`, color: on ? c.color : T.muted, fontSize: 13, fontWeight: on ? 700 : 400, whiteSpace: "nowrap", transition: "all .2s" }}>
+                    {c.emoji} {c.id}
+                  </button>
+                );
+              })}
+            </div>
           </div>
-          <div style={{ color: T.white, fontWeight: 700, fontSize: 16, marginTop: 2 }}>
-            <span style={{ color: T.teal }}>{pins.length}</span> active requests nearby
-          </div>
-        </div>
-        <div style={{ display: "flex", gap: 8 }}>
-          <button className="glass press" onClick={() => setShowF(f => !f)} style={{ border: `1px solid ${showF ? T.borderHi : T.border}`, borderRadius: 12, width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center", background: showF ? `${T.teal}14` : "rgba(255,255,255,.04)", fontSize: 16 }}>⚡</button>
-          <button className="press" onClick={onAdd} style={{ background: `linear-gradient(135deg,${T.teal},${T.tealDim})`, border: "none", borderRadius: 12, width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, color: T.deep, boxShadow: `0 4px 18px ${T.tealGlow}` }}>+</button>
+          <button className="btn-p press" onClick={onAdd} style={{ width: "auto", padding: "14px 28px", fontSize: 15, display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
+            <span style={{ fontSize: 20 }}>+</span> Post Request
+          </button>
         </div>
       </div>
 
-      {showF && (
-        <div className="glass" style={{ display: "flex", gap: 7, padding: "9px 16px", overflowX: "auto", borderBottom: `1px solid ${T.border}`, animation: "fadeUp .2s both" }}>
-          <button className="press" onClick={() => setFilterCats([])} style={{ display: "flex", alignItems: "center", gap: 5, borderRadius: 20, padding: "6px 14px", background: filterCats.length === 0 ? `${T.teal}18` : "transparent", border: `1px solid ${filterCats.length === 0 ? T.tealDim : T.border}`, color: filterCats.length === 0 ? T.teal : T.muted, fontSize: 12, fontWeight: 600, whiteSpace: "nowrap" }}>All</button>
-          {CATS.map(c => {
-            const on = filterCats.includes(c.id);
-            return (
-              <button key={c.id} className="press" onClick={() => setFilterCats(f => on ? f.filter(x => x !== c.id) : [...f, c.id])} style={{ display: "flex", alignItems: "center", gap: 6, borderRadius: 20, padding: "6px 13px", background: on ? `${c.color}18` : "transparent", border: `1px solid ${on ? c.color : T.border}`, color: on ? c.color : T.muted, fontSize: 12, fontWeight: on ? 700 : 400, whiteSpace: "nowrap", transition: "all .2s" }}>
-                {c.emoji} {c.id}
-              </button>
-            );
-          })}
-        </div>
-      )}
-
-      {/* Real Leaflet Map */}
-      <div style={{ flex: 1, position: "relative", overflow: "hidden" }}>
+      {/* Real Leaflet Map — full width, no maxWidth */}
+      <div style={{ height: "65vh", minHeight: 480, position: "relative" }}>
         {loading && (
           <div style={{ position: "absolute", inset: 0, zIndex: 500, background: T.deep, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 12 }}>
             <div style={{ width: 36, height: 36, borderRadius: "50%", border: `3px solid ${T.teal}`, borderTopColor: "transparent", animation: "spin 0.8s linear infinite" }} />
@@ -1040,44 +1078,103 @@ function MapView({ pins, onPin, onAdd, filterCats, setFilterCats }) {
         <div className="glass" style={{ position: "absolute", bottom: 16, left: 16, borderRadius: 12, padding: "7px 11px", display: "flex", gap: 8, flexWrap: "wrap", maxWidth: "56%", zIndex: 1000 }}>
           {CATS.map(c => (<div key={c.id} style={{ display: "flex", alignItems: "center", gap: 4 }}><div style={{ width: 7, height: 7, borderRadius: "50%", background: c.color }} /><span style={{ fontSize: 10, color: T.muted }}>{c.id}</span></div>))}
         </div>
-        <button className="press" onClick={onAdd} style={{ position: "absolute", bottom: 16, right: 16, width: 52, height: 52, borderRadius: "50%", background: `linear-gradient(135deg,${T.teal},${T.tealDim})`, border: "none", fontSize: 26, color: T.deep, boxShadow: `0 4px 24px ${T.tealGlow}, 0 0 0 6px ${T.tealGlow}`, display: "flex", alignItems: "center", justifyContent: "center", animation: "glow 3s ease-in-out infinite", zIndex: 1000 }}>+</button>
+      </div>
+
+      {/* Recent Requests preview strip */}
+      <div style={{ padding: "24px 32px 40px", maxWidth: 1280, margin: "0 auto" }}>
+        <div style={{ color: T.muted, fontSize: 12, fontWeight: 700, letterSpacing: 1.2, textTransform: "uppercase", marginBottom: 14 }}>Recent Requests</div>
+        <div style={{ display: "flex", gap: 14, overflowX: "auto", paddingBottom: 8 }}>
+          {pins.slice(0, 8).map((pin) => {
+            const c = catOf(pin.cat);
+            return (
+              <button key={pin.id} onClick={() => onPin(pin)} className="press" style={{ flexShrink: 0, background: T.panel, border: `1px solid ${T.border}`, borderLeft: `3px solid ${c.color}`, borderRadius: 14, padding: "14px 16px", textAlign: "left", width: 220, transition: "transform .2s, box-shadow .2s" }}
+                onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = `0 8px 28px rgba(0,0,0,.4)`; }}
+                onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}>
+                <div style={{ fontSize: 11, color: c.color, fontWeight: 700, marginBottom: 6 }}>{c.emoji} {c.id.toUpperCase()}</div>
+                <div style={{ color: T.white, fontWeight: 700, fontSize: 13, marginBottom: 4, lineHeight: 1.3 }}>{pin.title}</div>
+                <div style={{ color: T.muted, fontSize: 11 }}>🕐 {pin.time} ago</div>
+              </button>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
 }
 
 // Help Feed
-function HelpFeed({ pins, onPin, isVol, setIsVol, onAdd, onXP }) {
+function HelpFeed({ pins, onPin, isVol, setIsVol, onAdd, onXP, streak, checkedToday, onCheckIn, setView }) {
   const [tab, setTab] = useState("nearby");
   const list = tab === "urgent" ? pins.filter(p => p.urgency === "Urgent") : tab === "mine" ? pins.slice(0, 3) : pins;
   return (
-    <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden", position: "relative" }}>
-      <div style={{ padding: "20px 18px 0", background: `linear-gradient(180deg,rgba(5,9,26,.98) 0%,transparent 100%)` }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+    <div style={{ width: "100%" }}>
+      {/* Section header */}
+      <div className="section-hero" style={{ padding: "52px 32px 0", maxWidth: 1280, margin: "0 auto" }}>
+        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 20, marginBottom: 20 }}>
           <div>
-            <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: 26, fontWeight: 800, color: T.white }}>Help Requests</h2>
-            <p style={{ color: isVol ? T.emerald : T.muted, fontSize: 13, marginTop: 2, fontWeight: isVol ? 600 : 400 }}>
-              {isVol ? "● You're visible as available" : "Toggle to offer your help"}
+            <h2 style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 40, fontWeight: 800, color: T.white, lineHeight: 1.1, letterSpacing: -1, marginBottom: 8 }}>Help Requests</h2>
+            <p style={{ color: isVol ? T.emerald : T.muted, fontSize: 15, fontWeight: isVol ? 600 : 400 }}>
+              {isVol ? "● You're visible as available to nearby helpers" : "Browse requests or toggle to offer your help"}
             </p>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <span style={{ fontSize: 12, color: isVol ? T.emerald : T.muted, fontWeight: 600 }}>{isVol ? "Online" : "Offline"}</span>
-            <div onClick={() => { setIsVol(v => !v); if (!isVol) onXP(5); }} style={{ width: 48, height: 26, borderRadius: 13, cursor: "pointer", transition: "background .3s", background: isVol ? `linear-gradient(90deg,${T.emerald},${T.tealDim})` : "rgba(255,255,255,.1)", position: "relative", boxShadow: isVol ? `0 0 14px ${T.emerald}40` : "none" }}>
-              <div style={{ position: "absolute", top: 3, left: isVol ? 25 : 3, width: 20, height: 20, borderRadius: "50%", background: "#fff", transition: "left .3s" }} />
+          <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <span style={{ fontSize: 13, color: isVol ? T.emerald : T.muted, fontWeight: 600 }}>{isVol ? "Online" : "Offline"}</span>
+              <div onClick={() => { setIsVol(v => !v); if (!isVol) onXP(5); }} style={{ width: 48, height: 26, borderRadius: 13, cursor: "pointer", transition: "background .3s", background: isVol ? `linear-gradient(90deg,${T.emerald},${T.tealDim})` : "rgba(255,255,255,.1)", position: "relative", boxShadow: isVol ? `0 0 14px ${T.emerald}40` : "none" }}>
+                <div style={{ position: "absolute", top: 3, left: isVol ? 25 : 3, width: 20, height: 20, borderRadius: "50%", background: "#fff", transition: "left .3s" }} />
+              </div>
             </div>
+            <button className="btn-p press" onClick={onAdd} style={{ width: "auto", padding: "11px 22px", fontSize: 14, display: "flex", alignItems: "center", gap: 6 }}>
+              <span>+</span> Post Request
+            </button>
+            <button className="press" onClick={() => setView("video")} style={{ background: `linear-gradient(135deg,${T.emerald}18,${T.teal}10)`, border: `1px solid ${T.emerald}44`, borderRadius: 12, padding: "11px 18px", display: "flex", alignItems: "center", gap: 8 }}>
+              <span style={{ fontSize: 16 }}>📹</span>
+              <div style={{ textAlign: "left" }}>
+                <div style={{ color: T.emerald, fontWeight: 700, fontSize: 13 }}>Help NOW</div>
+                <div style={{ color: T.muted, fontSize: 11 }}>Instant video · 60s</div>
+              </div>
+              <div style={{ width: 7, height: 7, borderRadius: "50%", background: T.emerald, animation: "callPulse 2s infinite" }} />
+            </button>
           </div>
         </div>
-        <div style={{ display: "flex", gap: 6, marginBottom: 0 }}>
+
+        {/* Streak banner */}
+        <div style={{ background: streak > 0 ? `linear-gradient(135deg,rgba(255,124,58,.12),rgba(255,61,90,.08))` : T.panel, border: `1px solid ${streak > 0 ? T.warm + "44" : T.border}`, borderRadius: 16, padding: "14px 20px", display: "flex", alignItems: "center", gap: 14, marginBottom: 20, backdropFilter: "blur(20px)" }}>
+          <div style={{ fontSize: 36, animation: streak > 0 ? "fireDance 2s ease-in-out infinite" : "none", lineHeight: 1 }}>{streak > 0 ? "🔥" : "🌱"}</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginBottom: 4 }}>
+              <span style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontWeight: 800, fontSize: 24, color: streak > 0 ? T.warm : T.muted }}>{streak}</span>
+              <span style={{ color: T.muted, fontSize: 14 }}>day streak</span>
+            </div>
+            <div style={{ height: 5, background: "rgba(255,255,255,.08)", borderRadius: 3, overflow: "hidden", maxWidth: 280 }}>
+              <div style={{ height: "100%", background: streak > 0 ? `linear-gradient(90deg,${T.warm},${T.urgent})` : T.muted, borderRadius: 3, width: Math.round((streak / ((() => { const m = [3,7,14,30,60,100]; return m.find(x => x > streak) || 100; })()) * 100)) + "%", transition: "width 1s cubic-bezier(.22,1,.36,1)" }} />
+            </div>
+          </div>
+          {!checkedToday ? (
+            <button className="press" onClick={onCheckIn} style={{ background: `linear-gradient(135deg,${T.warm},${T.urgent})`, border: "none", borderRadius: 12, padding: "10px 18px", color: T.white, fontSize: 13, fontWeight: 700, flexShrink: 0, boxShadow: `0 4px 14px ${T.warm}44` }}>
+              Check in +20 XP
+            </button>
+          ) : (
+            <div style={{ background: `${T.emerald}18`, border: `1px solid ${T.emerald}44`, borderRadius: 10, padding: "8px 14px", fontSize: 12, color: T.emerald, fontWeight: 700 }}>✓ Done today!</div>
+          )}
+        </div>
+
+        {/* Filter tabs */}
+        <div style={{ display: "flex", gap: 8, marginBottom: 0 }}>
           {[["nearby", "Nearby"], ["urgent", "🚨 Urgent"], ["mine", "My Posts"]].map(([v, l]) => (
-            <button key={v} className="press" onClick={() => setTab(v)} style={{ flex: 1, padding: "8px 6px", borderRadius: 12, fontSize: 12, fontWeight: tab === v ? 700 : 400, background: tab === v ? `${T.teal}16` : "transparent", border: `1px solid ${tab === v ? T.tealDim : T.border}`, color: tab === v ? T.teal : T.muted, transition: "all .2s" }}>{l}</button>
+            <button key={v} className="press" onClick={() => setTab(v)} style={{ padding: "10px 20px", borderRadius: 12, fontSize: 13, fontWeight: tab === v ? 700 : 400, background: tab === v ? `${T.teal}16` : "rgba(255,255,255,.04)", border: `1px solid ${tab === v ? T.tealDim : T.border}`, color: tab === v ? T.teal : T.muted, transition: "all .2s" }}>{l}</button>
           ))}
         </div>
       </div>
-      <div style={{ flex: 1, overflowY: "auto", padding: "12px 16px 90px" }}>
+
+      {/* Card grid */}
+      <div style={{ padding: "24px 32px 60px", maxWidth: 1280, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(360px, 1fr))", gap: 24 }}>
         {list.map((pin, i) => {
           const c = catOf(pin.cat);
           return (
-            <button key={pin.id} onClick={() => onPin(pin)} className="press hov" style={{ width: "100%", textAlign: "left", background: T.panel, backdropFilter: "blur(20px)", border: `1px solid ${T.border}`, borderLeft: `3px solid ${c.color}`, borderRadius: 18, padding: 18, marginBottom: 10, boxShadow: `0 4px 20px rgba(0,0,0,.22)`, animation: `fadeUp .4s ${i * .06}s both`, transition: "transform .2s, box-shadow .2s" }}>
+            <button key={pin.id} onClick={() => onPin(pin)} className="press" style={{ width: "100%", textAlign: "left", background: T.panel, backdropFilter: "blur(20px)", border: `1px solid ${T.border}`, borderLeft: `4px solid ${c.color}`, borderRadius: 18, padding: 24, boxShadow: `0 4px 20px rgba(0,0,0,.22)`, animation: `fadeUp .4s ${i * .06}s both`, transition: "transform .22s, box-shadow .22s" }}
+              onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = `0 16px 40px rgba(0,0,0,.4), 0 0 0 1px ${c.color}33`; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = `0 4px 20px rgba(0,0,0,.22)`; }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
                   <div style={{ width: 8, height: 8, borderRadius: "50%", background: c.color, boxShadow: `0 0 7px ${c.color}` }} />
@@ -1088,7 +1185,7 @@ function HelpFeed({ pins, onPin, isVol, setIsVol, onAdd, onXP }) {
                   {pin.verified && <span style={{ fontSize: 13, color: T.teal }}>✦</span>}
                 </div>
               </div>
-              <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, color: T.white, fontSize: 16, marginBottom: 7 }}>{pin.title}</div>
+              <div style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontWeight: 700, color: T.white, fontSize: 16, marginBottom: 7 }}>{pin.title}</div>
               <div style={{ fontSize: 13, color: T.muted, lineHeight: 1.55 }}>{pin.desc}</div>
               <div style={{ display: "flex", justifyContent: "space-between", marginTop: 12, paddingTop: 10, borderTop: `1px solid ${T.border}` }}>
                 <span style={{ fontSize: 12, color: T.muted }}>👤 {pin.user}</span>
@@ -1098,7 +1195,6 @@ function HelpFeed({ pins, onPin, isVol, setIsVol, onAdd, onXP }) {
           );
         })}
       </div>
-      <button className="press" onClick={onAdd} style={{ position: "absolute", bottom: 80, right: 20, width: 56, height: 56, borderRadius: "50%", background: `linear-gradient(135deg,${T.teal},${T.tealDim})`, border: "none", fontSize: 26, color: T.deep, boxShadow: `0 4px 24px ${T.tealGlow}`, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 50 }}>+</button>
     </div>
   );
 }
@@ -1107,16 +1203,16 @@ function HelpFeed({ pins, onPin, isVol, setIsVol, onAdd, onXP }) {
 function PinDetail({ pin, onBack, onChat, onAccept, accepted }) {
   const c = catOf(pin.cat);
   return (
-    <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+    <div style={{ maxWidth: 800, margin: "0 auto", width: "100%", paddingBottom: 60 }}>
       <div style={{ height: 4, background: `linear-gradient(90deg,${c.color},${c.color}55)`, boxShadow: `0 0 16px ${c.color}60` }} />
-      <div style={{ flex: 1, overflowY: "auto", padding: 20 }}>
+      <div style={{ padding: "24px 24px 40px" }}>
         <button className="glass press" onClick={onBack} style={{ border: `1px solid ${T.border}`, borderRadius: 10, padding: "7px 14px", color: T.muted, fontSize: 13, marginBottom: 22 }}>← Back</button>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
           <div style={{ width: 10, height: 10, borderRadius: "50%", background: c.color, boxShadow: `0 0 9px ${c.color}` }} />
           <span style={{ color: c.color, fontWeight: 700, fontSize: 12, letterSpacing: .8 }}>{c.label.toUpperCase()}</span>
           {pin.urgency === "Urgent" && <span style={{ fontSize: 10, color: T.urgent, background: `${T.urgent}16`, border: `1px solid ${T.urgent}38`, padding: "2px 10px", borderRadius: 20, fontWeight: 700 }}>🚨 URGENT</span>}
         </div>
-        <h2 className="fu" style={{ fontFamily: "'Syne',sans-serif", fontSize: 26, fontWeight: 800, color: T.white, lineHeight: 1.22, marginBottom: 14 }}>{pin.title}</h2>
+        <h2 className="fu" style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 26, fontWeight: 800, color: T.white, lineHeight: 1.22, marginBottom: 14 }}>{pin.title}</h2>
         <p style={{ color: T.muted, fontSize: 15, lineHeight: 1.75, marginBottom: 22 }}>{pin.desc}</p>
         <div className="glass" style={{ borderRadius: 16, padding: 18, marginBottom: 16, display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
           {[["Posted by", pin.user], ["Time", pin.time + " ago"], ["Urgency", pin.urgency]].map(([l, v]) => (
@@ -1166,7 +1262,7 @@ function ChatView({ pin, onBack }) {
   };
 
   return (
-    <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+    <div style={{ maxWidth: 800, margin: "0 auto", width: "100%", display: "flex", flexDirection: "column", height: "calc(100vh - 200px)", minHeight: 560 }}>
       <div className="glass" style={{ padding: "14px 18px", display: "flex", alignItems: "center", gap: 13, borderBottom: `1px solid ${T.border}` }}>
         <button className="press" onClick={onBack} style={{ background: "rgba(255,255,255,.05)", border: `1px solid ${T.border}`, borderRadius: 10, padding: "7px 11px", color: T.muted, fontSize: 13 }}>←</button>
         <div style={{ width: 40, height: 40, borderRadius: "50%", background: `linear-gradient(135deg,${c.color}38,${c.color}18)`, border: `1.5px solid ${c.color}55`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>{c.emoji}</div>
@@ -1219,18 +1315,18 @@ function PostRequest({ onBack, onPost }) {
           {[1, 2, 3].map(i => <div key={i} style={{ position: "absolute", inset: `${-i * 16}px`, borderRadius: "50%", border: `2px solid ${T.teal}`, opacity: 1 - i * .24, animation: `rippleOut ${1 + i * .4}s ease-out infinite`, animationDelay: `${i * .25}s` }} />)}
           <div style={{ position: "absolute", inset: 22, borderRadius: "50%", background: `linear-gradient(135deg,${T.teal},${T.tealDim})`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 34 }}>🌊</div>
         </div>
-        <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: 28, fontWeight: 800, color: T.teal, marginBottom: 10 }}>Request Posted!</h2>
+        <h2 style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 28, fontWeight: 800, color: T.teal, marginBottom: 10 }}>Request Posted!</h2>
         <p style={{ color: T.muted, fontSize: 15, lineHeight: 1.65 }}>Your request is now live on the map.<br />Nearby helpers have been notified. 🙏</p>
       </div>
     </div>
   );
   return (
-    <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
-      <div className="glass" style={{ padding: "14px 18px", display: "flex", alignItems: "center", gap: 12, borderBottom: `1px solid ${T.border}` }}>
+    <div style={{ maxWidth: 720, margin: "0 auto", width: "100%" }}>
+      <div className="glass" style={{ padding: "14px 24px", display: "flex", alignItems: "center", gap: 12, borderBottom: `1px solid ${T.border}` }}>
         <button className="press" onClick={onBack} style={{ background: "rgba(255,255,255,.05)", border: `1px solid ${T.border}`, borderRadius: 10, padding: "7px 13px", color: T.muted, fontSize: 13 }}>← Back</button>
-        <h2 style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 20, color: T.white }}>Post a Request</h2>
+        <h2 style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontWeight: 800, fontSize: 20, color: T.white }}>Post a Request</h2>
       </div>
-      <div style={{ flex: 1, overflowY: "auto", padding: 20, display: "flex", flexDirection: "column", gap: 17 }}>
+      <div style={{ padding: "24px 24px 60px", display: "flex", flexDirection: "column", gap: 17 }}>
         <div><label style={{ color: T.muted, fontSize: 11, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", display: "block", marginBottom: 8 }}>Title</label>
           <input className="inp" maxLength={80} placeholder="What do you need help with?" value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} /></div>
         <div><label style={{ color: T.muted, fontSize: 11, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", display: "block", marginBottom: 8 }}>Description</label>
@@ -1281,32 +1377,32 @@ function HealingView({ user, xp, onXP }) {
   };
 
   return (
-    <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
-      <div style={{ padding: "22px 18px 0", background: `linear-gradient(180deg,#1a053580 0%,rgba(5,9,26,0) 100%)`, position: "relative" }}>
+    <div style={{ width: "100%" }}>
+      <div style={{ padding: "52px 32px 28px", maxWidth: 1100, margin: "0 auto", background: `linear-gradient(180deg,rgba(167,139,250,0.08) 0%,transparent 100%)`, position: "relative" }}>
         <OrbBg cols={[T.violet, T.warm]} />
         <div style={{ position: "relative", zIndex: 1 }}>
-          <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: 26, fontWeight: 800, color: T.white }}>Your Healing Journey</h2>
-          <p style={{ color: T.muted, fontSize: 13, marginTop: 3, marginBottom: 14 }}>Track your growth, gratitude & impact</p>
+          <h2 style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 40, fontWeight: 800, color: T.white, letterSpacing: -1, lineHeight: 1.1, marginBottom: 10 }}>Your Healing Journey</h2>
+          <p style={{ color: T.muted, fontSize: 16, marginBottom: 20 }}>Track your growth, gratitude & impact</p>
           <XPBar xp={xp} inline />
-          <div style={{ display: "flex", gap: 6, marginTop: 14 }}>
+          <div style={{ display: "flex", gap: 8, marginTop: 20 }}>
             {[["log", "✦ Miracles"], ["journal", "📝 Journal"], ["ripple", "🌊 Ripple"]].map(([v, l]) => (
-              <button key={v} className="press" onClick={() => setTab(v)} style={{ flex: 1, padding: "9px 6px", borderRadius: 12, fontSize: 12, fontWeight: tab === v ? 700 : 400, background: tab === v ? `${T.violet}1e` : "rgba(255,255,255,.03)", border: `1px solid ${tab === v ? T.violet : T.border}`, color: tab === v ? T.violet : T.muted, transition: "all .2s" }}>{l}</button>
+              <button key={v} className="press" onClick={() => setTab(v)} style={{ padding: "12px 24px", borderRadius: 14, fontSize: 14, fontWeight: tab === v ? 700 : 400, background: tab === v ? `${T.violet}1e` : "rgba(255,255,255,.04)", border: `1px solid ${tab === v ? T.violet : T.border}`, color: tab === v ? T.violet : T.muted, transition: "all .2s" }}>{l}</button>
             ))}
           </div>
         </div>
       </div>
-      <div style={{ flex: 1, overflowY: "auto", padding: 16 }}>
+      <div style={{ padding: "24px 32px 60px", maxWidth: 1100, margin: "0 auto" }}>
         {tab === "log" && (
           <div className="fu">
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10, marginBottom: 20 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 10, marginBottom: 20 }}>
               {[["Helps Given", helpsGiven, T.urgent], ["Ripples", helpsGiven * 3, T.teal], ["XP", xp, T.gold]].map(([l, v, col]) => (
                 <div key={l} className="glass" style={{ borderRadius: 16, padding: 15, textAlign: "center", border: `1px solid ${col}22`, boxShadow: `0 0 18px ${col}0e` }}>
-                  <div style={{ color: col, fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 26, animation: "countUp .5s both" }}>{v}</div>
+                  <div style={{ color: col, fontFamily: "'Bricolage Grotesque',sans-serif", fontWeight: 800, fontSize: 26, animation: "countUp .5s both" }}>{v}</div>
                   <div style={{ color: T.muted, fontSize: 11, marginTop: 4 }}>{l}</div>
                 </div>
               ))}
             </div>
-            <h3 style={{ fontFamily: "'Syne',sans-serif", color: T.white, fontWeight: 700, fontSize: 16, marginBottom: 11 }}>Badges Earned</h3>
+            <h3 style={{ fontFamily: "'Bricolage Grotesque',sans-serif", color: T.white, fontWeight: 700, fontSize: 16, marginBottom: 11 }}>Badges Earned</h3>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 20 }}>
               {BADGES.slice(0, 4).map(b => (
                 <TiltCard key={b.id} className="glass" style={{ borderRadius: 14, padding: "16px 14px", textAlign: "center", border: `1px solid ${T.gold}22`, boxShadow: `0 0 12px ${T.gold}0c` }}>
@@ -1317,7 +1413,7 @@ function HealingView({ user, xp, onXP }) {
                 </TiltCard>
               ))}
             </div>
-            <h3 style={{ fontFamily: "'Syne',sans-serif", color: T.white, fontWeight: 700, fontSize: 16, marginBottom: 11 }}>Recent Moments</h3>
+            <h3 style={{ fontFamily: "'Bricolage Grotesque',sans-serif", color: T.white, fontWeight: 700, fontSize: 16, marginBottom: 11 }}>Recent Moments</h3>
             {[{ icon: "💜", col: T.urgent, title: "Helped Rahul M.", desc: "Provided cab fare · 2h ago", badge: "+3 ripples" }, { icon: "💬", col: T.warm, title: "Emotional support", desc: "Listened for 30 min · Yesterday", badge: "+5 ripples" }, { icon: "✦", col: T.teal, title: "Gratitude received", desc: '"You changed my day" · 2d ago', badge: "✨ Miracle" }].map((item, i) => (
               <div key={i} className="glass hov" style={{ display: "flex", gap: 12, borderRadius: 16, padding: "13px 15px", marginBottom: 9, alignItems: "flex-start", animation: `fadeUp .4s ${i * .08}s both`, borderLeft: `3px solid ${item.col}30` }}>
                 <div style={{ width: 40, height: 40, borderRadius: "50%", background: `${item.col}16`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, flexShrink: 0 }}>{item.icon}</div>
@@ -1355,19 +1451,19 @@ function HealingView({ user, xp, onXP }) {
         )}
         {tab === "ripple" && (
           <div className="fu" style={{ textAlign: "center" }}>
-            <h3 style={{ fontFamily: "'Syne',sans-serif", color: T.white, fontWeight: 800, fontSize: 22, marginBottom: 6 }}>Your Ripple Effect</h3>
+            <h3 style={{ fontFamily: "'Bricolage Grotesque',sans-serif", color: T.white, fontWeight: 800, fontSize: 22, marginBottom: 6 }}>Your Ripple Effect</h3>
             <p style={{ color: T.muted, fontSize: 14, marginBottom: 30 }}>Each act of kindness ripples outward forever</p>
             <div style={{ position: "relative", width: 220, height: 220, margin: "0 auto 28px" }}>
               {[1, 2, 3, 4].map(i => (<div key={i} style={{ position: "absolute", inset: `${i * 18}px`, borderRadius: "50%", border: `1.5px solid ${T.teal}`, opacity: 1 - i * .2, animation: `rippleOut ${1.2 + i * .5}s ease-out infinite`, animationDelay: `${i * .3}s` }} />))}
               <div style={{ position: "absolute", inset: 70, borderRadius: "50%", background: `linear-gradient(135deg,${T.teal},${T.tealDim})`, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", boxShadow: `0 0 34px ${T.tealGlow}` }}>
-                <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 28, color: T.deep }}>{helpsGiven * 3}</div>
+                <div style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontWeight: 800, fontSize: 28, color: T.deep }}>{helpsGiven * 3}</div>
                 <div style={{ fontSize: 10, color: `${T.deep}99`, fontWeight: 700 }}>ripples</div>
               </div>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 11 }}>
               {[["People Helped", helpsGiven, T.urgent], ["2nd Connections", helpsGiven * 2, T.warm], ["Gratitude Notes", Math.floor(helpsGiven * .7), T.violet], ["Impact Score", `${helpsGiven * 12}pts`, T.teal]].map(([l, v, col]) => (
                 <div key={l} className="glass" style={{ borderRadius: 16, padding: 17, border: `1px solid ${col}22` }}>
-                  <div style={{ color: col, fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 26 }}>{v}</div>
+                  <div style={{ color: col, fontFamily: "'Bricolage Grotesque',sans-serif", fontWeight: 800, fontSize: 26 }}>{v}</div>
                   <div style={{ color: T.muted, fontSize: 12, marginTop: 5 }}>{l}</div>
                 </div>
               ))}
@@ -1385,34 +1481,37 @@ function ProfileView({ user, xp, onXP, onLogout }) {
   const lv = levelOf(xp);
 
   return (
-    <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
-      <div style={{ padding: "22px 18px 0", background: `linear-gradient(180deg,#0d1535 0%,rgba(5,9,26,0) 100%)`, position: "relative" }}>
+    <div style={{ width: "100%" }}>
+      {/* Profile hero strip */}
+      <div style={{ padding: "52px 32px 28px", maxWidth: 900, margin: "0 auto", background: `linear-gradient(180deg,rgba(244,63,94,0.07) 0%,transparent 100%)`, position: "relative" }}>
         <OrbBg cols={[T.teal, T.violet]} />
         <div style={{ position: "relative", zIndex: 1 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 15, marginBottom: 18 }}>
-            <div style={{ width: 66, height: 66, borderRadius: "50%", flexShrink: 0, background: `linear-gradient(135deg,${T.teal},${T.violet})`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 32, boxShadow: `0 0 0 3px ${T.deep},0 0 0 5px ${T.tealDim}`, animation: "float3d 8s ease-in-out infinite" }}>{user.avatar || "🌱"}</div>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontFamily: "'Syne',sans-serif", color: T.white, fontWeight: 800, fontSize: 21 }}>{user.name || "Friend"}</div>
-              <div style={{ color: T.teal, fontSize: 13, marginTop: 2, fontWeight: 600 }}>{lv.emoji} {lv.name} · {xp} XP</div>
-              <div style={{ color: T.muted, fontSize: 12, marginTop: 1 }}>Member since March 2026</div>
+          {/* Avatar + name — horizontal hero */}
+          <div style={{ display: "flex", alignItems: "center", gap: 24, marginBottom: 24, flexWrap: "wrap" }}>
+            <div style={{ width: 88, height: 88, borderRadius: "50%", flexShrink: 0, background: `linear-gradient(135deg,${T.teal},${T.violet})`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 44, boxShadow: `0 0 0 4px ${T.deep},0 0 0 6px ${T.tealDim}`, animation: "float3d 8s ease-in-out infinite" }}>{user.avatar || "🌱"}</div>
+            <div style={{ flex: 1, minWidth: 200 }}>
+              <div style={{ fontFamily: "'Bricolage Grotesque',sans-serif", color: T.white, fontWeight: 800, fontSize: 32, lineHeight: 1.1, marginBottom: 6 }}>{user.name || "Friend"}</div>
+              <div style={{ color: T.teal, fontSize: 15, fontWeight: 600, marginBottom: 4 }}>{lv.emoji} {lv.name} · {xp} XP</div>
+              <div style={{ color: T.muted, fontSize: 13 }}>Member since March 2026</div>
             </div>
           </div>
           <XPBar xp={xp} inline />
-          <div style={{ display: "flex", gap: 6, marginTop: 14, marginBottom: 0 }}>
+          {/* Tab bar */}
+          <div style={{ display: "flex", gap: 8, marginTop: 24 }}>
             {[["me", "Profile"], ["settings", "Settings"], ["admin", "Admin"]].map(([v, l]) => (
-              <button key={v} className="press" onClick={() => setTab(v)} style={{ flex: 1, padding: "8px 6px", borderRadius: 12, fontSize: 12, fontWeight: tab === v ? 700 : 400, background: tab === v ? `${T.teal}16` : "rgba(255,255,255,.03)", border: `1px solid ${tab === v ? T.tealDim : T.border}`, color: tab === v ? T.teal : T.muted, transition: "all .2s" }}>{l}</button>
+              <button key={v} className="press" onClick={() => setTab(v)} style={{ padding: "12px 24px", borderRadius: 14, fontSize: 14, fontWeight: tab === v ? 700 : 400, background: tab === v ? `${T.teal}16` : "rgba(255,255,255,.04)", border: `1px solid ${tab === v ? T.tealDim : T.border}`, color: tab === v ? T.teal : T.muted, transition: "all .2s" }}>{l}</button>
             ))}
           </div>
         </div>
       </div>
 
-      <div style={{ flex: 1, overflowY: "auto", padding: 16 }}>
+      <div style={{ padding: "24px 32px 60px", maxWidth: 900, margin: "0 auto" }}>
         {tab === "me" && (
           <div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10, marginBottom: 18 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 10, marginBottom: 18 }}>
               {[["Given", Math.floor(xp / 40), T.teal], ["Received", 2, T.violet], ["Ripples", Math.floor(xp / 40) * 3, T.warm]].map(([l, v, col]) => (
                 <div key={l} className="glass" style={{ borderRadius: 16, padding: 15, textAlign: "center", border: `1px solid ${col}22` }}>
-                  <div style={{ color: col, fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 26 }}>{v}</div>
+                  <div style={{ color: col, fontFamily: "'Bricolage Grotesque',sans-serif", fontWeight: 800, fontSize: 26 }}>{v}</div>
                   <div style={{ color: T.muted, fontSize: 11, marginTop: 4 }}>{l}</div>
                 </div>
               ))}
@@ -1457,7 +1556,7 @@ function ProfileView({ user, xp, onXP, onLogout }) {
               <div key={i} className="glass hov" style={{ display: "flex", alignItems: "center", gap: 13, borderRadius: 16, padding: "13px 15px", marginBottom: 9, animation: `fadeUp .3s ${i * .07}s both`, border: `1px solid ${col}13` }}>
                 <div style={{ width: 42, height: 42, borderRadius: 12, background: `${col}16`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, flexShrink: 0 }}>{ic}</div>
                 <div style={{ flex: 1, color: T.white, fontSize: 14, fontWeight: 600 }}>{l}</div>
-                <span style={{ color: col, fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 18 }}>{v}</span>
+                <span style={{ color: col, fontFamily: "'Bricolage Grotesque',sans-serif", fontWeight: 800, fontSize: 18 }}>{v}</span>
               </div>
             ))}
           </div>
@@ -1475,13 +1574,14 @@ function StreakBanner({ streak, checkedToday, onCheckIn }) {
   const nextMilestone = STREAK_MILESTONES.find(m => m > streak) || 100;
   const pct = Math.round((streak / nextMilestone) * 100);
   return (
-    <div style={{ margin: "12px 16px 0", background: streak > 0 ? `linear-gradient(135deg,rgba(255,124,58,.12),rgba(255,61,90,.08))` : T.panel, border: `1px solid ${streak > 0 ? T.warm + "44" : T.border}`, borderRadius: 16, padding: "12px 16px", display: "flex", alignItems: "center", gap: 12, backdropFilter: "blur(20px)" }}>
+    <div style={{ margin: "20px auto 0", maxWidth: 1280, padding: "0 24px" }}>
+    <div style={{ background: streak > 0 ? `linear-gradient(135deg,rgba(255,124,58,.12),rgba(255,61,90,.08))` : T.panel, border: `1px solid ${streak > 0 ? T.warm + "44" : T.border}`, borderRadius: 16, padding: "12px 16px", display: "flex", alignItems: "center", gap: 12, backdropFilter: "blur(20px)" }}>
       <div style={{ fontSize: 32, animation: streak > 0 ? "fireDance 2s ease-in-out infinite" : "none", lineHeight: 1 }}>
         {streak > 0 ? "🔥" : "🌱"}
       </div>
       <div style={{ flex: 1 }}>
         <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginBottom: 4 }}>
-          <span style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 22, color: streak > 0 ? T.warm : T.muted }}>{streak}</span>
+          <span style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontWeight: 800, fontSize: 22, color: streak > 0 ? T.warm : T.muted }}>{streak}</span>
           <span style={{ color: T.muted, fontSize: 13 }}>day streak · next milestone: {nextMilestone}</span>
         </div>
         <div style={{ height: 5, background: "rgba(255,255,255,.08)", borderRadius: 3, overflow: "hidden" }}>
@@ -1497,6 +1597,7 @@ function StreakBanner({ streak, checkedToday, onCheckIn }) {
         <div style={{ background: `${T.emerald}18`, border: `1px solid ${T.emerald}44`, borderRadius: 10, padding: "6px 10px", fontSize: 11, color: T.emerald, fontWeight: 700 }}>Done today!</div>
       )}
     </div>
+    </div>
   );
 }
 
@@ -1508,43 +1609,43 @@ function StreakView({ streak, shields, checkedToday, onCheckIn, onUseShield, use
   const pct = Math.round((streak / nextMilestone) * 100);
 
   return (
-    <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
-      {/* Header */}
-      <div style={{ padding: "24px 18px 0", background: `linear-gradient(180deg,rgba(255,90,40,.14) 0%,transparent 100%)`, position: "relative" }}>
+    <div style={{ width: "100%" }}>
+      {/* Hero header */}
+      <div style={{ padding: "52px 32px 32px", maxWidth: 900, margin: "0 auto", background: `linear-gradient(180deg,rgba(255,90,40,.10) 0%,transparent 100%)`, position: "relative" }}>
         <OrbBg cols={[T.warm, T.urgent, T.gold]} />
         <div style={{ position: "relative", zIndex: 1 }}>
-          {/* Big flame + count */}
-          <div style={{ textAlign: "center", marginBottom: 20 }}>
-            <div style={{ fontSize: 72, animation: streak > 0 ? "fireDance 1.8s ease-in-out infinite" : "none", display: "inline-block", filter: streak > 0 ? `drop-shadow(0 0 24px ${T.warm}88)` : "none" }}>
+          {/* Big flame + count — HERO element */}
+          <div style={{ textAlign: "center", marginBottom: 32 }}>
+            <div style={{ fontSize: 96, animation: streak > 0 ? "fireDance 1.8s ease-in-out infinite" : "none", display: "inline-block", filter: streak > 0 ? `drop-shadow(0 0 32px ${T.warm}99)` : "none", lineHeight: 1, marginBottom: 8 }}>
               {streak > 0 ? "🔥" : "🌱"}
             </div>
-            <div style={{ fontFamily: "'Syne',sans-serif", fontSize: 56, fontWeight: 800, color: streak > 0 ? T.warm : T.muted, lineHeight: 1, marginTop: 8, animation: streak > 0 ? "streakPop .6s both" : "none" }}>
+            <div style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 88, fontWeight: 800, color: streak > 0 ? T.warm : T.muted, lineHeight: 1, animation: streak > 0 ? "streakPop .6s both" : "none" }}>
               {streak}
             </div>
-            <div style={{ color: T.muted, fontSize: 15, marginTop: 4 }}>day kindness streak</div>
+            <div style={{ color: T.muted, fontSize: 18, marginTop: 10, fontWeight: 500 }}>day kindness streak</div>
           </div>
 
-          {/* Progress to next milestone */}
-          <div style={{ background: T.panel, border: `1px solid ${T.border}`, borderRadius: 14, padding: "12px 16px", marginBottom: 14, backdropFilter: "blur(20px)" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
-              <span style={{ color: T.muted, fontSize: 12 }}>Toward {nextMilestone}-day milestone</span>
-              <span style={{ color: T.warm, fontSize: 12, fontWeight: 700 }}>{pct}%</span>
+          {/* Progress to next milestone — as a proper card */}
+          <div style={{ background: T.panel, border: `1px solid ${T.border}`, borderRadius: 20, padding: "18px 24px", marginBottom: 20, backdropFilter: "blur(20px)" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
+              <span style={{ color: T.muted, fontSize: 14 }}>Toward {nextMilestone}-day milestone</span>
+              <span style={{ color: T.warm, fontSize: 14, fontWeight: 700 }}>{pct}%</span>
             </div>
-            <div style={{ height: 8, background: "rgba(255,255,255,.07)", borderRadius: 4, overflow: "hidden" }}>
-              <div style={{ height: "100%", background: `linear-gradient(90deg,${T.gold},${T.warm},${T.urgent})`, borderRadius: 4, width: pct + "%", transition: "width 1.2s cubic-bezier(.22,1,.36,1)" }} />
+            <div style={{ height: 10, background: "rgba(255,255,255,.07)", borderRadius: 5, overflow: "hidden" }}>
+              <div style={{ height: "100%", background: `linear-gradient(90deg,${T.gold},${T.warm},${T.urgent})`, borderRadius: 5, width: pct + "%", transition: "width 1.2s cubic-bezier(.22,1,.36,1)" }} />
             </div>
           </div>
 
           {/* Tabs */}
-          <div style={{ display: "flex", gap: 6 }}>
+          <div style={{ display: "flex", gap: 8 }}>
             {[["streak", "🔥 Streak"], ["league", "🏆 League"], ["milestones", "🎯 Goals"]].map(([v, l]) => (
-              <button key={v} className="press" onClick={() => setTab(v)} style={{ flex: 1, padding: "8px 4px", borderRadius: 12, fontSize: 12, fontWeight: tab === v ? 700 : 400, background: tab === v ? `${T.warm}18` : "rgba(255,255,255,.03)", border: `1px solid ${tab === v ? T.warm : T.border}`, color: tab === v ? T.warm : T.muted, transition: "all .2s" }}>{l}</button>
+              <button key={v} className="press" onClick={() => setTab(v)} style={{ flex: 1, padding: "12px 8px", borderRadius: 14, fontSize: 14, fontWeight: tab === v ? 700 : 400, background: tab === v ? `${T.warm}18` : "rgba(255,255,255,.04)", border: `1px solid ${tab === v ? T.warm : T.border}`, color: tab === v ? T.warm : T.muted, transition: "all .2s" }}>{l}</button>
             ))}
           </div>
         </div>
       </div>
 
-      <div style={{ flex: 1, overflowY: "auto", padding: 16 }}>
+      <div style={{ padding: "20px 32px 60px", maxWidth: 900, margin: "0 auto" }}>
 
         {/* STREAK TAB */}
         {tab === "streak" && (
@@ -1575,7 +1676,7 @@ function StreakView({ streak, shields, checkedToday, onCheckIn, onUseShield, use
                   <div style={{ color: T.white, fontWeight: 700, fontSize: 15, marginBottom: 3 }}>Streak Shields</div>
                   <div style={{ color: T.muted, fontSize: 12 }}>Use one to protect a missed day</div>
                 </div>
-                <div style={{ color: T.violet, fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 22 }}>{shields}</div>
+                <div style={{ color: T.violet, fontFamily: "'Bricolage Grotesque',sans-serif", fontWeight: 800, fontSize: 22 }}>{shields}</div>
               </div>
               <div style={{ display: "flex", gap: 10, marginBottom: 14 }}>
                 {Array.from({ length: 3 }, (_, i) => (
@@ -1616,7 +1717,7 @@ function StreakView({ streak, shields, checkedToday, onCheckIn, onUseShield, use
               <div style={{ color: T.muted, fontSize: 11, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", marginBottom: 14 }}>Gurugram Weekly League</div>
               {[{ name: user?.name || "You", avatar: user?.avatar || "🌱", streak, ripples: streak * 3, isMe: true }, ...LEAGUE].sort((a, b) => b.streak - a.streak).map((p, i) => (
                 <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 0", borderBottom: i < LEAGUE.length ? `1px solid ${T.border}` : "none" }}>
-                  <div style={{ width: 24, fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 14, color: i === 0 ? T.gold : i === 1 ? T.muted : i === 2 ? T.warm : T.muted, textAlign: "center" }}>
+                  <div style={{ width: 24, fontFamily: "'Bricolage Grotesque',sans-serif", fontWeight: 800, fontSize: 14, color: i === 0 ? T.gold : i === 1 ? T.muted : i === 2 ? T.warm : T.muted, textAlign: "center" }}>
                     {i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `${i + 1}`}
                   </div>
                   <div style={{ width: 36, height: 36, borderRadius: "50%", background: p.isMe ? `linear-gradient(135deg,${T.teal},${T.violet})` : `${T.warm}22`, border: p.isMe ? `2px solid ${T.teal}` : `1px solid ${T.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, flexShrink: 0 }}>
@@ -1628,7 +1729,7 @@ function StreakView({ streak, shields, checkedToday, onCheckIn, onUseShield, use
                   </div>
                   <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
                     <span style={{ fontSize: 14 }}>🔥</span>
-                    <span style={{ color: T.warm, fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 16 }}>{p.streak}</span>
+                    <span style={{ color: T.warm, fontFamily: "'Bricolage Grotesque',sans-serif", fontWeight: 800, fontSize: 16 }}>{p.streak}</span>
                   </div>
                 </div>
               ))}
@@ -1707,13 +1808,13 @@ function VideoMatchView({ onBack, onComplete, user }) {
   const c = catOf("urgent");
 
   return (
-    <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden", position: "relative" }}>
-      <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
+    <div style={{ maxWidth: 800, margin: "0 auto", width: "100%", display: "flex", flexDirection: "column", minHeight: 600 }}>
+      <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
         {/* Header */}
         <div className="glass" style={{ padding: "14px 18px", display: "flex", alignItems: "center", gap: 12, borderBottom: `1px solid ${T.border}` }}>
           <button className="press" onClick={onBack} style={{ background: "rgba(255,255,255,.05)", border: `1px solid ${T.border}`, borderRadius: 10, padding: "7px 12px", color: T.muted, fontSize: 13 }}>← Back</button>
           <div style={{ flex: 1 }}>
-            <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 18, color: T.white }}>Instant Video Help</div>
+            <div style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontWeight: 800, fontSize: 18, color: T.white }}>Instant Video Help</div>
             <div style={{ color: T.teal, fontSize: 12 }}>Be available for someone right now</div>
           </div>
         </div>
@@ -1725,7 +1826,7 @@ function VideoMatchView({ onBack, onComplete, user }) {
           {phase === "standby" && (
             <div style={{ textAlign: "center", position: "relative", zIndex: 1, animation: "fadeUp .5s both" }}>
               <div style={{ fontSize: 80, marginBottom: 24, animation: "float3d 6s ease-in-out infinite", filter: `drop-shadow(0 0 24px ${T.emerald}66)` }}>📹</div>
-              <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: 26, fontWeight: 800, color: T.white, marginBottom: 10 }}>Help Someone Live</h2>
+              <h2 style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 26, fontWeight: 800, color: T.white, marginBottom: 10 }}>Help Someone Live</h2>
               <p style={{ color: T.muted, fontSize: 15, lineHeight: 1.7, marginBottom: 32, maxWidth: 280 }}>
                 Tap "I'm Available Now" and get matched with someone who needs help — within 60 seconds.
               </p>
@@ -1754,8 +1855,8 @@ function VideoMatchView({ onBack, onComplete, user }) {
                   {user?.avatar || "🌱"}
                 </div>
               </div>
-              <div style={{ fontFamily: "'Syne',sans-serif", fontSize: 22, fontWeight: 800, color: T.white, marginBottom: 8 }}>Matching you now…</div>
-              <div style={{ color: T.teal, fontSize: 28, fontWeight: 800, fontFamily: "'Syne',sans-serif", marginBottom: 8 }}>{countdown}s</div>
+              <div style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 22, fontWeight: 800, color: T.white, marginBottom: 8 }}>Matching you now…</div>
+              <div style={{ color: T.teal, fontSize: 28, fontWeight: 800, fontFamily: "'Bricolage Grotesque',sans-serif", marginBottom: 8 }}>{countdown}s</div>
               <div style={{ color: T.muted, fontSize: 14, marginBottom: 28 }}>Looking for someone who needs help nearby</div>
               <div style={{ display: "flex", gap: 5, justifyContent: "center" }}>
                 {[0, 1, 2].map(i => <div key={i} style={{ width: 8, height: 8, borderRadius: "50%", background: T.teal, animation: `dotBounce .9s ${i * .2}s infinite` }} />)}
@@ -1768,7 +1869,7 @@ function VideoMatchView({ onBack, onComplete, user }) {
             <div style={{ position: "relative", zIndex: 1, width: "100%", maxWidth: 340, animation: "cardReveal .6s both" }}>
               <div style={{ textAlign: "center", marginBottom: 24 }}>
                 <div style={{ color: T.emerald, fontSize: 12, fontWeight: 700, letterSpacing: 1, marginBottom: 4 }}>MATCH FOUND</div>
-                <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: 22, fontWeight: 800, color: T.white }}>Someone needs you!</h2>
+                <h2 style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 22, fontWeight: 800, color: T.white }}>Someone needs you!</h2>
               </div>
               <TiltCard style={{ background: T.panel, border: `2px solid ${c.color}55`, borderRadius: 22, padding: 22, marginBottom: 20, boxShadow: `0 20px 50px rgba(0,0,0,.5), 0 0 30px ${c.color}18`, backdropFilter: "blur(20px)" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14 }}>
@@ -1795,7 +1896,7 @@ function VideoMatchView({ onBack, onComplete, user }) {
           {phase === "call" && (
             <div style={{ position: "relative", zIndex: 1, width: "100%", textAlign: "center" }}>
               {/* Simulated video frame */}
-              <div style={{ background: `linear-gradient(135deg,#0a1628,#08122a)`, border: `2px solid ${T.emerald}44`, borderRadius: 20, padding: 0, overflow: "hidden", marginBottom: 16, position: "relative", height: 240 }}>
+              <div style={{ background: `linear-gradient(135deg,#0d0d14,#030712)`, border: `2px solid ${T.emerald}44`, borderRadius: 20, padding: 0, overflow: "hidden", marginBottom: 16, position: "relative", height: 240 }}>
                 <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" }}>
                   <div style={{ fontSize: 64 }}>{matched?.avatar || "🌸"}</div>
                   <div style={{ color: T.muted, fontSize: 13, marginTop: 8 }}>Live video · {matched?.name}</div>
@@ -1827,7 +1928,7 @@ function VideoMatchView({ onBack, onComplete, user }) {
           {phase === "done" && (
             <div style={{ position: "relative", zIndex: 1, textAlign: "center", animation: "scaleIn .5s both" }}>
               <div style={{ fontSize: 72, marginBottom: 20, animation: "streakPop .7s both" }}>🌊</div>
-              <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: 26, fontWeight: 800, color: T.emerald, marginBottom: 8 }}>Session complete!</h2>
+              <h2 style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 26, fontWeight: 800, color: T.emerald, marginBottom: 8 }}>Session complete!</h2>
               <p style={{ color: T.muted, fontSize: 15, lineHeight: 1.65, marginBottom: 24 }}>You helped {matched?.name} for {fmtTime(callTime)}.<br />That moment mattered.</p>
               <div style={{ display: "flex", gap: 10, justifyContent: "center", marginBottom: 28 }}>
                 {["+80 XP", "+1 Shield", "+3 Ripples"].map(b => (
@@ -1848,11 +1949,11 @@ function VideoMatchView({ onBack, onComplete, user }) {
 // ══════════════════════════════════════════════════════
 
 const SHARE_TEMPLATES = {
-  first:   { emoji: "🌊", title: "First Ripple",    sub: "Just helped someone in my community.",      gradient: ["#00e8b4","#00bf94"] },
-  streak7: { emoji: "🔥", title: "7-Day Streak!",   sub: "7 days of kindness in a row.",              gradient: ["#ff7b3a","#ff3d5a"] },
-  streak30:{ emoji: "🏆", title: "30-Day Champion", sub: "30 days of making a difference.",           gradient: ["#ffc43d","#ff7b3a"] },
-  xp100:   { emoji: "💫", title: "100 XP Earned",   sub: "Growing through giving.",                   gradient: ["#8580ff","#00e8b4"] },
-  video1:  { emoji: "📹", title: "Live Helper",      sub: "Just helped someone via video in real time.",gradient: ["#1de99b","#00e8b4"] },
+  first:   { emoji: "🌊", title: "First Ripple",    sub: "Just helped someone in my community.",      gradient: ["#f43f5e","#ec4899"] },
+  streak7: { emoji: "🔥", title: "7-Day Streak!",   sub: "7 days of kindness in a row.",              gradient: ["#fb923c","#f43f5e"] },
+  streak30:{ emoji: "🏆", title: "30-Day Champion", sub: "30 days of making a difference.",           gradient: ["#fbbf24","#fb923c"] },
+  xp100:   { emoji: "💫", title: "100 XP Earned",   sub: "Growing through giving.",                   gradient: ["#a78bfa","#f43f5e"] },
+  video1:  { emoji: "📹", title: "Live Helper",      sub: "Just helped someone via video in real time.",gradient: ["#34d399","#f43f5e"] },
 };
 
 function ShareCardOverlay({ type, user, xp, streak, onShare, onClose }) {
@@ -1871,7 +1972,7 @@ function ShareCardOverlay({ type, user, xp, streak, onShare, onClose }) {
       <ParticleCanvas />
 
       {/* The share card */}
-      <div ref={canvasRef} style={{ width: "100%", maxWidth: 320, background: `linear-gradient(145deg,#05091a,#08122a)`, border: `1px solid ${T.teal}33`, borderRadius: 24, padding: 28, textAlign: "center", position: "relative", overflow: "hidden", animation: "cardReveal .6s cubic-bezier(.22,1,.36,1) both", zIndex: 1 }}>
+      <div ref={canvasRef} style={{ width: "100%", maxWidth: 320, background: `linear-gradient(145deg,#0d0d14,#030712)`, border: `1px solid rgba(244,63,94,0.3)`, borderRadius: 24, padding: 28, textAlign: "center", position: "relative", overflow: "hidden", animation: "cardReveal .6s cubic-bezier(.22,1,.36,1) both", zIndex: 1 }}>
         {/* Shimmer bar */}
         <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: `linear-gradient(90deg,${tpl.gradient[0]},${tpl.gradient[1]},${tpl.gradient[0]})`, backgroundSize: "200% 100%", animation: "shimmerSlide 2s linear infinite" }} />
 
@@ -1879,9 +1980,9 @@ function ShareCardOverlay({ type, user, xp, streak, onShare, onClose }) {
         <div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
           <svg viewBox="0 0 96 96" style={{ width: 36, height: 36 }}>
             <rect x="0" y="0" width="96" height="96" rx="17" fill={tpl.gradient[0]} />
-            <rect x="22" y="19" width="17" height="58" rx="4" fill="#05091a" />
-            <polygon points="39,48 72,19 83,19 83,31 50,52" fill="#05091a" />
-            <polygon points="39,52 72,77 83,77 83,65 50,46" fill="#05091a" />
+            <rect x="22" y="19" width="17" height="58" rx="4" fill="#030712" />
+            <polygon points="39,48 72,19 83,19 83,31 50,52" fill="#030712" />
+            <polygon points="39,52 72,77 83,77 83,65 50,46" fill="#030712" />
             <circle cx="68" cy="27" r="5" fill={tpl.gradient[0]} />
           </svg>
         </div>
@@ -1890,23 +1991,23 @@ function ShareCardOverlay({ type, user, xp, streak, onShare, onClose }) {
         <div style={{ fontSize: 64, marginBottom: 16, animation: "streakPop .7s .2s both", display: "block" }}>{tpl.emoji}</div>
 
         {/* Achievement */}
-        <div style={{ background: `linear-gradient(90deg,${tpl.gradient[0]},${tpl.gradient[1]})`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", fontFamily: "'Syne',sans-serif", fontSize: 24, fontWeight: 800, marginBottom: 6 }}>{tpl.title}</div>
+        <div style={{ background: `linear-gradient(90deg,${tpl.gradient[0]},${tpl.gradient[1]})`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 24, fontWeight: 800, marginBottom: 6 }}>{tpl.title}</div>
         <div style={{ color: T.muted, fontSize: 14, marginBottom: 20 }}>{tpl.sub}</div>
 
         {/* User + stats */}
         <div style={{ display: "flex", gap: 14, justifyContent: "center", marginBottom: 20 }}>
           <div style={{ textAlign: "center" }}>
-            <div style={{ color: tpl.gradient[0], fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 22 }}>{xp}</div>
+            <div style={{ color: tpl.gradient[0], fontFamily: "'Bricolage Grotesque',sans-serif", fontWeight: 800, fontSize: 22 }}>{xp}</div>
             <div style={{ color: T.muted, fontSize: 11 }}>XP</div>
           </div>
           <div style={{ width: 1, background: T.border }} />
           <div style={{ textAlign: "center" }}>
-            <div style={{ color: tpl.gradient[0], fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 22 }}>{streak}</div>
+            <div style={{ color: tpl.gradient[0], fontFamily: "'Bricolage Grotesque',sans-serif", fontWeight: 800, fontSize: 22 }}>{streak}</div>
             <div style={{ color: T.muted, fontSize: 11 }}>day streak</div>
           </div>
           <div style={{ width: 1, background: T.border }} />
           <div style={{ textAlign: "center" }}>
-            <div style={{ color: tpl.gradient[0], fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 22 }}>{streak * 3}</div>
+            <div style={{ color: tpl.gradient[0], fontFamily: "'Bricolage Grotesque',sans-serif", fontWeight: 800, fontSize: 22 }}>{streak * 3}</div>
             <div style={{ color: T.muted, fontSize: 11 }}>ripples</div>
           </div>
         </div>
@@ -1940,7 +2041,7 @@ function StreakPill({ streak, checkedToday, onGoToStreak }) {
   return (
     <button className="press" onClick={onGoToStreak} style={{ display: "flex", alignItems: "center", gap: 6, background: streak > 0 ? `${T.warm}18` : "rgba(255,255,255,.05)", border: `1px solid ${streak > 0 ? T.warm + "44" : T.border}`, borderRadius: 20, padding: "5px 12px 5px 8px" }}>
       <span style={{ fontSize: 16, animation: streak > 0 ? "fireDance 2s ease-in-out infinite" : "none" }}>{streak > 0 ? "🔥" : "🌱"}</span>
-      <span style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 15, color: streak > 0 ? T.warm : T.muted }}>{streak}</span>
+      <span style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontWeight: 800, fontSize: 15, color: streak > 0 ? T.warm : T.muted }}>{streak}</span>
       {checkedToday && <span style={{ width: 6, height: 6, borderRadius: "50%", background: T.emerald, display: "inline-block" }} />}
     </button>
   );
@@ -1950,24 +2051,147 @@ function StreakPill({ streak, checkedToday, onGoToStreak }) {
 function BottomNav({ active, setActive, isVol, streak }) {
   const tabs = [
     { id: "map",    icon: "🗺️", l: "Map"     },
-    { id: "help",   icon: "💚", l: "Help"    },
-    { id: "streak", icon: streak > 0 ? "🔥" : "🌱", l: streak > 0 ? `${streak}` : "Streak" },
+    { id: "help",   icon: "💚", l: "Help Feed" },
+    { id: "streak", icon: streak > 0 ? "🔥" : "🌱", l: streak > 0 ? `${streak}-day Streak` : "Streak" },
     { id: "heal",   icon: "✦",  l: "Heal"   },
     { id: "me",     icon: "👤", l: "Profile" },
   ];
   return (
-    <div style={{ position: "absolute", bottom: 10, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 3, zIndex: 100, background: "rgba(8,18,42,.92)", backdropFilter: "blur(32px)", WebkitBackdropFilter: "blur(32px)", borderRadius: 28, padding: "5px", border: `1px solid ${T.border}`, boxShadow: "0 8px 32px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.03)" }}>
+    <div style={{
+      display: "flex", gap: 4, padding: "10px 24px",
+      background: "rgba(3,7,18,0.95)", backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)",
+      borderBottom: "1px solid rgba(255,255,255,0.07)",
+      overflowX: "auto", flexShrink: 0,
+      position: "sticky", top: 80, zIndex: 100,
+      boxShadow: "0 1px 0 rgba(255,255,255,0.04), 0 8px 32px rgba(0,0,0,0.4)",
+    }}>
       {tabs.map(t => {
         const on = active === t.id;
         const isStreak = t.id === "streak";
         return (
-          <button key={t.id} className="press" onClick={() => setActive(t.id)} style={{ position: "relative", display: "flex", flexDirection: "column", alignItems: "center", background: on ? (isStreak && streak > 0 ? `rgba(255,123,58,.16)` : `rgba(0,232,180,.12)`) : "transparent", border: `1px solid ${on ? (isStreak && streak > 0 ? T.warm : T.tealDim) : T.border}`, borderRadius: 22, padding: "7px 14px", transition: "all .25s", boxShadow: on ? (isStreak && streak > 0 ? `0 0 16px rgba(255,123,58,.25)` : `0 0 16px rgba(0,232,180,.18)`) : "none" }}>
-            <span style={{ fontSize: 18, animation: isStreak && streak > 0 && on ? "fireDance 2s ease-in-out infinite" : "none" }}>{t.icon}</span>
-            <span style={{ fontSize: 10, color: on ? (isStreak && streak > 0 ? T.warm : T.teal) : T.muted, fontWeight: on ? 700 : 400, marginTop: 3, fontFamily: "'Plus Jakarta Sans',sans-serif" }}>{t.l}</span>
-            {t.id === "help" && isVol && <div style={{ position: "absolute", top: 5, right: 8, width: 7, height: 7, borderRadius: "50%", background: T.emerald, boxShadow: `0 0 6px ${T.emerald}` }} />}
+          <button key={t.id} className="press" onClick={() => setActive(t.id)} style={{
+            position: "relative", display: "flex", flexDirection: "row", alignItems: "center", gap: 8,
+            background: on ? (isStreak && streak > 0 ? "rgba(255,123,58,0.12)" : "rgba(244,63,94,0.10)") : "transparent",
+            border: `1px solid ${on ? (isStreak && streak > 0 ? "rgba(255,123,58,0.5)" : "rgba(244,63,94,0.4)") : "rgba(255,255,255,0.08)"}`,
+            borderRadius: 10, padding: "8px 18px", transition: "all .22s", whiteSpace: "nowrap",
+            boxShadow: on ? "0 2px 12px rgba(244,63,94,0.18)" : "none",
+          }}>
+            <span style={{ fontSize: 16, animation: isStreak && streak > 0 && on ? "fireDance 2s ease-in-out infinite" : "none" }}>{t.icon}</span>
+            <span style={{ fontSize: 13, color: on ? (isStreak && streak > 0 ? T.warm : "#fda4af") : "rgba(255,255,255,0.45)", fontWeight: on ? 700 : 500, fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif" }}>{t.l}</span>
+            {t.id === "help" && isVol && <div style={{ width: 7, height: 7, borderRadius: "50%", background: T.emerald, boxShadow: `0 0 6px ${T.emerald}` }} />}
           </button>
         );
       })}
+    </div>
+  );
+}
+
+// ══════════════════════════════════════════════════════
+// LANDING PAGE  (shown when user hasn't onboarded yet)
+// ══════════════════════════════════════════════════════
+function LandingPage({ onBegin }) {
+  const Btn = ({ children, onClick, secondary }) => (
+    <button onClick={onClick} style={{
+      background: secondary ? "transparent" : `linear-gradient(135deg,${T.teal},${T.tealDim})`,
+      border: secondary ? `1.5px solid rgba(255,255,255,0.2)` : "none",
+      borderRadius: 16, padding: "16px 36px",
+      color: secondary ? "rgba(240,244,255,0.8)" : "#fff",
+      fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 16, fontWeight: 700,
+      cursor: "pointer", transition: "all .22s",
+      boxShadow: secondary ? "none" : `0 8px 32px rgba(244,63,94,0.35)`,
+      display: "flex", alignItems: "center", gap: 8,
+    }}
+    onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; if (!secondary) e.currentTarget.style.boxShadow = `0 14px 40px rgba(244,63,94,0.5)`; else e.currentTarget.style.borderColor = "rgba(255,255,255,0.4)"; }}
+    onMouseLeave={e => { e.currentTarget.style.transform = ""; if (!secondary) e.currentTarget.style.boxShadow = `0 8px 32px rgba(244,63,94,0.35)`; else e.currentTarget.style.borderColor = "rgba(255,255,255,0.2)"; }}
+    >{children}</button>
+  );
+
+  return (
+    <div className="kw-cosmos" style={{ fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif", color: T.white }}>
+      <style>{CSS}</style>
+
+      {/* ── HERO ── */}
+      <section style={{ width: "100%", minHeight: "100vh", position: "relative", isolation: "isolate" }}>
+        {/* Background image */}
+        <img
+          src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/0e2dbea0-c0a9-413f-a57b-af279633c0df_3840w.jpg"
+          alt=""
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center" }}
+        />
+        {/* Overlay */}
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg,rgba(3,7,18,0.55) 0%,rgba(3,7,18,0.72) 60%,rgba(3,7,18,0.92) 100%)", pointerEvents: "none" }} />
+        {/* Ring */}
+        <div style={{ position: "absolute", inset: 0, boxShadow: "inset 0 0 0 1px rgba(0,0,0,0.3)", pointerEvents: "none" }} />
+
+        {/* Content */}
+        <div style={{ position: "relative", zIndex: 1, display: "flex", flexDirection: "column", minHeight: "100vh", paddingTop: 80 }}>
+          {/* Center content */}
+          <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "clamp(48px,8vw,96px) 24px clamp(32px,5vw,64px)" }}>
+            <div style={{ maxWidth: 780, width: "100%", textAlign: "center" }}>
+
+              {/* Badge */}
+              <div className="kwhi-1" style={{ display: "inline-flex", alignItems: "center", gap: 12, background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 999, padding: "8px 10px 8px 20px", marginBottom: 28, backdropFilter: "blur(12px)" }}>
+                <span style={{ color: "rgba(240,244,255,0.9)", fontSize: 14, fontWeight: 500, letterSpacing: 0.2 }}>Real-Time Community Kindness Network</span>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 5, background: "rgba(255,255,255,0.9)", borderRadius: 999, padding: "3px 10px" }}>
+                  <span style={{ width: 6, height: 6, borderRadius: "50%", background: T.teal, display: "inline-block", animation: "pulse 2s infinite" }} />
+                  <span style={{ color: "#030712", fontSize: 12, fontWeight: 700, letterSpacing: 0.5 }}>LIVE</span>
+                </span>
+              </div>
+
+              {/* Headline */}
+              <h1 className="kwhi-2" style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontSize: "clamp(3.2rem,8.5vw,6.5rem)", fontWeight: 400, lineHeight: 1.08, letterSpacing: "-1px", marginBottom: 28, color: T.white }}>
+                Help Others.
+                <br />
+                <span style={{ fontStyle: "italic" }}>Heal Yourself.</span>
+              </h1>
+
+              {/* Description */}
+              <p className="kwhi-3" style={{ color: "rgba(240,244,255,0.78)", fontSize: "clamp(16px,2vw,19px)", lineHeight: 1.75, maxWidth: 560, margin: "0 auto 44px" }}>
+                A GPS-powered community where giving help is the fastest path to healing — for everyone involved.
+              </p>
+
+              {/* CTAs */}
+              <div className="kwhi-4" style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap", marginBottom: 72 }}>
+                <button
+                  onClick={onBegin}
+                  style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.18)", borderRadius: 999, padding: "14px 28px", color: T.white, fontSize: 15, fontWeight: 600, cursor: "pointer", backdropFilter: "blur(12px)", transition: "all .2s", fontFamily: "'Plus Jakarta Sans',sans-serif" }}
+                  onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.2)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.12)"; e.currentTarget.style.transform = ""; }}
+                >
+                  Begin Your Journey
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                </button>
+              </div>
+
+              {/* Stats */}
+              <div className="kwhi-5" style={{ display: "flex", gap: "clamp(24px,6vw,72px)", justifyContent: "center", flexWrap: "wrap" }}>
+                {[["47K+","Acts of Kindness"],["91","Countries"],["Live","GPS-Powered"],["Free","Always & Forever"]].map(([v, l]) => (
+                  <div key={l} style={{ textAlign: "center" }}>
+                    <div style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: "clamp(22px,3vw,34px)", fontWeight: 800, color: T.white }}>{v}</div>
+                    <div style={{ color: "rgba(240,244,255,0.5)", fontSize: 13, marginTop: 4 }}>{l}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Partners strip */}
+          <div style={{ padding: "28px 32px 40px", borderTop: "1px solid rgba(255,255,255,0.08)", backdropFilter: "blur(8px)", background: "rgba(3,7,18,0.35)" }}>
+            <div style={{ maxWidth: 900, margin: "0 auto" }}>
+              <p style={{ textAlign: "center", color: "rgba(240,244,255,0.45)", fontSize: 13, marginBottom: 20, letterSpacing: 0.5 }}>Partnering with leading organizations worldwide</p>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "clamp(24px,4vw,56px)", flexWrap: "wrap" }}>
+                {["Feeding America","Water.org","UNICEF","One Tree Planted","Save the Children"].map((name) => (
+                  <div key={name} style={{ color: "rgba(240,244,255,0.4)", fontSize: 13, fontWeight: 600, letterSpacing: 0.8, textTransform: "uppercase", fontFamily: "'Plus Jakarta Sans',sans-serif", transition: "color .2s", cursor: "default" }}
+                    onMouseEnter={e => { e.currentTarget.style.color = "rgba(240,244,255,0.75)"; }}
+                    onMouseLeave={e => { e.currentTarget.style.color = "rgba(240,244,255,0.4)"; }}
+                  >{name}</div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
     </div>
   );
 }
@@ -1978,6 +2202,7 @@ function BottomNav({ active, setActive, isVol, streak }) {
 export default function KindWaveApp() {
   const { pins: DB_PINS } = useKindWaveData();
   const [user, setUser]               = useState(null);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const [xp, setXp]                   = useState(0);
   const [tab, setTab]                 = useState("map");
   const [pins, setPins]               = useState(DB_PINS);
@@ -2076,7 +2301,11 @@ export default function KindWaveApp() {
     notify("Impact card copied! Share it to spread kindness. ✨");
   };
 
-  if (!user) return (<Onboarding onComplete={handleComplete} />);
+  // Onboarding full-page flow
+  if (!user && showOnboarding) return (<Onboarding onComplete={handleComplete} />);
+
+  // Landing page (marketing) — not yet signed up
+  if (!user) return (<LandingPage onBegin={() => setShowOnboarding(true)} />);
 
   const showTooltip = firstVisit && !tooltipDismissed[tab];
   const dismissTooltip = () => {
@@ -2085,15 +2314,15 @@ export default function KindWaveApp() {
   };
 
   return (
-    <div style={{ height: "calc(100vh - var(--kw-offset, 0px))", display: "flex", flexDirection: "column", fontFamily: "'Plus Jakarta Sans',sans-serif", color: T.white, width: "100%", position: "relative", overflow: "hidden" }}>
+    <div className="kw-cosmos" style={{ minHeight: "100vh", fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif", color: "#f0f4ff", paddingTop: 80 }}>
       <style>{CSS}</style>
 
-      {/* Notifications */}
+      {/* Notification overlays */}
       {toast   && <Toast msg={toast} onDone={() => setToast(null)} />}
       {xpToast && <XPToast xp={xpToast} onDone={() => setXpToast(null)} />}
       {badgeQ.length > 0 && <BadgeUnlock badge={badgeQ[0]} onDone={() => setBadgeQ(prev => prev.slice(1))} />}
 
-      {/* Feature 3: Share card overlay */}
+      {/* Share card overlay */}
       {shareCard && view === "main" && (
         <ShareCardOverlay
           type={shareCard}
@@ -2105,42 +2334,74 @@ export default function KindWaveApp() {
         />
       )}
 
-      {/* Main Content */}
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden", position: "relative" }}>
-        {view === "main" && tab === "map" && (
-          <MapView pins={pins}
+      {/* Modal overlays for detail views */}
+      {view === "detail" && selPin && (
+        <Modal onClose={() => setView("main")}>
+          <PinDetail
+            pin={selPin}
+            onBack={() => setView("main")}
+            onChat={p => { setChatPin(p); setView("chat"); }}
+            onAccept={handleAccept}
+            accepted={accepted}
+          />
+        </Modal>
+      )}
+      {view === "chat" && chatPin && (
+        <Modal onClose={() => setView(selPin ? "detail" : "main")}>
+          <ChatView pin={chatPin} onBack={() => setView(selPin ? "detail" : "main")} />
+        </Modal>
+      )}
+      {view === "post" && (
+        <Modal onClose={() => setView("main")}>
+          <PostRequest
+            onBack={() => setView("main")}
+            onPost={f => {
+              setPins(prev => [{ id: Date.now(), title: f.title, desc: f.desc, cat: f.cat, urgency: f.urgency, x: 38 + Math.random() * 18, y: 38 + Math.random() * 18, user: user?.name || "You", time: "Just now", verified: false }, ...prev]);
+              addXP(20);
+              notify("🗺️ Your request is live on the map!");
+            }}
+          />
+        </Modal>
+      )}
+      {view === "video" && (
+        <Modal onClose={() => setView("main")}>
+          <VideoMatchView
+            onBack={() => setView("main")}
+            onComplete={handleVideoComplete}
+            user={user}
+          />
+        </Modal>
+      )}
+
+      {/* Sticky tab nav — always visible */}
+      <BottomNav active={tab} setActive={setTab} isVol={isVol} streak={streak} />
+
+      {/* Page sections */}
+      <div style={{ position: "relative" }}>
+        {tab === "map" && (
+          <MapView
+            pins={pins}
             onPin={p => { setSelPin(p); setAccepted(false); setView("detail"); }}
             onAdd={() => setView("post")}
             filterCats={filterCats}
             setFilterCats={setFilterCats}
           />
         )}
-        {view === "main" && tab === "help" && (
-          <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
-            {/* Streak banner in help feed */}
-            <StreakBanner streak={streak} checkedToday={checkedToday} onCheckIn={handleCheckIn} />
-            {/* Video Help NOW button */}
-            <div style={{ margin: "10px 16px 0", display: "flex", gap: 8 }}>
-              <button className="press" onClick={() => setView("video")} style={{ flex: 1, background: `linear-gradient(135deg,${T.emerald}18,${T.teal}10)`, border: `1px solid ${T.emerald}44`, borderRadius: 14, padding: "12px 16px", display: "flex", alignItems: "center", gap: 10 }}>
-                <span style={{ fontSize: 20 }}>📹</span>
-                <div style={{ textAlign: "left" }}>
-                  <div style={{ color: T.emerald, fontWeight: 700, fontSize: 14 }}>Help RIGHT NOW</div>
-                  <div style={{ color: T.muted, fontSize: 11 }}>Instant video match · 60s</div>
-                </div>
-                <div style={{ marginLeft: "auto", width: 8, height: 8, borderRadius: "50%", background: T.emerald, animation: "callPulse 2s infinite" }} />
-              </button>
-            </div>
-            <HelpFeed
-              pins={pins}
-              onPin={p => { setSelPin(p); setAccepted(false); setView("detail"); }}
-              isVol={isVol}
-              setIsVol={v => { setIsVol(v); if (v) { notify("🟢 You're now visible as available!"); addXP(5); } else notify("⚪ You're now offline."); }}
-              onAdd={() => setView("post")}
-              onXP={addXP}
-            />
-          </div>
+        {tab === "help" && (
+          <HelpFeed
+            pins={pins}
+            onPin={p => { setSelPin(p); setAccepted(false); setView("detail"); }}
+            isVol={isVol}
+            setIsVol={v => { setIsVol(v); if (v) { notify("🟢 You're now visible as available!"); addXP(5); } else notify("⚪ You're now offline."); }}
+            onAdd={() => setView("post")}
+            onXP={addXP}
+            streak={streak}
+            checkedToday={checkedToday}
+            onCheckIn={handleCheckIn}
+            setView={setView}
+          />
         )}
-        {view === "main" && tab === "streak" && (
+        {tab === "streak" && (
           <StreakView
             streak={streak}
             shields={shields}
@@ -2152,41 +2413,12 @@ export default function KindWaveApp() {
             badgeList={badgeQ}
           />
         )}
-        {view === "main" && tab === "heal" && <HealingView user={user} xp={xp} onXP={addXP} />}
-        {view === "main" && tab === "me"   && <ProfileView user={user} xp={xp} onXP={addXP} onLogout={() => setUser(null)} />}
+        {tab === "heal" && <HealingView user={user} xp={xp} onXP={addXP} />}
+        {tab === "me"   && <ProfileView user={user} xp={xp} onXP={addXP} onLogout={() => setUser(null)} />}
 
-        {view === "detail" && selPin && (
-          <PinDetail
-            pin={selPin}
-            onBack={() => setView("main")}
-            onChat={p => { setChatPin(p); setView("chat"); }}
-            onAccept={handleAccept}
-            accepted={accepted}
-          />
-        )}
-        {view === "chat" && chatPin && <ChatView pin={chatPin} onBack={() => setView(selPin ? "detail" : "main")} />}
-        {view === "post" && (
-          <PostRequest
-            onBack={() => setView("main")}
-            onPost={f => {
-              setPins(prev => [{ id: Date.now(), title: f.title, desc: f.desc, cat: f.cat, urgency: f.urgency, x: 38 + Math.random() * 18, y: 38 + Math.random() * 18, user: user?.name || "You", time: "Just now", verified: false }, ...prev]);
-              addXP(20);
-              notify("🗺️ Your request is live on the map!");
-            }}
-          />
-        )}
-        {view === "video" && (
-          <VideoMatchView
-            onBack={() => setView("main")}
-            onComplete={handleVideoComplete}
-            user={user}
-          />
-        )}
-
+        {/* Tooltip guide */}
         {view === "main" && showTooltip && <TooltipGuide tab={tab} onDismiss={dismissTooltip} />}
       </div>
-
-      {view === "main" && <BottomNav active={tab} setActive={setTab} isVol={isVol} streak={streak} />}
     </div>
   );
 }

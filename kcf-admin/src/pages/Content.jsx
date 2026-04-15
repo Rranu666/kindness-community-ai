@@ -29,30 +29,57 @@ function Toggle({ checked, onChange, disabled }) {
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 const SITE_ORIGIN = 'https://kindnesscommunityfoundation.com';
-const SLUG_TO_PATH = {
-  home: '/',
-  kindwave: '/kindwave',
-  servekindness: '/servekindness',
-  blog: '/blog',
-  contact: '/contact',
-  volunteer: '/volunteer',
-  jointeam: '/jointeam',
-  synergyhub: '/synergyhub',
-  mygiving: '/mygiving',
-};
+
+// All pages on kindnesscommunityfoundation.com — source of truth
+const ALL_PAGES = [
+  { slug: 'home',                 name: 'Home',                  path: '/',                    nav: 'Home' },
+  { slug: 'volunteer',            name: 'Volunteer',             path: '/volunteer',            nav: 'Volunteer' },
+  { slug: 'jointeam',             name: 'Join the Team',         path: '/jointeam',             nav: 'Join Team' },
+  { slug: 'servekindness',        name: 'Donate & Give',         path: '/servekindness',        nav: 'Serve' },
+  { slug: 'kindwave',             name: 'KindWave',              path: '/kindwave',             nav: 'KindWave' },
+  { slug: 'kindlearn',            name: 'KindLearn',             path: '/kindlearn',            nav: 'KindLearn' },
+  { slug: 'kindcalmunity',        name: 'KindCalmUnity',         path: '/kindcalmunity',        nav: 'KindCalmUnity' },
+  { slug: 'grow',                 name: 'Personal Growth',       path: '/grow',                 nav: 'Grow' },
+  { slug: 'blog',                 name: 'Blog',                  path: '/blog',                 nav: 'Blog' },
+  { slug: 'vision',               name: 'Vision & Mission',      path: '/vision',               nav: 'Vision' },
+  { slug: 'leadership',           name: 'Leadership',            path: '/leadership',           nav: 'Leadership' },
+  { slug: 'initiatives',          name: 'Initiatives',           path: '/initiatives',          nav: 'Initiatives' },
+  { slug: 'governance',           name: 'Governance',            path: '/governance',           nav: 'Governance' },
+  { slug: 'contact',              name: 'Contact',               path: '/contact',              nav: 'Contact' },
+  { slug: 'mygiving',             name: 'My Giving',             path: '/mygiving',             nav: 'My Giving' },
+  { slug: 'hub',                  name: 'Synergy Hub',           path: '/hub',                  nav: 'Team Portal' },
+  { slug: 'volunteer-dashboard',  name: 'Volunteer Dashboard',   path: '/volunteer/dashboard',  nav: 'Vol. Dashboard' },
+];
+
 function pageUrl(slug) {
-  const path = SLUG_TO_PATH[slug] ?? `/${slug}`;
-  return `${SITE_ORIGIN}${path}`;
+  const page = ALL_PAGES.find(p => p.slug === slug);
+  return `${SITE_ORIGIN}${page ? page.path : `/${slug}`}`;
 }
 
 // ─── Tab 1: Page Visibility ──────────────────────────────────────────────────
 function PagesVisibilityTab() {
-  const { data: pages = [], isLoading } = usePageVisibility();
+  const { data: dbPages = [], isLoading } = usePageVisibility();
   const update = useUpdatePageVisibility();
+
+  // Merge ALL_PAGES with DB records — DB visibility takes precedence, defaults to visible=true
+  const dbMap = Object.fromEntries(dbPages.map(p => [p.page_slug, p]));
+  const mergedPages = ALL_PAGES.map(p => ({
+    page_slug: p.slug,
+    page_name: p.name,
+    nav_label: dbMap[p.slug]?.nav_label ?? p.nav,
+    is_visible: dbMap[p.slug] ? !!dbMap[p.slug].is_visible : true,
+    path: p.path,
+    inDb: !!dbMap[p.slug],
+  }));
 
   const handleToggle = async (page, newVal) => {
     try {
-      await update.mutateAsync({ page_slug: page.page_slug, updates: { is_visible: newVal } });
+      await update.mutateAsync({
+        page_slug: page.page_slug,
+        page_name: page.page_name,
+        nav_label: page.nav_label,
+        updates: { is_visible: newVal },
+      });
       toast.success(`"${page.page_name}" is now ${newVal ? 'visible' : 'hidden'}`);
     } catch (err) {
       toast.error(err.message);
@@ -60,16 +87,6 @@ function PagesVisibilityTab() {
   };
 
   if (isLoading) return <LoadingSpinner />;
-
-  if (pages.length === 0) {
-    return (
-      <EmptyState
-        icon="🌐"
-        title="No pages configured"
-        message="Add rows to the page_visibility table in Supabase to manage nav visibility."
-      />
-    );
-  }
 
   return (
     <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white">
@@ -84,23 +101,23 @@ function PagesVisibilityTab() {
           </tr>
         </thead>
         <tbody>
-          {pages.map((page) => (
+          {mergedPages.map((page) => (
             <tr key={page.page_slug} className="border-b border-gray-100 last:border-0 hover:bg-gray-50/50">
               <td className="px-4 py-3">
                 <div className="flex items-center gap-2">
                   <Globe size={14} className="text-gray-400 shrink-0" />
-                  <span className="font-medium text-gray-900">{page.page_name || page.page_slug}</span>
+                  <span className="font-medium text-gray-900">{page.page_name}</span>
                 </div>
               </td>
               <td className="px-4 py-3">
                 <a
-                  href={pageUrl(page.page_slug)}
+                  href={`${SITE_ORIGIN}${page.path}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={e => e.stopPropagation()}
                   className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 font-mono text-xs group"
                 >
-                  /{page.page_slug}
+                  {page.path}
                   <ExternalLink size={11} className="opacity-0 group-hover:opacity-100 transition-opacity" />
                 </a>
               </td>
@@ -118,7 +135,7 @@ function PagesVisibilityTab() {
               </td>
               <td className="px-4 py-3">
                 <Toggle
-                  checked={!!page.is_visible}
+                  checked={page.is_visible}
                   onChange={(val) => handleToggle(page, val)}
                   disabled={update.isPending}
                 />
@@ -259,7 +276,6 @@ function EditableContent({ block, pageSlug }) {
 
 // ─── Tab 2: Text Editor ───────────────────────────────────────────────────────
 function TextEditorTab() {
-  const { data: pages = [], isLoading: pagesLoading } = usePageVisibility();
   const [selectedSlug, setSelectedSlug] = useState('');
   const { data: blocks = [], isLoading: blocksLoading } = useContentBlocks(selectedSlug);
   const deleteBlock = useDeleteContentBlock();
@@ -275,12 +291,11 @@ function TextEditorTab() {
           value={selectedSlug}
           onChange={(e) => { setSelectedSlug(e.target.value); setShowAddForm(false); }}
           className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-64"
-          disabled={pagesLoading}
         >
           <option value="">— choose a page —</option>
-          {pages.map((p) => (
-            <option key={p.page_slug} value={p.page_slug}>
-              {p.page_name || p.page_slug} ({p.page_slug})
+          {ALL_PAGES.map((p) => (
+            <option key={p.slug} value={p.slug}>
+              {p.name} ({p.path})
             </option>
           ))}
         </select>

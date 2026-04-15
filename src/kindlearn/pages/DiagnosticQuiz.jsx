@@ -179,7 +179,7 @@ export default function DiagnosticQuiz() {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <div className="pt-20 pb-16 px-4 md:px-6">
+      <div className="pt-20 kl-page-body pb-16 px-4 md:px-6">
         <div className="container mx-auto max-w-2xl">
           {showResult !== 'final' ? (
             <>
