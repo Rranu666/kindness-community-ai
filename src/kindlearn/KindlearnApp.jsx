@@ -9,6 +9,9 @@ import { queryClientInstance } from '@/lib/query-client';
 import { AuthProvider, useAuth } from '@/kindlearn/lib/AuthContext';
 import { UILanguageProvider } from '@/kindlearn/lib/UILanguageContext';
 
+// Native shell (header + bottom nav) — only renders inside Capacitor
+import CapacitorShell from '@/kindlearn/components/CapacitorShell';
+
 // Pages
 import Landing      from '@/kindlearn/pages/Landing';
 import Login        from '@/kindlearn/pages/Login';
@@ -101,12 +104,32 @@ function KindlearnRoutes() {
   );
 }
 
+// Inject padding CSS for Capacitor shell once (avoids content hiding under fixed bars)
+if (typeof window !== 'undefined' && window.Capacitor) {
+  const existing = document.getElementById('kl-cap-pad');
+  if (!existing) {
+    const s = document.createElement('style');
+    s.id = 'kl-cap-pad';
+    s.textContent = `
+      /* Push page content below the fixed header and above the fixed nav */
+      #kl-app-root { padding-top: calc(52px + env(safe-area-inset-top)); padding-bottom: calc(62px + env(safe-area-inset-bottom)); }
+      /* Hide the KindLearn landing Navbar (replaced by CapacitorShell header) */
+      nav.fixed, .kl-landing-nav { display: none !important; }
+      /* Hide website footer */
+      footer, .kindlearn-footer { display: none !important; }
+    `;
+    document.head.appendChild(s);
+  }
+}
+
 export default function KindlearnApp() {
   return (
-    <div style={KINDLEARN_THEME} className="min-h-screen bg-white text-gray-900">
+    <div id="kl-app-root" style={KINDLEARN_THEME} className="min-h-screen bg-white text-gray-900">
       <UILanguageProvider>
         <AuthProvider>
           <QueryClientProvider client={queryClientInstance}>
+            {/* Shell renders as fixed overlay — outside route tree so it persists across navigations */}
+            <CapacitorShell />
             <KindlearnRoutes />
           </QueryClientProvider>
         </AuthProvider>
