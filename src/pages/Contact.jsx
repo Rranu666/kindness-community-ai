@@ -33,6 +33,7 @@ const contactDetails = [
     href: "mailto:contact@kindnesscommunityfoundation.com",
     color: "from-rose-500 to-pink-500",
     glow: "rgba(244,63,94,0.15)",
+    valueSize: "text-xs",
   },
   {
     icon: Phone,
@@ -175,7 +176,7 @@ export default function Contact() {
                     {item.href ? (
                       <a
                         href={item.href}
-                        className="text-white/80 text-sm font-medium hover:text-rose-400 transition-colors leading-relaxed break-all"
+                        className={`text-white/80 font-medium hover:text-rose-400 transition-colors leading-relaxed whitespace-nowrap ${item.valueSize || "text-sm"}`}
                       >
                         {item.value}
                       </a>
