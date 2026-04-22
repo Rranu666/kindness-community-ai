@@ -35,6 +35,14 @@ const contactDetails = [
     glow: "rgba(244,63,94,0.15)",
   },
   {
+    icon: Phone,
+    label: "Call Us",
+    value: "(949) 996-3051",
+    href: "tel:+19499963051",
+    color: "from-orange-500 to-amber-500",
+    glow: "rgba(249,115,22,0.15)",
+  },
+  {
     icon: MapPin,
     label: "Location",
     value: "Newport Beach, California\nUSA 92660",
@@ -194,14 +202,24 @@ export default function Contact() {
                 <p className="text-white/50 text-sm leading-relaxed mb-4 relative z-10">
                   Partner with us, volunteer, or support our mission. Together we build stronger communities.
                 </p>
-                <a
-                  href="mailto:contact@kindnesscommunityfoundation.com"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-white text-sm font-bold relative z-10 transition-all hover:scale-[1.02]"
-                  style={{ background: "linear-gradient(135deg, #f43f5e, #ec4899)" }}
-                >
-                  <Mail className="w-4 h-4" />
-                  Send Us an Email
-                </a>
+                <div className="flex flex-wrap gap-3 relative z-10">
+                  <a
+                    href="mailto:contact@kindnesscommunityfoundation.com"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-white text-sm font-bold transition-all hover:scale-[1.02]"
+                    style={{ background: "linear-gradient(135deg, #f43f5e, #ec4899)" }}
+                  >
+                    <Mail className="w-4 h-4" />
+                    Send Us an Email
+                  </a>
+                  <a
+                    href="tel:+19499963051"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-white text-sm font-bold transition-all hover:scale-[1.02]"
+                    style={{ background: "linear-gradient(135deg, #f97316, #f59e0b)" }}
+                  >
+                    <Phone className="w-4 h-4" />
+                    Call Us
+                  </a>
+                </div>
               </div>
             </AnimBlock>
           </div>
