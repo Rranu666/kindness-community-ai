@@ -191,8 +191,9 @@ export default function HeroSection() {
               margin: '0 0 1.6rem',
             }}
           >
-            A unified ecosystem for learning, volunteering, mental wellbeing, and life tools —
-            built around contribution, not access barriers.
+            Kindness Community is a unified ecosystem for learning, volunteering, mental well being,
+            and everyday life tools designed around contribution, collaboration, and shared growth,
+            rather than access barriers.
           </p>
 
           {/* Tags */}
