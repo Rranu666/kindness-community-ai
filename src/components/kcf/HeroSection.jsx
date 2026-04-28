@@ -19,8 +19,14 @@ const MARQUEE = [
 
 /* ─── Tags ────────────────────────────────────────────────────────────────── */
 const TAGS = [
-  'Volunteering','Free Learning','Mental Wellness','Personal Growth',
-  'Community','Global Impact','Career Tools','AI-Powered',
+  { label: 'Volunteering',   href: '/volunteer'      },
+  { label: 'Free Learning',  href: '/kindlearn'      },
+  { label: 'Mental Wellness',href: '/kindcalmunity'  },
+  { label: 'Personal Growth',href: '/grow'           },
+  { label: 'Community',      href: '/kindwave'       },
+  { label: 'Global Impact',  href: '/#initiatives'   },
+  { label: 'Career Tools',   href: '/grow'           },
+  { label: 'AI-Powered',     href: '/kindlearn'      },
 ];
 
 /* ─── Cycling kinetic word ────────────────────────────────────────────────── */
@@ -199,8 +205,9 @@ export default function HeroSection() {
           {/* Tags */}
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center', marginBottom: '1.8rem' }}>
             {TAGS.map(tag => (
-              <span
-                key={tag}
+              <a
+                key={tag.label}
+                href={tag.href}
                 style={{
                   padding: '0.35rem 0.85rem',
                   borderRadius: 999,
@@ -210,10 +217,15 @@ export default function HeroSection() {
                   border: '1px solid rgba(0,0,0,0.08)',
                   color: 'rgba(0,0,0,0.5)',
                   boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+                  textDecoration: 'none',
+                  transition: 'border-color 0.2s, color 0.2s',
+                  cursor: 'pointer',
                 }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(244,63,94,0.35)'; e.currentTarget.style.color = '#f43f5e'; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.08)'; e.currentTarget.style.color = 'rgba(0,0,0,0.5)'; }}
               >
-                {tag}
-              </span>
+                {tag.label}
+              </a>
             ))}
           </div>
 
