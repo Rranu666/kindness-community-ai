@@ -297,7 +297,7 @@ function renderContent(text) {
 
 function DbPostFull({ post, onBack }) {
   const tags = (() => {
-    try { return JSON.parse(post.tags); } catch { return post.tags ? post.tags.split(',').map(t => t.trim()) : []; }
+    if (Array.isArray(post.tags)) return post.tags; try { return JSON.parse(post.tags); } catch { return post.tags ? String(post.tags).split(',').map(t => t.trim()) : []; }
   })();
   return (
     <div>
@@ -476,7 +476,7 @@ export default function Blog() {
                   </div>
                   <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {[...STATIC_BLOG_POSTS, ...dbPosts].map((post, i) => {
-                      const tags = (() => { try { return JSON.parse(post.tags); } catch { return post.tags ? post.tags.split(',').map(t => t.trim()) : []; } })();
+                      const tags = (() => { if (Array.isArray(post.tags)) return post.tags; try { return JSON.parse(post.tags); } catch { return post.tags ? String(post.tags).split(',').map(t => t.trim()) : []; } })();
                       return (
                         <Link key={post.id} to={`/blog/${post.slug}`}>
                         <motion.div

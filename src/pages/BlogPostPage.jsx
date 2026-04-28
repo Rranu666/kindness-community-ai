@@ -127,8 +127,9 @@ export default function BlogPostPage() {
 
   const tags = (() => {
     if (!post?.tags) return [];
+    if (Array.isArray(post.tags)) return post.tags;
     try { return JSON.parse(post.tags); }
-    catch { return post.tags.split(",").map(t => t.trim()); }
+    catch { return String(post.tags).split(",").map(t => t.trim()); }
   })();
 
   if (loading) {
