@@ -19,6 +19,27 @@ const FALLBACK_IMAGE = "https://kindnesscommunityfoundation.com/og-image.jpg";
 const SITE_NAME      = "Kindness Community Foundation";
 const BASE_URL       = "https://kindnesscommunityfoundation.com";
 
+// Static posts — mirrors src/data/staticBlogPosts.js
+// Add an entry here whenever a new static post is added to the codebase.
+const STATIC_POSTS = {
+  "rise-of-contribution-based-systems": {
+    title: "The Rise of Contribution-Based Systems: Building on Kindness and Community",
+    excerpt: "How Kindness Community Foundation is redefining access to education, healthcare, housing, and work through an AI-powered, contribution-based ecosystem built around shared value.",
+    meta_description: "Discover Kindness Community Foundation — an AI-powered platform redefining access to education, healthcare, housing, and work through a contribution-based ecosystem. Join a global community built on kindness, collaboration, and shared value.",
+    image_url: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80",
+    author_name: "Kindness Community Foundation",
+    created_at: "2026-04-28T00:00:00.000Z",
+  },
+  "kindness-community-personal-growth": {
+    title: "Kindness Community Foundation | Building a Global Kindness Community & Personal Growth Platform",
+    excerpt: "How Kindness Community Foundation is redefining personal growth through community, contribution, and AI-powered tools.",
+    meta_description: "Discover how Kindness Community Foundation helps individuals grow personally and professionally through community-driven tools, AI-powered learning, and contribution-based systems.",
+    image_url: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80",
+    author_name: "Kindness Community Foundation",
+    created_at: "2026-03-26T00:00:00.000Z",
+  },
+};
+
 function esc(str) {
   return String(str ?? "")
     .replace(/&/g, "&amp;")
@@ -54,7 +75,12 @@ export default async function handler(request, context) {
     return context.next();
   }
 
-  if (!post) return context.next();
+  // Fall back to static posts if not found in Supabase
+  if (!post) {
+    const staticPost = STATIC_POSTS[slug];
+    if (!staticPost) return context.next();
+    post = staticPost;
+  }
 
   // ── 2. Resolve image URL ─────────────────────────────────────────────────
   let rawImage = post.image_url || "";
