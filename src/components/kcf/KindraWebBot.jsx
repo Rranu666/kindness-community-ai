@@ -525,9 +525,9 @@ export default function KindraWebBot() {
     <>
       <style>{`
         @keyframes kw-ring {
-          0%   { box-shadow: 0 8px 30px rgba(16,185,129,0.45), 0 0 0 0   rgba(16,185,129,0.55); }
-          70%  { box-shadow: 0 8px 30px rgba(16,185,129,0.45), 0 0 0 18px rgba(16,185,129,0);   }
-          100% { box-shadow: 0 8px 30px rgba(16,185,129,0.45), 0 0 0 0   rgba(16,185,129,0);    }
+          0%   { box-shadow: 0 8px 30px rgba(244,63,94,0.45), 0 0 0 0   rgba(244,63,94,0.55); }
+          70%  { box-shadow: 0 8px 30px rgba(244,63,94,0.45), 0 0 0 18px rgba(244,63,94,0);   }
+          100% { box-shadow: 0 8px 30px rgba(244,63,94,0.45), 0 0 0 0   rgba(244,63,94,0);    }
         }
         @keyframes kw-in {
           from { opacity:0; transform:translateY(18px) scale(0.96); }
@@ -538,12 +538,12 @@ export default function KindraWebBot() {
           30%          { transform:translateY(-6px); }
         }
         @keyframes kw-pulse {
-          0%,100% { opacity:1; box-shadow:0 0 0 0 rgba(16,185,129,0.5); }
-          50%     { opacity:0.8; box-shadow:0 0 0 6px rgba(16,185,129,0); }
+          0%,100% { opacity:1; box-shadow:0 0 0 0 rgba(244,63,94,0.5); }
+          50%     { opacity:0.8; box-shadow:0 0 0 6px rgba(244,63,94,0); }
         }
         @keyframes kw-mic {
-          0%,100% { box-shadow:0 0 0 0   rgba(16,185,129,0.6); }
-          50%     { box-shadow:0 0 0 8px rgba(16,185,129,0);   }
+          0%,100% { box-shadow:0 0 0 0   rgba(244,63,94,0.6); }
+          50%     { box-shadow:0 0 0 8px rgba(244,63,94,0);   }
         }
         .kw-panel { animation: kw-in 0.26s cubic-bezier(0.34,1.56,0.64,1) forwards; }
         .kw-trigger-ring { animation: kw-ring 3s ease-in-out infinite; }
@@ -559,9 +559,9 @@ export default function KindraWebBot() {
             width: 'min(390px, calc(100vw - 32px))',
             height: minimized ? 'auto' : 540,
             background: 'rgba(3,7,18,0.97)',
-            border: '1px solid rgba(16,185,129,0.2)',
+            border: '1px solid rgba(244,63,94,0.2)',
             borderRadius: 20,
-            boxShadow: '0 28px 90px rgba(0,0,0,0.75), 0 0 0 1px rgba(16,185,129,0.07), 0 0 50px rgba(16,185,129,0.07)',
+            boxShadow: '0 28px 90px rgba(0,0,0,0.75), 0 0 0 1px rgba(244,63,94,0.07), 0 0 50px rgba(244,63,94,0.07)',
             backdropFilter: 'blur(28px)',
           }}
         >
@@ -571,14 +571,14 @@ export default function KindraWebBot() {
               <div className="absolute -top-20 -right-20 w-64 h-64 rounded-full opacity-[0.06]"
                 style={{ background: 'radial-gradient(circle, #f43f5e, transparent 70%)' }} />
               <div className="absolute -bottom-20 -left-20 w-48 h-48 rounded-full opacity-[0.04]"
-                style={{ background: 'radial-gradient(circle, #059669, transparent 70%)' }} />
+                style={{ background: 'radial-gradient(circle, #f43f5e, transparent 70%)' }} />
             </div>
           )}
 
           {/* ── Panel Header ── */}
           <div
             className="relative z-10 flex items-center gap-3 px-4 py-3 flex-shrink-0 cursor-pointer select-none"
-            style={{ borderBottom: minimized ? 'none' : '1px solid rgba(16,185,129,0.1)', background: 'rgba(0,0,0,0.3)' }}
+            style={{ borderBottom: minimized ? 'none' : '1px solid rgba(244,63,94,0.1)', background: 'rgba(0,0,0,0.3)' }}
             onClick={() => minimized && setMinimized(false)}
           >
             <KindraAvatar size={32} glow />
@@ -587,7 +587,7 @@ export default function KindraWebBot() {
                 <span className="text-white font-bold text-sm">Kindbot</span>
                 <span
                   className="flex items-center gap-1 text-[9px] font-bold text-rose-400"
-                  style={{ background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(244,63,94,0.22)', borderRadius: 99, padding: '1px 6px' }}
+                  style={{ background: 'rgba(244,63,94,0.12)', border: '1px solid rgba(244,63,94,0.22)', borderRadius: 99, padding: '1px 6px' }}
                 >
                   <span className="w-1 h-1 rounded-full bg-rose-400" style={{ animation: 'kw-pulse 2s infinite' }} />
                   LIVE
@@ -626,7 +626,7 @@ export default function KindraWebBot() {
           {!minimized && (
             <>
               <div className="relative z-10 flex-1 overflow-y-auto px-4 py-4 space-y-4"
-                style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(16,185,129,0.15) transparent' }}>
+                style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(244,63,94,0.15) transparent' }}>
                 {messages.map(msg => (
                   msg.role === 'user' ? (
                     /* User bubble */
@@ -735,8 +735,8 @@ export default function KindraWebBot() {
                       title={listening ? 'Stop listening' : 'Voice input'}
                       className="flex-shrink-0 w-7 h-7 flex items-center justify-center rounded-xl transition-all disabled:opacity-30"
                       style={{
-                        background: listening ? 'rgba(16,185,129,0.25)' : 'rgba(255,255,255,0.05)',
-                        border: listening ? '1px solid rgba(16,185,129,0.5)' : '1px solid rgba(255,255,255,0.08)',
+                        background: listening ? 'rgba(244,63,94,0.25)' : 'rgba(255,255,255,0.05)',
+                        border: listening ? '1px solid rgba(244,63,94,0.5)' : '1px solid rgba(255,255,255,0.08)',
                         animation: listening ? 'kw-mic 1.2s ease-in-out infinite' : 'none',
                       }}
                     >
