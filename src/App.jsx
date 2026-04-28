@@ -128,7 +128,6 @@ function App() {
             <ErrorBoundary>
               <AppRoutes />
             </ErrorBoundary>
-            {!window.Capacitor && <ScrollToggleButton hideOn={['/servekindness', '/kindcalmunity', '/kindwave']} />}
             <PublicBot />
           </Router>
           <Toaster />
