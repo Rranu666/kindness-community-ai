@@ -132,7 +132,7 @@ export default function Home() {
   }, [scrollTarget]);
 
   return (
-    <div id="home" className="min-h-screen" style={{ background: "#030712", fontFamily: "'Inter', system-ui, sans-serif" }}>
+    <div id="home" className="min-h-screen" style={{ background: "#f0f0ef", fontFamily: "'Inter', system-ui, sans-serif" }}>
       <AmbientBackground />
       <Header />
       <main id="main-content">

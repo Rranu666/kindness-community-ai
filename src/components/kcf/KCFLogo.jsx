@@ -4,11 +4,11 @@ export default function KCFLogo() {
       {/* Icon */}
       <div style={{ width: 38, height: 38, flexShrink: 0 }}>
         <svg viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" width="38" height="38">
-          <rect x="0" y="0" width="96" height="96" rx="17" fill="white" fillOpacity="0.12" />
-          <rect x="22" y="19" width="17" height="58" rx="4" fill="white" />
-          <polygon points="39,48 72,19 83,19 83,31 50,52" fill="white" />
-          <polygon points="39,52 72,77 83,77 83,65 50,46" fill="white" />
-          <circle cx="68" cy="27" r="5" fill="rgba(255,255,255,0.3)" />
+          <rect x="0" y="0" width="96" height="96" rx="17" fill="#f43f5e" fillOpacity="0.10" />
+          <rect x="22" y="19" width="17" height="58" rx="4" fill="#0f0f0f" />
+          <polygon points="39,48 72,19 83,19 83,31 50,52" fill="#0f0f0f" />
+          <polygon points="39,52 72,77 83,77 83,65 50,46" fill="#0f0f0f" />
+          <circle cx="68" cy="27" r="5" fill="#f43f5e" fillOpacity="0.5" />
         </svg>
       </div>
 
@@ -19,7 +19,7 @@ export default function KCFLogo() {
             fontFamily: "'Inter', sans-serif",
             fontWeight: 800,
             fontSize: "15px",
-            color: "#ffffff",
+            color: "#0f0f0f",
             letterSpacing: "-0.3px",
             lineHeight: 1.1,
           }}
@@ -31,7 +31,7 @@ export default function KCFLogo() {
             fontFamily: "'Inter', sans-serif",
             fontWeight: 600,
             fontSize: "10px",
-            color: "rgba(255,255,255,0.5)",
+            color: "rgba(0,0,0,0.45)",
             letterSpacing: "1.5px",
             textTransform: "uppercase",
             marginTop: "3px",

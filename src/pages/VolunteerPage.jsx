@@ -11,7 +11,7 @@ export default function VolunteerPage() {
   );
 
   return (
-    <div style={{ minHeight: "100vh", background: "#030712" }}>
+    <div style={{ minHeight: "100vh", background: "#f0f0ef" }}>
       <Header />
       <main id="main-content" style={{ paddingTop: "80px" }}>
         <PartnerSection />

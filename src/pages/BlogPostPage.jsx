@@ -13,35 +13,35 @@ function renderContent(text) {
   return text.split("\n").map((line, i) => {
     if (line.startsWith("## ")) {
       return (
-        <h2 key={i} className="text-white font-black text-2xl mt-10 mb-4 leading-snug">
+        <h2 key={i} className="text-gray-900 font-black text-2xl mt-10 mb-4 leading-snug">
           {line.slice(3)}
         </h2>
       );
     }
     if (line.startsWith("### ")) {
       return (
-        <h3 key={i} className="text-white font-bold text-xl mt-8 mb-3">
+        <h3 key={i} className="text-gray-900 font-bold text-xl mt-8 mb-3">
           {line.slice(4)}
         </h3>
       );
     }
     if (line.startsWith("- ") || line.startsWith("* ")) {
       return (
-        <li key={i} className="text-white/70 text-base leading-relaxed ml-5 list-disc mb-1">
+        <li key={i} className="text-gray-600 text-base leading-relaxed ml-5 list-disc mb-1">
           {parseBold(line.slice(2))}
         </li>
       );
     }
     if (line.startsWith("> ")) {
       return (
-        <blockquote key={i} className="border-l-4 border-rose-500 pl-5 my-6 text-white/80 italic text-lg leading-relaxed">
+        <blockquote key={i} className="border-l-4 border-rose-500 pl-5 my-6 text-gray-600 italic text-lg leading-relaxed bg-rose-50 py-3 rounded-r-xl">
           {line.slice(2)}
         </blockquote>
       );
     }
     if (line.trim() === "") return <div key={i} className="h-4" />;
     return (
-      <p key={i} className="text-white/70 text-base leading-relaxed mb-1">
+      <p key={i} className="text-gray-600 text-base leading-relaxed mb-1">
         {parseBold(line)}
       </p>
     );
@@ -51,7 +51,7 @@ function renderContent(text) {
 function parseBold(text) {
   return text.split(/(\*\*[^*]+\*\*)/g).map((part, j) =>
     part.startsWith("**") && part.endsWith("**")
-      ? <strong key={j} className="text-white font-semibold">{part.slice(2, -2)}</strong>
+      ? <strong key={j} className="text-gray-900 font-semibold">{part.slice(2, -2)}</strong>
       : part
   );
 }
@@ -95,11 +95,11 @@ export default function BlogPostPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: "#030712" }}>
+      <div className="min-h-screen flex items-center justify-center" style={{ background: "#f0f0ef" }}>
         <Header />
         <div className="flex flex-col items-center gap-4">
           <div className="w-10 h-10 rounded-full border-2 border-rose-500 border-t-transparent animate-spin" />
-          <p className="text-white/40 text-sm">Loading post…</p>
+          <p className="text-gray-400 text-sm">Loading post…</p>
         </div>
       </div>
     );
@@ -107,11 +107,11 @@ export default function BlogPostPage() {
 
   if (notFound) {
     return (
-      <div className="min-h-screen" style={{ background: "#030712" }}>
+      <div className="min-h-screen" style={{ background: "#f0f0ef" }}>
         <Header />
         <div className="max-w-3xl mx-auto px-6 pt-40 pb-20 text-center">
-          <p className="text-rose-400 text-6xl font-black mb-4">404</p>
-          <p className="text-white text-xl font-bold mb-6">Post not found</p>
+          <p className="text-rose-500 text-6xl font-black mb-4">404</p>
+          <p className="text-gray-900 text-xl font-bold mb-6">Post not found</p>
           <Link to="/blog">
             <button className="flex items-center gap-2 mx-auto px-6 py-3 rounded-2xl text-white font-bold text-sm"
               style={{ background: "linear-gradient(135deg, #f43f5e, #ec4899)" }}>
@@ -125,21 +125,21 @@ export default function BlogPostPage() {
   }
 
   return (
-    <div className="min-h-screen" style={{ background: "#030712" }}>
+    <div className="min-h-screen" style={{ background: "#f0f0ef" }}>
       <Header />
 
       {/* Hero */}
-      <div className="relative pt-28 pb-0 overflow-hidden" style={{ background: "linear-gradient(180deg, #0d1b2a 0%, #030712 100%)" }}>
+      <div className="relative pt-28 pb-0 overflow-hidden" style={{ background: "#ffffff" }}>
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] rounded-full blur-[120px]"
-            style={{ background: "radial-gradient(ellipse, rgba(244,63,94,0.09) 0%, transparent 70%)" }} />
+            style={{ background: "radial-gradient(ellipse, rgba(244,63,94,0.05) 0%, transparent 70%)" }} />
         </div>
 
         <div className="relative z-10 max-w-4xl mx-auto px-6 lg:px-12 pt-6 pb-10">
           {/* Back */}
           <Link to="/blog">
             <motion.div
-              className="inline-flex items-center gap-2 text-white/50 hover:text-white text-sm font-semibold mb-8 transition-colors group cursor-pointer"
+              className="inline-flex items-center gap-2 text-gray-400 hover:text-gray-700 text-sm font-semibold mb-8 transition-colors group cursor-pointer"
               whileHover={{ x: -2 }}
             >
               <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
@@ -151,12 +151,12 @@ export default function BlogPostPage() {
           <div className="flex flex-wrap gap-2 mb-5">
             {post.category && (
               <span className="px-3 py-1 rounded-full text-xs font-bold"
-                style={{ background: "rgba(244,63,94,0.12)", border: "1px solid rgba(244,63,94,0.3)", color: "#fb7185" }}>
+                style={{ background: "rgba(244,63,94,0.08)", border: "1px solid rgba(244,63,94,0.2)", color: "#f43f5e" }}>
                 {post.category}
               </span>
             )}
             {tags.map((tag, i) => (
-              <span key={i} className="px-3 py-1 rounded-full text-xs font-semibold border border-white/10 text-white/50">
+              <span key={i} className="px-3 py-1 rounded-full text-xs font-semibold border border-gray-200 text-gray-500 bg-gray-50">
                 {tag}
               </span>
             ))}
@@ -167,26 +167,26 @@ export default function BlogPostPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight mb-6"
+            className="text-3xl sm:text-4xl lg:text-5xl font-black text-gray-900 leading-tight mb-6"
           >
             {post.title}
           </motion.h1>
 
           {/* Meta row */}
-          <div className="flex flex-wrap items-center gap-5 text-white/40 text-sm pb-8 border-b border-white/[0.07]">
+          <div className="flex flex-wrap items-center gap-5 text-gray-400 text-sm pb-8 border-b border-gray-200">
             {post.author_name && (
               <span className="flex items-center gap-2">
-                <User className="w-4 h-4 text-rose-400" />
-                <span className="text-white/60 font-medium">{post.author_name}</span>
+                <User className="w-4 h-4 text-rose-500" />
+                <span className="text-gray-600 font-medium">{post.author_name}</span>
               </span>
             )}
             <span className="flex items-center gap-2">
-              <Calendar className="w-4 h-4 text-rose-400" />
+              <Calendar className="w-4 h-4 text-rose-500" />
               {new Date(post.created_at).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
             </span>
             {post.read_time && (
               <span className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-rose-400" />
+                <Clock className="w-4 h-4 text-rose-500" />
                 {post.read_time}
               </span>
             )}
@@ -201,7 +201,8 @@ export default function BlogPostPage() {
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.7 }}
-            className="rounded-3xl overflow-hidden shadow-2xl shadow-black/60"
+            className="rounded-3xl overflow-hidden shadow-xl"
+            style={{ boxShadow: "0 8px 40px rgba(0,0,0,0.10)" }}
           >
             <img
               src={post.image_url}
@@ -221,7 +222,7 @@ export default function BlogPostPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="text-white/80 text-lg leading-relaxed mb-10 pb-10 border-b border-white/[0.07] font-medium"
+            className="text-gray-600 text-lg leading-relaxed mb-10 pb-10 border-b border-gray-200 font-medium"
           >
             {post.excerpt}
           </motion.p>
@@ -231,13 +232,13 @@ export default function BlogPostPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.25 }}
-          className="prose prose-invert max-w-none space-y-1"
+          className="max-w-none space-y-1"
         >
           {renderContent(post.content)}
         </motion.div>
 
         {/* CTA */}
-        <div className="flex flex-col sm:flex-row gap-4 mt-16 pt-10 border-t border-white/[0.07]">
+        <div className="flex flex-col sm:flex-row gap-4 mt-16 pt-10 border-t border-gray-200">
           <Link to="/servekindness">
             <motion.button whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
               className="flex items-center gap-2 px-7 py-3.5 rounded-2xl text-white font-bold text-sm"
@@ -247,15 +248,13 @@ export default function BlogPostPage() {
           </Link>
           <Link to="/volunteer">
             <motion.button whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
-              className="flex items-center gap-2 px-7 py-3.5 rounded-2xl text-white/80 font-bold text-sm border border-white/20 hover:border-white/40 transition-all"
-              style={{ background: "rgba(255,255,255,0.04)" }}>
+              className="flex items-center gap-2 px-7 py-3.5 rounded-2xl text-gray-700 font-bold text-sm border border-gray-200 hover:border-rose-200 hover:text-rose-500 transition-all bg-white">
               <Users className="w-4 h-4" /> Volunteer With Us
             </motion.button>
           </Link>
           <Link to="/blog">
             <motion.button whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
-              className="flex items-center gap-2 px-7 py-3.5 rounded-2xl text-white/60 font-bold text-sm border border-white/10 hover:border-white/30 transition-all"
-              style={{ background: "rgba(255,255,255,0.02)" }}>
+              className="flex items-center gap-2 px-7 py-3.5 rounded-2xl text-gray-500 font-bold text-sm border border-gray-200 hover:border-gray-300 transition-all bg-white">
               <ArrowLeft className="w-4 h-4" /> More Articles
             </motion.button>
           </Link>

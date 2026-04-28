@@ -13,7 +13,7 @@ export default function SectionDivider({ color = "rose", flip = false }) {
   const line = color === "rose" ? "#f43f5e" : color === "violet" ? "#8b5cf6" : "#44aaff";
 
   return (
-    <div ref={ref} className="relative h-16 overflow-hidden pointer-events-none select-none" style={{ background: "#030712" }}>
+    <div ref={ref} className="relative h-12 overflow-hidden pointer-events-none select-none" style={{ background: "#f0f0ef" }}>
       {/* Center glow */}
       <motion.div
         initial={{ opacity: 0, scaleX: 0 }}

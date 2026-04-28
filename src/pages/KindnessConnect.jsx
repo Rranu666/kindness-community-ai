@@ -35,7 +35,7 @@ export default function KindnessConnect() {
   };
 
   return (
-    <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", background: "#030712" }}>
+    <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", background: "#f0f0ef" }}>
       {/* Loading skeleton */}
       {!loaded && (
         <div
@@ -47,7 +47,7 @@ export default function KindnessConnect() {
             alignItems: "center",
             justifyContent: "center",
             gap: 16,
-            background: "#030712",
+            background: "#f0f0ef",
             zIndex: 1,
           }}
         >
@@ -56,12 +56,12 @@ export default function KindnessConnect() {
               width: 48,
               height: 48,
               borderRadius: "50%",
-              border: "3px solid rgba(255,255,255,0.08)",
+              border: "3px solid rgba(0,0,0,0.08)",
               borderTop: "3px solid #10b981",
               animation: "kcf-spin 0.8s linear infinite",
             }}
           />
-          <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 14, margin: 0 }}>Loading ServeKindness…</p>
+          <p style={{ color: "#9ca3af", fontSize: 14, margin: 0 }}>Loading ServeKindness…</p>
           <style>{`@keyframes kcf-spin { to { transform: rotate(360deg); } }`}</style>
         </div>
       )}

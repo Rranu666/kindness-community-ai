@@ -84,18 +84,20 @@ export default function EvolutionSection() {
   return (
     <section
       id="evolution"
-      className="py-24 lg:py-36 relative overflow-hidden" style={{ background: "#030712" }}
+      className="py-24 lg:py-36 relative overflow-hidden" style={{ background: "#f0f0ef" }}
       ref={ref}
     >
       {/* Background glows */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[400px] bg-sky-500/5 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[400px] rounded-full blur-[140px] pointer-events-none"
+        style={{ background: "rgba(14,165,233,0.04)" }} />
+      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full blur-[120px] pointer-events-none"
+        style={{ background: "rgba(16,185,129,0.04)" }} />
 
       {/* Subtle grid */}
       <div
-        className="absolute inset-0 opacity-[0.02] pointer-events-none"
+        className="absolute inset-0 opacity-[0.04] pointer-events-none"
         style={{
-          backgroundImage: `linear-gradient(rgba(255,255,255,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.6) 1px, transparent 1px)`,
+          backgroundImage: `linear-gradient(rgba(0,0,0,0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.4) 1px, transparent 1px)`,
           backgroundSize: "50px 50px",
         }}
       />
@@ -108,19 +110,20 @@ export default function EvolutionSection() {
           transition={{ duration: 0.7 }}
           className="text-center mb-20"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-6">
-            <div className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse" />
-            <span className="text-white/50 text-xs font-bold tracking-widest uppercase">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-sky-200 mb-6"
+            style={{ background: "rgba(14,165,233,0.06)" }}>
+            <div className="w-1.5 h-1.5 rounded-full bg-sky-500 animate-pulse" />
+            <span className="text-sky-600 text-xs font-bold tracking-widest uppercase">
               Cultural Architecture
             </span>
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight max-w-3xl mx-auto mb-4">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 leading-tight max-w-3xl mx-auto mb-4">
             Designing a{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-emerald-400 to-amber-300">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-500 via-emerald-500 to-amber-500">
               Cultural Evolution
             </span>
           </h2>
-          <p className="text-white/40 text-lg max-w-2xl mx-auto leading-relaxed">
+          <p className="text-gray-500 text-lg max-w-2xl mx-auto leading-relaxed">
             Not a fantasy jump to utopia. A precise, sequenced reconfiguration
             of the operating system — beginning exactly where we are today.
           </p>
@@ -141,7 +144,7 @@ export default function EvolutionSection() {
                   initial={{ scaleX: 0 }}
                   animate={inView ? { scaleX: 1 } : {}}
                   transition={{ duration: 0.6, delay: 0.4 + i * 0.15 }}
-                  className="w-48 h-px bg-gradient-to-r from-white/10 to-white/20 origin-left mx-2"
+                  className="w-48 h-px bg-gradient-to-r from-gray-200 to-gray-300 origin-left mx-2"
                 />
               )}
             </div>
@@ -158,7 +161,7 @@ export default function EvolutionSection() {
                 initial={{ opacity: 0, y: 40 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.65, delay: 0.15 + i * 0.15 }}
-                className="relative rounded-3xl overflow-hidden border border-white/8 bg-white/[0.03] hover:bg-white/[0.06] transition-all duration-500 group"
+                className="relative rounded-3xl overflow-hidden border border-gray-200 bg-white hover:shadow-md transition-all duration-500 group"
               >
                 {/* Card header gradient */}
                 <div className={`bg-gradient-to-br ${stage.color} p-8`}>
@@ -188,14 +191,14 @@ export default function EvolutionSection() {
 
                 {/* Card body */}
                 <div className="p-7">
-                  <p className="text-white/50 text-sm leading-relaxed mb-6">
+                  <p className="text-gray-500 text-sm leading-relaxed mb-6">
                     {stage.description}
                   </p>
                   <div className="space-y-2.5">
                     {stage.traits.map((trait, j) => (
                       <div key={j} className="flex items-start gap-3">
                         <div className={`w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0 ${stage.dotColor}`} />
-                        <span className="text-white/60 text-sm">{trait}</span>
+                        <span className="text-gray-600 text-sm">{trait}</span>
                       </div>
                     ))}
                   </div>
@@ -204,8 +207,8 @@ export default function EvolutionSection() {
                 {/* Connecting arrow (not on last) */}
                 {i < stages.length - 1 && (
                   <div className="absolute -right-3 top-1/2 -translate-y-1/2 z-10 hidden lg:flex">
-                    <div className="w-6 h-6 rounded-full border border-white/10 flex items-center justify-center" style={{ background: "#030712" }}>
-                      <ArrowRight className="w-3 h-3 text-white/30" />
+                    <div className="w-6 h-6 rounded-full border border-gray-200 flex items-center justify-center bg-white">
+                      <ArrowRight className="w-3 h-3 text-gray-400" />
                     </div>
                   </div>
                 )}
@@ -219,9 +222,10 @@ export default function EvolutionSection() {
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7, delay: 0.6 }}
-          className="rounded-3xl bg-white/[0.03] border border-white/8 p-8 sm:p-12"
+          className="rounded-3xl bg-white border border-gray-200 p-8 sm:p-12"
+          style={{ boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}
         >
-          <p className="text-center text-white/30 text-xs font-bold tracking-widest uppercase mb-8">
+          <p className="text-center text-gray-400 text-xs font-bold tracking-widest uppercase mb-8">
             The Anchoring Principle
           </p>
           <div className="grid sm:grid-cols-3 gap-6 sm:gap-8">
@@ -234,7 +238,7 @@ export default function EvolutionSection() {
                 className="text-center"
               >
                 <div className="text-3xl mb-3">{p.icon}</div>
-                <p className="text-white/60 text-sm sm:text-base leading-relaxed font-medium italic">
+                <p className="text-gray-600 text-sm sm:text-base leading-relaxed font-medium italic">
                   "{p.text}"
                 </p>
               </motion.div>

@@ -73,7 +73,7 @@ export default function GrowPage() {
 
   return (
     <div
-      style={{ minHeight: "100vh", background: "#030712", color: "#f0f4ff", fontFamily: "Inter, sans-serif" }}
+      style={{ minHeight: "100vh", background: "#f0f0ef", color: "#0f0f0f", fontFamily: "Inter, sans-serif" }}
     >
       <Header />
 
@@ -85,19 +85,20 @@ export default function GrowPage() {
           paddingBottom: "100px",
           textAlign: "center",
           overflow: "hidden",
+          background: "#ffffff",
         }}
       >
         {/* Soft glow backgrounds */}
         <div style={{
           position: "absolute", top: "-120px", left: "50%", transform: "translateX(-50%)",
           width: "700px", height: "700px",
-          background: "radial-gradient(circle, rgba(139,92,246,0.18) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(139,92,246,0.07) 0%, transparent 70%)",
           pointerEvents: "none",
         }} />
         <div style={{
           position: "absolute", top: "80px", left: "10%",
           width: "300px", height: "300px",
-          background: "radial-gradient(circle, rgba(244,63,94,0.1) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(244,63,94,0.05) 0%, transparent 70%)",
           pointerEvents: "none",
         }} />
 
@@ -107,8 +108,8 @@ export default function GrowPage() {
             style={{
               display: "inline-flex", alignItems: "center", gap: "8px",
               padding: "6px 16px", borderRadius: "999px", marginBottom: "24px",
-              background: "rgba(139,92,246,0.12)", border: "1px solid rgba(139,92,246,0.3)",
-              fontSize: "13px", fontWeight: 600, color: "#c4b5fd",
+              background: "rgba(139,92,246,0.08)", border: "1px solid rgba(139,92,246,0.2)",
+              fontSize: "13px", fontWeight: 600, color: "#7c3aed",
             }}
           >
             <Sparkles size={14} />
@@ -123,6 +124,7 @@ export default function GrowPage() {
               lineHeight: 1.15,
               marginBottom: "20px",
               fontFamily: "Syne, Inter, sans-serif",
+              color: "#0f0f0f",
             }}
           >
             Helping Others Is How<br />
@@ -137,7 +139,7 @@ export default function GrowPage() {
 
           <motion.p
             variants={fadeUp} initial="hidden" animate="visible" custom={2}
-            style={{ fontSize: "1.15rem", color: "rgba(240,244,255,0.65)", lineHeight: 1.7, marginBottom: "40px" }}
+            style={{ fontSize: "1.15rem", color: "#6b7280", lineHeight: 1.7, marginBottom: "40px" }}
           >
             Science confirms it: acts of kindness reduce stress, build resilience, and create lasting
             happiness. At KCF, personal growth and community impact are the same journey.
@@ -155,7 +157,7 @@ export default function GrowPage() {
                 background: "linear-gradient(135deg, #8b5cf6, #f43f5e)",
                 color: "#fff", fontWeight: 700, fontSize: "15px",
                 textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "8px",
-                boxShadow: "0 8px 30px rgba(139,92,246,0.35)",
+                boxShadow: "0 8px 30px rgba(139,92,246,0.25)",
               }}
             >
               Start Volunteering <ArrowRight size={16} />
@@ -164,9 +166,10 @@ export default function GrowPage() {
               to="/servekindness"
               style={{
                 padding: "13px 28px", borderRadius: "999px",
-                background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)",
-                color: "rgba(240,244,255,0.8)", fontWeight: 600, fontSize: "15px",
+                background: "#ffffff", border: "1px solid rgba(0,0,0,0.1)",
+                color: "#374151", fontWeight: 600, fontSize: "15px",
                 textDecoration: "none",
+                boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
               }}
             >
               Give & Donate
@@ -178,9 +181,9 @@ export default function GrowPage() {
       {/* ── Philosophy strip ── */}
       <section style={{
         padding: "48px 24px",
-        background: "linear-gradient(135deg, rgba(139,92,246,0.07), rgba(244,63,94,0.05))",
-        borderTop: "1px solid rgba(255,255,255,0.05)",
-        borderBottom: "1px solid rgba(255,255,255,0.05)",
+        background: "#f0f0ef",
+        borderTop: "1px solid rgba(0,0,0,0.06)",
+        borderBottom: "1px solid rgba(0,0,0,0.06)",
         textAlign: "center",
       }}>
         <motion.p
@@ -188,11 +191,11 @@ export default function GrowPage() {
           style={{
             maxWidth: "680px", margin: "0 auto",
             fontSize: "1.25rem", fontStyle: "italic",
-            color: "rgba(240,244,255,0.7)", lineHeight: 1.75,
+            color: "#4b5563", lineHeight: 1.75,
           }}
         >
           "No one has ever become poor by giving. Every act of kindness grows the giver."
-          <span style={{ display: "block", marginTop: "12px", fontSize: "0.9rem", color: "rgba(240,244,255,0.4)", fontStyle: "normal" }}>
+          <span style={{ display: "block", marginTop: "12px", fontSize: "0.9rem", color: "#9ca3af", fontStyle: "normal" }}>
             — A principle woven into the KCF Kindness Constitution
           </span>
         </motion.p>
@@ -206,14 +209,14 @@ export default function GrowPage() {
         >
           <p style={{
             fontSize: "12px", fontWeight: 700, letterSpacing: "0.12em",
-            textTransform: "uppercase", color: "#8b5cf6", marginBottom: "12px",
+            textTransform: "uppercase", color: "#7c3aed", marginBottom: "12px",
           }}>
             The KCF Growth Framework
           </p>
-          <h2 style={{ fontSize: "clamp(1.8rem, 4vw, 2.8rem)", fontWeight: 800, lineHeight: 1.2 }}>
+          <h2 style={{ fontSize: "clamp(1.8rem, 4vw, 2.8rem)", fontWeight: 800, lineHeight: 1.2, color: "#0f0f0f" }}>
             Six Practices for a Life of Purpose
           </h2>
-          <p style={{ marginTop: "12px", color: "rgba(240,244,255,0.55)", fontSize: "1rem", maxWidth: "560px", margin: "12px auto 0" }}>
+          <p style={{ marginTop: "12px", color: "#6b7280", fontSize: "1rem", maxWidth: "560px", margin: "12px auto 0" }}>
             Growth is not accidental. These six practices — embedded in everything KCF does — help you become
             the person your community needs.
           </p>
@@ -231,22 +234,23 @@ export default function GrowPage() {
               style={{
                 padding: "32px",
                 borderRadius: "20px",
-                background: "rgba(255,255,255,0.03)",
-                border: "1px solid rgba(255,255,255,0.07)",
-                transition: "transform 0.2s, border-color 0.2s",
+                background: "#ffffff",
+                border: "1px solid rgba(0,0,0,0.07)",
+                boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
+                transition: "transform 0.2s, border-color 0.2s, box-shadow 0.2s",
               }}
-              whileHover={{ scale: 1.02, borderColor: `${item.color}44` }}
+              whileHover={{ scale: 1.02, borderColor: `${item.color}44`, boxShadow: `0 4px 20px ${item.color}15` }}
             >
               <div style={{
                 width: "48px", height: "48px", borderRadius: "14px",
-                background: `${item.color}1a`, border: `1px solid ${item.color}33`,
+                background: `${item.color}15`, border: `1px solid ${item.color}25`,
                 display: "flex", alignItems: "center", justifyContent: "center",
                 marginBottom: "18px",
               }}>
                 <item.icon size={22} color={item.color} />
               </div>
-              <h3 style={{ fontSize: "1.1rem", fontWeight: 700, marginBottom: "8px" }}>{item.title}</h3>
-              <p style={{ fontSize: "0.92rem", color: "rgba(240,244,255,0.55)", lineHeight: 1.65 }}>{item.desc}</p>
+              <h3 style={{ fontSize: "1.1rem", fontWeight: 700, marginBottom: "8px", color: "#0f0f0f" }}>{item.title}</h3>
+              <p style={{ fontSize: "0.92rem", color: "#6b7280", lineHeight: 1.65, margin: 0 }}>{item.desc}</p>
             </motion.div>
           ))}
         </div>
@@ -258,23 +262,24 @@ export default function GrowPage() {
         maxWidth: "900px",
         padding: "60px 48px",
         borderRadius: "28px",
-        background: "linear-gradient(135deg, rgba(139,92,246,0.12), rgba(244,63,94,0.08))",
-        border: "1px solid rgba(139,92,246,0.2)",
+        background: "linear-gradient(135deg, rgba(139,92,246,0.06), rgba(244,63,94,0.04))",
+        border: "1px solid rgba(139,92,246,0.15)",
         textAlign: "center",
         position: "relative",
         overflow: "hidden",
+        boxShadow: "0 2px 16px rgba(139,92,246,0.08)",
       }}>
         <div style={{
           position: "absolute", top: "-60px", right: "-60px",
           width: "240px", height: "240px",
-          background: "radial-gradient(circle, rgba(139,92,246,0.2), transparent)",
+          background: "radial-gradient(circle, rgba(139,92,246,0.1), transparent)",
           pointerEvents: "none",
         }} />
-        <Target size={40} color="#a78bfa" style={{ marginBottom: "20px" }} />
-        <h2 style={{ fontSize: "2rem", fontWeight: 800, marginBottom: "16px" }}>
+        <Target size={40} color="#8b5cf6" style={{ marginBottom: "20px" }} />
+        <h2 style={{ fontSize: "2rem", fontWeight: 800, marginBottom: "16px", color: "#0f0f0f" }}>
           Build Your Vision
         </h2>
-        <p style={{ color: "rgba(240,244,255,0.6)", lineHeight: 1.7, maxWidth: "580px", margin: "0 auto 28px", fontSize: "1rem" }}>
+        <p style={{ color: "#6b7280", lineHeight: 1.7, maxWidth: "580px", margin: "0 auto 28px", fontSize: "1rem" }}>
           Your future self is shaped by today's choices. Define who you want to become —
           the communities you'll impact, the lives you'll touch, the person you'll grow into.
           Start by taking one small action today.
@@ -295,11 +300,12 @@ export default function GrowPage() {
           ].map(v => (
             <div key={v.label} style={{
               padding: "18px", borderRadius: "16px",
-              background: "rgba(255,255,255,0.04)",
-              border: "1px solid rgba(255,255,255,0.08)",
+              background: "#ffffff",
+              border: "1px solid rgba(0,0,0,0.07)",
+              boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
             }}>
               <div style={{ fontSize: "2rem", marginBottom: "8px" }}>{v.emoji}</div>
-              <div style={{ fontSize: "0.85rem", fontWeight: 600, color: "rgba(240,244,255,0.7)" }}>{v.label}</div>
+              <div style={{ fontSize: "0.85rem", fontWeight: 600, color: "#374151" }}>{v.label}</div>
             </div>
           ))}
         </div>
@@ -310,7 +316,7 @@ export default function GrowPage() {
             background: "linear-gradient(135deg, #8b5cf6, #f43f5e)",
             color: "#fff", fontWeight: 700, fontSize: "15px",
             textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "8px",
-            boxShadow: "0 8px 30px rgba(139,92,246,0.3)",
+            boxShadow: "0 8px 30px rgba(139,92,246,0.25)",
           }}
         >
           Begin Your Journey <ArrowRight size={16} />
@@ -326,16 +332,16 @@ export default function GrowPage() {
           <div style={{
             display: "inline-flex", alignItems: "center", gap: "8px",
             padding: "6px 16px", borderRadius: "999px", marginBottom: "16px",
-            background: "rgba(245,158,11,0.1)", border: "1px solid rgba(245,158,11,0.25)",
-            fontSize: "13px", fontWeight: 600, color: "#fbbf24",
+            background: "rgba(245,158,11,0.08)", border: "1px solid rgba(245,158,11,0.2)",
+            fontSize: "13px", fontWeight: 600, color: "#d97706",
           }}>
             <MessageCircle size={14} />
             Daily Journaling
           </div>
-          <h2 style={{ fontSize: "clamp(1.8rem, 4vw, 2.5rem)", fontWeight: 800, lineHeight: 1.2 }}>
+          <h2 style={{ fontSize: "clamp(1.8rem, 4vw, 2.5rem)", fontWeight: 800, lineHeight: 1.2, color: "#0f0f0f" }}>
             Prompts to Spark Reflection
           </h2>
-          <p style={{ marginTop: "12px", color: "rgba(240,244,255,0.5)", fontSize: "1rem" }}>
+          <p style={{ marginTop: "12px", color: "#6b7280", fontSize: "1rem" }}>
             Five minutes a day, honest and unfiltered. These questions will surprise you.
           </p>
         </motion.div>
@@ -349,19 +355,21 @@ export default function GrowPage() {
                 display: "flex", alignItems: "flex-start", gap: "16px",
                 padding: "22px 24px",
                 borderRadius: "16px",
-                background: "rgba(255,255,255,0.03)",
-                border: "1px solid rgba(255,255,255,0.06)",
+                background: "#ffffff",
+                border: "1px solid rgba(0,0,0,0.07)",
+                boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
               }}
             >
               <span style={{
                 minWidth: "30px", height: "30px", borderRadius: "50%",
-                background: "rgba(245,158,11,0.15)", border: "1px solid rgba(245,158,11,0.3)",
+                background: "rgba(245,158,11,0.1)", border: "1px solid rgba(245,158,11,0.2)",
                 display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: "13px", fontWeight: 700, color: "#fbbf24",
+                fontSize: "13px", fontWeight: 700, color: "#d97706",
+                flexShrink: 0,
               }}>
                 {i + 1}
               </span>
-              <p style={{ fontSize: "0.97rem", color: "rgba(240,244,255,0.7)", lineHeight: 1.65, margin: 0 }}>
+              <p style={{ fontSize: "0.97rem", color: "#374151", lineHeight: 1.65, margin: 0 }}>
                 {prompt}
               </p>
             </motion.div>
@@ -373,16 +381,16 @@ export default function GrowPage() {
       <section style={{
         padding: "100px 24px",
         textAlign: "center",
-        borderTop: "1px solid rgba(255,255,255,0.05)",
-        background: "linear-gradient(180deg, transparent, rgba(139,92,246,0.05))",
+        borderTop: "1px solid rgba(0,0,0,0.06)",
+        background: "#ffffff",
       }}>
         <motion.div
           variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
         >
-          <h2 style={{ fontSize: "clamp(1.8rem, 4vw, 3rem)", fontWeight: 800, marginBottom: "16px" }}>
+          <h2 style={{ fontSize: "clamp(1.8rem, 4vw, 3rem)", fontWeight: 800, marginBottom: "16px", color: "#0f0f0f" }}>
             Ready to Grow?
           </h2>
-          <p style={{ color: "rgba(240,244,255,0.55)", fontSize: "1.05rem", maxWidth: "500px", margin: "0 auto 36px", lineHeight: 1.7 }}>
+          <p style={{ color: "#6b7280", fontSize: "1.05rem", maxWidth: "500px", margin: "0 auto 36px", lineHeight: 1.7 }}>
             Join thousands of volunteers, givers, and community builders who are growing every day
             through the power of kindness.
           </p>
@@ -394,7 +402,7 @@ export default function GrowPage() {
                 background: "linear-gradient(135deg, #8b5cf6, #f43f5e)",
                 color: "#fff", fontWeight: 700, fontSize: "16px",
                 textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "8px",
-                boxShadow: "0 8px 32px rgba(139,92,246,0.35)",
+                boxShadow: "0 8px 32px rgba(139,92,246,0.25)",
               }}
             >
               Volunteer Now <ArrowRight size={16} />
@@ -403,9 +411,10 @@ export default function GrowPage() {
               to="/kindwave"
               style={{
                 padding: "14px 32px", borderRadius: "999px",
-                background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)",
-                color: "rgba(240,244,255,0.8)", fontWeight: 600, fontSize: "16px",
+                background: "#ffffff", border: "1px solid rgba(0,0,0,0.1)",
+                color: "#374151", fontWeight: 600, fontSize: "16px",
                 textDecoration: "none",
+                boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
               }}
             >
               Explore KindWave

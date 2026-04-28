@@ -43,7 +43,7 @@ export default function AmbientBackground() {
         ref={orbRef}
         className="absolute w-[600px] h-[600px] rounded-full"
         style={{
-          background: "radial-gradient(circle, rgba(244,63,94,0.04) 0%, rgba(244,63,94,0.01) 40%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(244,63,94,0.06) 0%, rgba(244,63,94,0.02) 40%, transparent 70%)",
           willChange: "transform",
         }}
       />

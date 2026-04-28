@@ -1,6 +1,6 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
-import { BookOpen, Map, Home, Laptop, Heart, Globe, ArrowRight, CheckCircle } from "lucide-react";
+import { BookOpen, Map, Home, Laptop, Heart, Globe, ArrowRight } from "lucide-react";
 
 const opportunities = [
   { icon: BookOpen, label: "Language Teaching", detail: "Help learners grow through KindLearn" },
@@ -31,7 +31,7 @@ export default function PartnerSection() {
   };
 
   return (
-    <section id="volunteer" className="py-24 lg:py-32" style={{ background: "#050810" }} ref={ref}>
+    <section id="volunteer" className="py-24 lg:py-32" style={{ background: "#ffffff" }} ref={ref}>
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
 
         {/* Top: heading + description + CTA */}
@@ -41,23 +41,24 @@ export default function PartnerSection() {
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.7 }}
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-rose-500/20 mb-6" style={{ background: "rgba(244,63,94,0.06)" }}>
-              <div className="w-1.5 h-1.5 rounded-full bg-rose-400" />
-              <span className="text-rose-400 text-xs font-bold tracking-widest uppercase">Volunteer With Us</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-rose-200 mb-6"
+              style={{ background: "rgba(244,63,94,0.06)" }}>
+              <div className="w-1.5 h-1.5 rounded-full bg-rose-500" />
+              <span className="text-rose-500 text-xs font-bold tracking-widest uppercase">Volunteer With Us</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight mb-6">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 leading-tight mb-6">
               Join a movement{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-pink-400">
                 built on trust
               </span>
             </h2>
-            <p className="text-white/40 text-lg leading-relaxed mb-8">
+            <p className="text-gray-500 text-lg leading-relaxed mb-8">
               We welcome volunteers who share our commitment to ethical impact, sustainable growth,
               and community-first values.
             </p>
             <button
               onClick={scrollToForm}
-              className="group inline-flex items-center gap-3 px-8 py-4 text-white font-semibold rounded-2xl transition-all duration-300 shadow-lg"
+              className="group inline-flex items-center gap-3 px-8 py-4 text-white font-semibold rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.02]"
               style={{ background: "linear-gradient(135deg, #f43f5e, #ec4899)" }}
             >
               Register as Volunteer
@@ -78,15 +79,15 @@ export default function PartnerSection() {
                 initial={{ opacity: 0, y: 15 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.4, delay: 0.3 + i * 0.07 }}
-                className="flex items-start gap-4 p-4 rounded-2xl border border-white/[0.05] hover:border-rose-500/20 transition-all duration-300"
-                style={{ background: "rgba(255,255,255,0.025)" }}
+                className="flex items-start gap-4 p-4 rounded-2xl border border-gray-200 hover:border-rose-200 bg-white transition-all duration-300"
+                style={{ boxShadow: "0 1px 3px rgba(0,0,0,0.04)" }}
               >
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-rose-500 to-pink-500 flex items-center justify-center flex-shrink-0 shadow-md shadow-rose-900/30">
-                  <op.icon className="w-4.5 h-4.5 text-white w-[18px] h-[18px]" />
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-rose-500 to-pink-500 flex items-center justify-center flex-shrink-0 shadow-md shadow-rose-100">
+                  <op.icon className="w-[18px] h-[18px] text-white" />
                 </div>
                 <div>
-                  <p className="text-white/80 font-semibold text-sm">{op.label}</p>
-                  <p className="text-white/35 text-xs mt-0.5 leading-snug">{op.detail}</p>
+                  <p className="text-gray-800 font-semibold text-sm">{op.label}</p>
+                  <p className="text-gray-400 text-xs mt-0.5 leading-snug">{op.detail}</p>
                 </div>
               </motion.div>
             ))}
@@ -98,17 +99,16 @@ export default function PartnerSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.5 }}
-          className="border border-white/[0.06] rounded-2xl p-8"
-          style={{ background: "rgba(255,255,255,0.02)" }}
+          className="border border-gray-200 rounded-2xl p-8 bg-gray-50"
         >
-          <p className="text-rose-400 text-xs font-bold tracking-widest uppercase text-center mb-8">How It Works</p>
+          <p className="text-rose-500 text-xs font-bold tracking-widest uppercase text-center mb-8">How It Works</p>
           <div className="grid sm:grid-cols-3 gap-8">
             {steps.map((step, i) => (
               <div key={i} className="flex items-start gap-4">
-                <span className="text-3xl font-black text-rose-500/20 leading-none select-none">{step.number}</span>
+                <span className="text-3xl font-black text-rose-200 leading-none select-none">{step.number}</span>
                 <div>
-                  <p className="text-white font-bold mb-1">{step.title}</p>
-                  <p className="text-white/35 text-sm leading-relaxed">{step.detail}</p>
+                  <p className="text-gray-900 font-bold mb-1">{step.title}</p>
+                  <p className="text-gray-500 text-sm leading-relaxed">{step.detail}</p>
                 </div>
               </div>
             ))}

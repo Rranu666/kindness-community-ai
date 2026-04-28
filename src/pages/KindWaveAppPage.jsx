@@ -10,7 +10,7 @@ export default function KindWaveAppPage() {
   );
 
   return (
-    <div style={{ minHeight: "100vh", background: "#030712" }}>
+    <div style={{ minHeight: "100vh", background: "#f0f0ef" }}>
       <Header />
       <KindWaveApp />
       <Footer />

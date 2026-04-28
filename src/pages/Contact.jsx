@@ -104,12 +104,12 @@ export default function Contact() {
   };
 
   return (
-    <div className="min-h-screen" style={{ background: "#030712", fontFamily: "'Inter', system-ui, sans-serif" }}>
+    <div className="min-h-screen" style={{ background: "#f0f0ef", fontFamily: "'Inter', system-ui, sans-serif" }}>
       {/* Ambient blobs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div className="absolute top-0 left-1/4 w-[600px] h-[600px] rounded-full opacity-[0.06]"
+        <div className="absolute top-0 left-1/4 w-[600px] h-[600px] rounded-full opacity-[0.04]"
           style={{ background: "radial-gradient(circle, #f43f5e, transparent 70%)", filter: "blur(80px)" }} />
-        <div className="absolute bottom-1/3 right-1/4 w-[500px] h-[500px] rounded-full opacity-[0.04]"
+        <div className="absolute bottom-1/3 right-1/4 w-[500px] h-[500px] rounded-full opacity-[0.03]"
           style={{ background: "radial-gradient(circle, #a78bfa, transparent 70%)", filter: "blur(80px)" }} />
       </div>
 
@@ -120,25 +120,25 @@ export default function Contact() {
         <div className="max-w-7xl mx-auto">
           <Link
             to="/"
-            className="inline-flex items-center gap-2 text-white/40 hover:text-white/70 text-sm font-medium transition-colors mb-10"
+            className="inline-flex items-center gap-2 text-gray-400 hover:text-gray-700 text-sm font-medium transition-colors mb-10"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Home
           </Link>
 
           <AnimBlock>
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-rose-500/20 mb-6"
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-rose-200 mb-6"
               style={{ background: "rgba(244,63,94,0.06)" }}>
-              <div className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse" />
-              <span className="text-rose-400 text-xs font-bold tracking-widest uppercase">Get In Touch</span>
+              <div className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
+              <span className="text-rose-500 text-xs font-bold tracking-widest uppercase">Get In Touch</span>
             </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-tight mb-6">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-900 leading-tight mb-6">
               We'd love to{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-pink-400">
                 hear from you
               </span>
             </h1>
-            <p className="text-white/50 text-lg leading-relaxed max-w-2xl">
+            <p className="text-gray-500 text-lg leading-relaxed max-w-2xl">
               Whether you're interested in partnering with KCF, volunteering, supporting our mission,
               or just want to say hello — reach out. Every message matters.
             </p>
@@ -153,8 +153,8 @@ export default function Contact() {
           {/* Contact details */}
           <div className="space-y-6">
             <AnimBlock delay={0.1}>
-              <h2 className="text-2xl font-black text-white mb-2">Contact Information</h2>
-              <p className="text-white/40 text-sm leading-relaxed">
+              <h2 className="text-2xl font-black text-gray-900 mb-2">Contact Information</h2>
+              <p className="text-gray-500 text-sm leading-relaxed">
                 Reach out through any of these channels. We're always happy to connect.
               </p>
             </AnimBlock>
@@ -163,8 +163,8 @@ export default function Contact() {
               {contactDetails.map((item, i) => (
                 <AnimBlock key={item.label} delay={0.15 + i * 0.08}>
                   <div
-                    className="p-5 rounded-2xl border border-white/[0.06] hover:border-white/[0.12] transition-all duration-300"
-                    style={{ background: "rgba(255,255,255,0.025)" }}
+                    className="p-5 rounded-2xl border border-gray-200 hover:border-gray-300 bg-white transition-all duration-300"
+                    style={{ boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}
                   >
                     <div
                       className={`w-10 h-10 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center mb-4`}
@@ -172,16 +172,16 @@ export default function Contact() {
                     >
                       <item.icon className="w-5 h-5 text-white" />
                     </div>
-                    <p className="text-white/40 text-xs font-semibold uppercase tracking-wider mb-1">{item.label}</p>
+                    <p className="text-gray-400 text-xs font-semibold uppercase tracking-wider mb-1">{item.label}</p>
                     {item.href ? (
                       <a
                         href={item.href}
-                        className={`text-white/80 font-medium hover:text-rose-400 transition-colors leading-relaxed whitespace-nowrap ${item.valueSize || "text-sm"}`}
+                        className={`text-gray-800 font-medium hover:text-rose-500 transition-colors leading-relaxed whitespace-nowrap ${item.valueSize || "text-sm"}`}
                       >
                         {item.value}
                       </a>
                     ) : (
-                      <p className="text-white/80 text-sm font-medium leading-relaxed whitespace-pre-line">{item.value}</p>
+                      <p className="text-gray-700 text-sm font-medium leading-relaxed whitespace-pre-line">{item.value}</p>
                     )}
                   </div>
                 </AnimBlock>
@@ -191,16 +191,15 @@ export default function Contact() {
             {/* CTA card */}
             <AnimBlock delay={0.5}>
               <div
-                className="p-6 rounded-2xl border border-rose-500/20 relative overflow-hidden"
-                style={{ background: "rgba(244,63,94,0.06)" }}
+                className="p-6 rounded-2xl border border-rose-100 relative overflow-hidden bg-rose-50"
               >
                 <div className="absolute top-0 right-0 w-32 h-32 rounded-full pointer-events-none"
-                  style={{ background: "radial-gradient(circle, rgba(244,63,94,0.15), transparent 70%)", filter: "blur(20px)" }} />
+                  style={{ background: "radial-gradient(circle, rgba(244,63,94,0.1), transparent 70%)", filter: "blur(20px)" }} />
                 <div className="flex items-center gap-3 mb-3 relative z-10">
-                  <Heart className="w-5 h-5 text-rose-400 fill-rose-400/30" />
-                  <h3 className="text-white font-bold text-base">Join the KCF Community</h3>
+                  <Heart className="w-5 h-5 text-rose-500 fill-rose-200" />
+                  <h3 className="text-gray-900 font-bold text-base">Join the KCF Community</h3>
                 </div>
-                <p className="text-white/50 text-sm leading-relaxed mb-4 relative z-10">
+                <p className="text-gray-500 text-sm leading-relaxed mb-4 relative z-10">
                   Partner with us, volunteer, or support our mission. Together we build stronger communities.
                 </p>
                 <div className="flex flex-wrap gap-3 relative z-10">
@@ -228,35 +227,33 @@ export default function Contact() {
           {/* Contact form */}
           <AnimBlock delay={0.2}>
             <div
-              className="p-8 rounded-3xl border border-white/[0.07]"
-              style={{ background: "rgba(255,255,255,0.03)" }}
+              className="p-8 rounded-3xl border border-gray-200 bg-white"
+              style={{ boxShadow: "0 2px 16px rgba(0,0,0,0.06)" }}
             >
               {submitted ? (
                 <div className="text-center py-12">
-                  <div className="w-16 h-16 rounded-2xl mx-auto mb-4 flex items-center justify-center"
-                    style={{ background: "linear-gradient(135deg, rgba(52,211,153,0.15), rgba(16,185,129,0.1))" }}>
-                    <CheckCircle className="w-8 h-8 text-emerald-400" />
+                  <div className="w-16 h-16 rounded-2xl mx-auto mb-4 flex items-center justify-center bg-emerald-50 border border-emerald-100">
+                    <CheckCircle className="w-8 h-8 text-emerald-500" />
                   </div>
-                  <h3 className="text-white font-black text-xl mb-2">Message received!</h3>
-                  <p className="text-white/50 text-sm leading-relaxed mb-6">
+                  <h3 className="text-gray-900 font-black text-xl mb-2">Message received!</h3>
+                  <p className="text-gray-500 text-sm leading-relaxed mb-6">
                     Thank you! We'll get back to you within 24–48 hours. You can also reach us directly at{" "}
                     <a href="mailto:contact@kindnesscommunityfoundation.com"
-                      className="text-rose-400 hover:underline">
+                      className="text-rose-500 hover:underline">
                       contact@kindnesscommunityfoundation.com
                     </a>
                   </p>
                   <button
                     onClick={() => { setSubmitted(false); setForm({ name: "", email: "", subject: "", message: "" }); }}
-                    className="px-6 py-2.5 rounded-xl text-white text-sm font-semibold border border-white/[0.1] hover:border-rose-500/30 transition-all"
-                    style={{ background: "rgba(255,255,255,0.05)" }}
+                    className="px-6 py-2.5 rounded-xl text-gray-600 text-sm font-semibold border border-gray-200 hover:border-rose-200 hover:text-rose-500 transition-all bg-gray-50 hover:bg-rose-50"
                   >
                     Send Another Message
                   </button>
                 </div>
               ) : (
                 <>
-                  <h2 className="text-xl font-black text-white mb-1">Send us a message</h2>
-                  <p className="text-white/40 text-sm mb-6">Fill in the form and we'll get back to you shortly.</p>
+                  <h2 className="text-xl font-black text-gray-900 mb-1">Send us a message</h2>
+                  <p className="text-gray-500 text-sm mb-6">Fill in the form and we'll get back to you shortly.</p>
                   <form
                     onSubmit={handleSubmit}
                     name="contact"
@@ -269,7 +266,7 @@ export default function Contact() {
                     <input type="hidden" name="bot-field" className="hidden" />
                     <div className="grid sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-white/50 text-xs font-semibold uppercase tracking-wider mb-2">
+                        <label className="block text-gray-500 text-xs font-semibold uppercase tracking-wider mb-2">
                           Your Name *
                         </label>
                         <input
@@ -279,12 +276,11 @@ export default function Contact() {
                           onChange={handleChange}
                           required
                           placeholder="Your name"
-                          className="w-full px-4 py-3 rounded-xl text-white text-sm placeholder-white/20 border border-white/[0.08] focus:border-rose-500/40 focus:outline-none transition-all"
-                          style={{ background: "rgba(255,255,255,0.04)" }}
+                          className="w-full px-4 py-3 rounded-xl text-gray-900 text-sm placeholder-gray-300 border border-gray-200 focus:border-rose-400 focus:outline-none transition-all bg-gray-50"
                         />
                       </div>
                       <div>
-                        <label className="block text-white/50 text-xs font-semibold uppercase tracking-wider mb-2">
+                        <label className="block text-gray-500 text-xs font-semibold uppercase tracking-wider mb-2">
                           Email Address *
                         </label>
                         <input
@@ -294,14 +290,13 @@ export default function Contact() {
                           onChange={handleChange}
                           required
                           placeholder="you@example.com"
-                          className="w-full px-4 py-3 rounded-xl text-white text-sm placeholder-white/20 border border-white/[0.08] focus:border-rose-500/40 focus:outline-none transition-all"
-                          style={{ background: "rgba(255,255,255,0.04)" }}
+                          className="w-full px-4 py-3 rounded-xl text-gray-900 text-sm placeholder-gray-300 border border-gray-200 focus:border-rose-400 focus:outline-none transition-all bg-gray-50"
                         />
                       </div>
                     </div>
 
                     <div>
-                      <label className="block text-white/50 text-xs font-semibold uppercase tracking-wider mb-2">
+                      <label className="block text-gray-500 text-xs font-semibold uppercase tracking-wider mb-2">
                         Subject
                       </label>
                       <input
@@ -310,13 +305,12 @@ export default function Contact() {
                         value={form.subject}
                         onChange={handleChange}
                         placeholder="Partnership inquiry, Volunteer interest, General question..."
-                        className="w-full px-4 py-3 rounded-xl text-white text-sm placeholder-white/20 border border-white/[0.08] focus:border-rose-500/40 focus:outline-none transition-all"
-                        style={{ background: "rgba(255,255,255,0.04)" }}
+                        className="w-full px-4 py-3 rounded-xl text-gray-900 text-sm placeholder-gray-300 border border-gray-200 focus:border-rose-400 focus:outline-none transition-all bg-gray-50"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-white/50 text-xs font-semibold uppercase tracking-wider mb-2">
+                      <label className="block text-gray-500 text-xs font-semibold uppercase tracking-wider mb-2">
                         Message *
                       </label>
                       <textarea
@@ -326,8 +320,7 @@ export default function Contact() {
                         required
                         rows={5}
                         placeholder="Tell us how we can help, or share your thoughts about KCF's mission..."
-                        className="w-full px-4 py-3 rounded-xl text-white text-sm placeholder-white/20 border border-white/[0.08] focus:border-rose-500/40 focus:outline-none transition-all resize-none"
-                        style={{ background: "rgba(255,255,255,0.04)" }}
+                        className="w-full px-4 py-3 rounded-xl text-gray-900 text-sm placeholder-gray-300 border border-gray-200 focus:border-rose-400 focus:outline-none transition-all resize-none bg-gray-50"
                       />
                     </div>
 

@@ -74,7 +74,6 @@ export default function EngagementSection() {
       setVolunteerDone(true);
       setVolunteerForm({ name: "", email: "", skills: "" });
     } catch {
-      // silently fail — still show success so user isn't stuck
       setVolunteerDone(true);
       setVolunteerForm({ name: "", email: "", skills: "" });
     } finally {
@@ -83,31 +82,36 @@ export default function EngagementSection() {
   };
 
   return (
-    <section id="engagement" className="py-20 px-4" style={{ background: "#030712" }}>
+    <section id="engagement" className="py-20 px-4" style={{ background: "#f0f0ef" }}>
       <div className="max-w-6xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-14">
-          <span className="text-rose-400 text-sm font-semibold uppercase tracking-widest">Get Involved</span>
-          <h2 className="text-3xl md:text-4xl font-bold text-white mt-2 mb-3">Join Our Community</h2>
-          <p className="text-white/35 max-w-xl mx-auto">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-rose-200 mb-4"
+            style={{ background: "rgba(244,63,94,0.06)" }}>
+            <div className="w-1.5 h-1.5 rounded-full bg-rose-500" />
+            <span className="text-rose-500 text-xs font-bold tracking-widest uppercase">Get Involved</span>
+          </div>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mt-2 mb-3">Join Our Community</h2>
+          <p className="text-gray-500 max-w-xl mx-auto">
             Whether you want to stay informed, lend your skills, or simply ask questions — there's a place for you here.
           </p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-10 mb-16">
           {/* Newsletter */}
-          <div className="rounded-2xl border border-white/[0.06] p-8" style={{ background: "rgba(255,255,255,0.03)" }}>
+          <div className="rounded-2xl border border-gray-200 p-8 bg-white"
+            style={{ boxShadow: "0 1px 4px rgba(0,0,0,0.05)" }}>
             <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 rounded-full" style={{ background: "rgba(244,63,94,0.15)" }}>
-                <Mail className="w-5 h-5 text-rose-400" />
+              <div className="p-2 rounded-full" style={{ background: "rgba(244,63,94,0.10)" }}>
+                <Mail className="w-5 h-5 text-rose-500" />
               </div>
-              <h3 className="text-xl font-bold text-white">Newsletter</h3>
+              <h3 className="text-xl font-bold text-gray-900">Newsletter</h3>
             </div>
-            <p className="text-white/35 text-sm mb-5">
+            <p className="text-gray-500 text-sm mb-5">
               Get quarterly impact updates, stories from the field, and event news delivered to your inbox.
             </p>
             {newsletterDone ? (
-              <div className="flex items-center gap-2 text-green-400 font-medium text-sm rounded-lg px-4 py-3 border border-green-500/20" style={{ background: "rgba(34,197,94,0.08)" }}>
+              <div className="flex items-center gap-2 text-green-600 font-medium text-sm rounded-lg px-4 py-3 border border-green-200 bg-green-50">
                 <Heart className="w-4 h-4" /> Thank you for subscribing!
               </div>
             ) : (
@@ -117,7 +121,7 @@ export default function EngagementSection() {
                   placeholder="Your email address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="flex-1 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-rose-500/50"
+                  className="flex-1 bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400 focus:border-rose-400"
                   required
                 />
                 <Button type="submit" disabled={loading.newsletter} className="bg-rose-500 hover:bg-rose-600 text-white gap-1">
@@ -129,18 +133,19 @@ export default function EngagementSection() {
           </div>
 
           {/* Volunteer */}
-          <div className="rounded-2xl border border-white/[0.06] p-8" style={{ background: "rgba(255,255,255,0.03)" }}>
+          <div className="rounded-2xl border border-gray-200 p-8 bg-white"
+            style={{ boxShadow: "0 1px 4px rgba(0,0,0,0.05)" }}>
             <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 rounded-full" style={{ background: "rgba(79,124,255,0.15)" }}>
-                <Users className="w-5 h-5 text-blue-400" />
+              <div className="p-2 rounded-full" style={{ background: "rgba(59,130,246,0.10)" }}>
+                <Users className="w-5 h-5 text-blue-500" />
               </div>
-              <h3 className="text-xl font-bold text-white">Volunteer With Us</h3>
+              <h3 className="text-xl font-bold text-gray-900">Volunteer With Us</h3>
             </div>
-            <p className="text-white/35 text-sm mb-5">
+            <p className="text-gray-500 text-sm mb-5">
               Share your time, skills, and passion. We'll find the right program for you.
             </p>
             {volunteerDone ? (
-              <div className="flex items-center gap-2 text-green-400 font-medium text-sm rounded-lg px-4 py-3 border border-green-500/20" style={{ background: "rgba(34,197,94,0.08)" }}>
+              <div className="flex items-center gap-2 text-green-600 font-medium text-sm rounded-lg px-4 py-3 border border-green-200 bg-green-50">
                 <Heart className="w-4 h-4" /> We'll be in touch soon — thank you!
               </div>
             ) : (
@@ -150,7 +155,7 @@ export default function EngagementSection() {
                   value={volunteerForm.name}
                   onChange={(e) => setVolunteerForm((f) => ({ ...f, name: e.target.value }))}
                   required
-                  className="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-rose-500/50"
+                  className="bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400 focus:border-rose-400"
                 />
                 <Input
                   type="email"
@@ -158,13 +163,13 @@ export default function EngagementSection() {
                   value={volunteerForm.email}
                   onChange={(e) => setVolunteerForm((f) => ({ ...f, email: e.target.value }))}
                   required
-                  className="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-rose-500/50"
+                  className="bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400 focus:border-rose-400"
                 />
                 <Input
                   placeholder="Skills or area of interest (optional)"
                   value={volunteerForm.skills}
                   onChange={(e) => setVolunteerForm((f) => ({ ...f, skills: e.target.value }))}
-                  className="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-rose-500/50"
+                  className="bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400 focus:border-rose-400"
                 />
                 <Button type="submit" disabled={loading.volunteer} className="w-full text-white" style={{ background: "linear-gradient(135deg, #f43f5e, #ec4899)" }}>
                   {loading.volunteer ? "Submitting..." : "Register as Volunteer"}
@@ -176,23 +181,24 @@ export default function EngagementSection() {
 
         {/* FAQ */}
         <div className="max-w-3xl mx-auto">
-          <h3 className="text-2xl font-bold text-white text-center mb-8">Frequently Asked Questions</h3>
+          <h3 className="text-2xl font-bold text-gray-900 text-center mb-8">Frequently Asked Questions</h3>
           <div className="space-y-3">
             {faqs.map((faq, i) => (
-              <div key={i} className="rounded-xl border border-white/[0.06] overflow-hidden" style={{ background: "rgba(255,255,255,0.025)" }}>
+              <div key={i} className="rounded-xl border border-gray-200 overflow-hidden bg-white"
+                style={{ boxShadow: "0 1px 3px rgba(0,0,0,0.04)" }}>
                 <button
-                  className="w-full text-left px-6 py-4 flex justify-between items-center gap-4 hover:bg-white/3 transition-colors"
+                  className="w-full text-left px-6 py-4 flex justify-between items-center gap-4 hover:bg-gray-50 transition-colors"
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
                 >
-                  <span className="font-semibold text-white/70 text-sm md:text-base">{faq.question}</span>
+                  <span className="font-semibold text-gray-700 text-sm md:text-base">{faq.question}</span>
                   {openFaq === i ? (
                     <ChevronUp className="w-4 h-4 text-rose-500 shrink-0" />
                   ) : (
-                    <ChevronDown className="w-4 h-4 text-slate-400 shrink-0" />
+                    <ChevronDown className="w-4 h-4 text-gray-400 shrink-0" />
                   )}
                 </button>
                 {openFaq === i && (
-                  <div className="px-6 pb-4 text-white/40 text-sm leading-relaxed border-t border-white/[0.04] pt-3">
+                  <div className="px-6 pb-4 text-gray-500 text-sm leading-relaxed border-t border-gray-100 pt-3">
                     {faq.answer}
                   </div>
                 )}

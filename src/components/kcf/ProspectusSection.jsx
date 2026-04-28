@@ -139,17 +139,17 @@ function ProspectusItem({ section, index }) {
   const Icon = section.icon;
 
   return (
-    <div className={`rounded-2xl overflow-hidden border transition-all duration-300 ${open ? "border-rose-200/50 shadow-sm" : "border-white/5 hover:border-white/10"} bg-white/[0.03]`}>
+    <div className={`rounded-2xl overflow-hidden border transition-all duration-300 ${open ? "border-rose-300 shadow-sm" : "border-gray-200 hover:border-gray-300"} bg-white`}>
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center gap-4 p-5 text-left hover:bg-white/5 transition-colors"
+        className="w-full flex items-center gap-4 p-5 text-left hover:bg-gray-50 transition-colors"
       >
-        <span className="text-white/15 font-black text-xl w-8 flex-shrink-0 select-none">{section.number}</span>
-        <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-300 ${open ? "bg-rose-500/20" : "bg-white/5"}`}>
-          <Icon className={`w-4 h-4 transition-colors duration-300 ${open ? "text-rose-400" : "text-white/40"}`} />
+        <span className="text-gray-200 font-black text-xl w-8 flex-shrink-0 select-none">{section.number}</span>
+        <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-300 ${open ? "bg-rose-100" : "bg-gray-100"}`}>
+          <Icon className={`w-4 h-4 transition-colors duration-300 ${open ? "text-rose-500" : "text-gray-400"}`} />
         </div>
-        <span className={`flex-1 font-bold text-sm transition-colors duration-300 ${open ? "text-white" : "text-white/60"}`}>{section.title}</span>
-        <ChevronDown className={`w-4 h-4 text-white/30 transition-transform duration-300 ${open ? "rotate-180" : ""}`} />
+        <span className={`flex-1 font-bold text-sm transition-colors duration-300 ${open ? "text-gray-900" : "text-gray-600"}`}>{section.title}</span>
+        <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-300 ${open ? "rotate-180" : ""}`} />
       </button>
       <motion.div
         initial={false}
@@ -159,20 +159,20 @@ function ProspectusItem({ section, index }) {
       >
         <div className="px-5 pb-5 pl-[4.75rem] space-y-3">
           {section.body && (
-            <p className="text-white/50 text-sm leading-relaxed">{section.body}</p>
+            <p className="text-gray-500 text-sm leading-relaxed">{section.body}</p>
           )}
           {section.bullets && (
             <ul className="space-y-2">
               {section.bullets.map((b, i) => (
-                <li key={i} className="flex items-start gap-2.5 text-sm text-white/50">
-                  <div className="w-1.5 h-1.5 rounded-full bg-rose-400/60 mt-1.5 flex-shrink-0" />
+                <li key={i} className="flex items-start gap-2.5 text-sm text-gray-500">
+                  <div className="w-1.5 h-1.5 rounded-full bg-rose-400 mt-1.5 flex-shrink-0" />
                   <span>{b}</span>
                 </li>
               ))}
             </ul>
           )}
           {section.note && (
-            <p className="text-xs text-rose-300/70 italic border-l-2 border-rose-500/30 pl-3">{section.note}</p>
+            <p className="text-xs text-rose-500 italic border-l-2 border-rose-300 pl-3">{section.note}</p>
           )}
         </div>
       </motion.div>
@@ -185,8 +185,9 @@ export default function ProspectusSection() {
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section id="prospectus" className="py-24 lg:py-32 relative overflow-hidden" style={{ background: "#030712" }} ref={ref}>
-      <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-rose-500/4 rounded-full blur-[140px] pointer-events-none" />
+    <section id="prospectus" className="py-24 lg:py-32 relative overflow-hidden" style={{ background: "#ffffff" }} ref={ref}>
+      <div className="absolute top-0 left-0 w-[600px] h-[600px] rounded-full blur-[140px] pointer-events-none"
+        style={{ background: "rgba(244,63,94,0.03)" }} />
 
       <div className="relative max-w-4xl mx-auto px-6 lg:px-12">
         <motion.div
@@ -195,17 +196,18 @@ export default function ProspectusSection() {
           transition={{ duration: 0.7 }}
           className="text-center mb-14"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-6">
-            <div className="w-1.5 h-1.5 rounded-full bg-rose-400" />
-            <span className="text-white/50 text-xs font-bold tracking-widest uppercase">Strategic Prospectus</span>
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-rose-200 mb-6"
+            style={{ background: "rgba(244,63,94,0.06)" }}>
+            <div className="w-1.5 h-1.5 rounded-full bg-rose-500" />
+            <span className="text-rose-500 text-xs font-bold tracking-widest uppercase">Strategic Prospectus</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight mb-4">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 leading-tight mb-4">
             Structured Community{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-pink-300">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-pink-400">
               Infrastructure
             </span>
           </h2>
-          <p className="text-white/40 text-lg max-w-2xl mx-auto leading-relaxed">
+          <p className="text-gray-500 text-lg max-w-2xl mx-auto leading-relaxed">
             A 12-section document grounding KCF's mission in legal clarity, operational structure, and community accountability.
           </p>
         </motion.div>
@@ -226,11 +228,11 @@ export default function ProspectusSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7, delay: 0.5 }}
-          className="mt-10 p-6 rounded-2xl border border-white/8 bg-white/[0.03] flex flex-col sm:flex-row items-center gap-4 justify-between"
+          className="mt-10 p-6 rounded-2xl border border-gray-200 bg-gray-50 flex flex-col sm:flex-row items-center gap-4 justify-between"
         >
           <div>
-            <p className="text-white font-bold text-sm">Need the full prospectus document?</p>
-            <p className="text-white/40 text-xs mt-0.5">Contact us for the attorney-reviewed version for board and legal review.</p>
+            <p className="text-gray-900 font-bold text-sm">Need the full prospectus document?</p>
+            <p className="text-gray-500 text-xs mt-0.5">Contact us for the attorney-reviewed version for board and legal review.</p>
           </div>
           <a
             href="mailto:contact@kindnesscommunityfoundation.com?subject=Strategic Prospectus Request"

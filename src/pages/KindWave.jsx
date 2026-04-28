@@ -171,11 +171,11 @@ function FadeIn({ children, delay = 0, className = "" }) {
 
 function SectionLabel({ label, color = "rose" }) {
   const colorMap = {
-    rose:   { bg: "rgba(244,63,94,0.07)",    border: "rgba(244,63,94,0.25)",    text: "#fda4af" },
-    violet: { bg: "rgba(167,139,250,0.07)",  border: "rgba(167,139,250,0.25)",  text: "#c4b5fd" },
-    blue:   { bg: "rgba(96,165,250,0.07)",   border: "rgba(96,165,250,0.25)",   text: "#93c5fd" },
-    green:  { bg: "rgba(52,211,153,0.07)",   border: "rgba(52,211,153,0.25)",   text: "#6ee7b7" },
-    amber:  { bg: "rgba(251,191,36,0.07)",   border: "rgba(251,191,36,0.25)",   text: "#fde68a" },
+    rose:   { bg: "rgba(244,63,94,0.07)",    border: "rgba(244,63,94,0.25)",    text: "#e11d48" },
+    violet: { bg: "rgba(167,139,250,0.07)",  border: "rgba(167,139,250,0.25)",  text: "#7c3aed" },
+    blue:   { bg: "rgba(96,165,250,0.07)",   border: "rgba(96,165,250,0.25)",   text: "#2563eb" },
+    green:  { bg: "rgba(52,211,153,0.07)",   border: "rgba(52,211,153,0.25)",   text: "#059669" },
+    amber:  { bg: "rgba(251,191,36,0.07)",   border: "rgba(251,191,36,0.25)",   text: "#d97706" },
   };
   const c = colorMap[color] || colorMap.rose;
   return (
@@ -196,13 +196,13 @@ function OverviewTab() {
           const Icon = s.icon;
           return (
             <FadeIn key={s.label} delay={i * 0.08}>
-              <div className="flex flex-col items-center gap-2 p-6 rounded-2xl border border-white/[0.07] relative overflow-hidden"
-                style={{ background: "rgba(255,255,255,0.03)" }}>
+              <div className="flex flex-col items-center gap-2 p-6 rounded-2xl border border-gray-200 relative overflow-hidden"
+                style={{ background: "#ffffff" }}>
                 <div className="absolute inset-0 pointer-events-none"
                   style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(244,63,94,0.07) 0%, transparent 70%)" }} />
                 <Icon className="w-5 h-5 text-rose-400/70 relative z-10" />
-                <span className="text-3xl md:text-4xl font-black text-white relative z-10">{s.value}</span>
-                <span className="text-sm text-white/50 font-semibold relative z-10">{s.label}</span>
+                <span className="text-3xl md:text-4xl font-black text-gray-900 relative z-10">{s.value}</span>
+                <span className="text-sm text-gray-500 font-semibold relative z-10">{s.label}</span>
               </div>
             </FadeIn>
           );
@@ -213,14 +213,14 @@ function OverviewTab() {
       <div>
         <FadeIn className="text-center mb-12">
           <SectionLabel label="What We Do" color="violet" />
-          <h2 className="kw-heading text-3xl md:text-5xl font-black text-white leading-tight mb-4">
+          <h2 className="kw-heading text-3xl md:text-5xl font-black text-gray-900 leading-tight mb-4">
             Kindness as a{" "}
             <span className="text-transparent bg-clip-text" style={{ backgroundImage: "linear-gradient(135deg, #f43f5e, #a78bfa)" }}>
               practice,
             </span>
             <br />not an accident.
           </h2>
-          <p className="text-white/50 text-lg max-w-xl mx-auto">
+          <p className="text-gray-500 text-lg max-w-xl mx-auto">
             Every feature answers one question: does this help you take one small step right now?
           </p>
         </FadeIn>
@@ -229,16 +229,16 @@ function OverviewTab() {
             const Icon = f.icon;
             return (
               <FadeIn key={f.title} delay={i * 0.1}>
-                <div className="p-7 rounded-3xl border border-white/[0.08] relative overflow-hidden group hover:border-white/[0.14] transition-all duration-500 h-full"
-                  style={{ background: "rgba(255,255,255,0.025)" }}>
+                <div className="p-7 rounded-3xl border border-gray-200 relative overflow-hidden group hover:border-gray-300 transition-all duration-500 h-full"
+                  style={{ background: "#ffffff" }}>
                   <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
                     style={{ background: `radial-gradient(ellipse at 30% 30%, ${f.glow} 0%, transparent 70%)` }} />
                   <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-5 relative z-10"
                     style={{ background: `${f.color}18`, border: `1px solid ${f.color}30` }}>
                     <Icon style={{ color: f.color }} className="w-6 h-6" />
                   </div>
-                  <h3 className="text-lg font-bold text-white mb-3 relative z-10">{f.title}</h3>
-                  <p className="text-sm text-white/50 leading-relaxed relative z-10">{f.desc}</p>
+                  <h3 className="text-lg font-bold text-gray-900 mb-3 relative z-10">{f.title}</h3>
+                  <p className="text-sm text-gray-500 leading-relaxed relative z-10">{f.desc}</p>
                 </div>
               </FadeIn>
             );
@@ -250,7 +250,7 @@ function OverviewTab() {
       <div>
         <FadeIn className="text-center mb-12">
           <SectionLabel label="Competitive Edge" color="amber" />
-          <h2 className="kw-heading text-3xl md:text-4xl font-black text-white leading-tight">
+          <h2 className="kw-heading text-3xl md:text-4xl font-black text-gray-900 leading-tight">
             What{" "}
             <span className="text-transparent bg-clip-text" style={{ backgroundImage: "linear-gradient(135deg, #fbbf24, #f43f5e)" }}>
               nobody else
@@ -263,14 +263,14 @@ function OverviewTab() {
             const Icon = d.icon;
             return (
               <FadeIn key={d.title} delay={i * 0.1}>
-                <div className="p-6 rounded-3xl border border-white/[0.08] h-full"
-                  style={{ background: "rgba(255,255,255,0.025)" }}>
+                <div className="p-6 rounded-3xl border border-gray-200 h-full"
+                  style={{ background: "#ffffff" }}>
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
                     style={{ background: `${d.color}18`, border: `1px solid ${d.color}30` }}>
                     <Icon style={{ color: d.color }} className="w-5 h-5" />
                   </div>
-                  <h3 className="text-base font-bold text-white mb-2">{d.title}</h3>
-                  <p className="text-sm text-white/45 leading-relaxed">{d.desc}</p>
+                  <h3 className="text-base font-bold text-gray-900 mb-2">{d.title}</h3>
+                  <p className="text-sm text-gray-500 leading-relaxed">{d.desc}</p>
                 </div>
               </FadeIn>
             );
@@ -292,14 +292,14 @@ function VisionTab() {
       label: "The Universal Truth",
       content: (
         <div className="space-y-6">
-          <p className="text-2xl md:text-3xl text-white/80 leading-relaxed font-light">
+          <p className="text-2xl md:text-3xl text-gray-700 leading-relaxed font-light">
             "No matter who we are… at some point, we all feel{" "}
-            <em className="text-rose-300 not-italic font-semibold">lost… disconnected… or stuck.</em>"
+            <em className="text-rose-500 not-italic font-semibold">lost… disconnected… or stuck.</em>"
           </p>
           <div className="flex flex-wrap gap-3 mt-6">
             {["🌙 Scrolling alone","😰 Stressed parent","🎒 Anxious teenager","🪑 Quietly alone","💼 Empty success"].map(s => (
-              <span key={s} className="px-4 py-2 rounded-full text-sm font-semibold text-white/60 border border-white/[0.1]"
-                style={{ background: "rgba(255,255,255,0.04)" }}>{s}</span>
+              <span key={s} className="px-4 py-2 rounded-full text-sm font-semibold text-gray-500 border border-gray-200"
+                style={{ background: "#f0f0ef" }}>{s}</span>
             ))}
           </div>
         </div>
@@ -310,9 +310,9 @@ function VisionTab() {
       label: "The Shift",
       content: (
         <div className="space-y-6">
-          <p className="text-2xl md:text-3xl text-white/80 leading-relaxed font-light">
+          <p className="text-2xl md:text-3xl text-gray-700 leading-relaxed font-light">
             "What if the fastest way to heal was{" "}
-            <em className="text-violet-300 not-italic font-bold">not receiving help</em>… but giving it?"
+            <em className="text-violet-500 not-italic font-bold">not receiving help</em>… but giving it?"
           </p>
           <div className="grid sm:grid-cols-3 gap-4 mt-4">
             {[
@@ -320,10 +320,10 @@ function VisionTab() {
               { e: "💬", t: '"Are you okay?"',     d: "Three words. The most powerful sentence in any language." },
               { e: "👂", t: "Listen fully",          d: "A volunteer who listens. Not fixes. Just listens." },
             ].map(item => (
-              <div key={item.t} className="p-4 rounded-2xl border border-white/[0.07]" style={{ background: "rgba(255,255,255,0.03)" }}>
+              <div key={item.t} className="p-4 rounded-2xl border border-gray-200" style={{ background: "#f0f0ef" }}>
                 <div className="text-2xl mb-2">{item.e}</div>
-                <div className="text-white font-semibold text-sm mb-1">{item.t}</div>
-                <div className="text-white/45 text-xs leading-relaxed">{item.d}</div>
+                <div className="text-gray-900 font-semibold text-sm mb-1">{item.t}</div>
+                <div className="text-gray-500 text-xs leading-relaxed">{item.d}</div>
               </div>
             ))}
           </div>
@@ -335,7 +335,7 @@ function VisionTab() {
       label: "The Science",
       content: (
         <div className="space-y-6">
-          <p className="text-xl text-white/70 leading-relaxed">
+          <p className="text-xl text-gray-600 leading-relaxed">
             "Reducing stress… rebuilding connection… and reconnecting you to life. This isn't philosophy — it's biology."
           </p>
           <div className="grid sm:grid-cols-3 gap-4">
@@ -344,11 +344,11 @@ function VisionTab() {
               { icon: "💓", t: "Cortisol drops after helping",  d: "Stress hormones decrease measurably within minutes of a kind act." },
               { icon: "✨", t: "Meaning replaces emptiness",     d: "Purpose is the antidote to disconnection. Helping creates purpose instantly." },
             ].map(item => (
-              <div key={item.t} className="p-5 rounded-2xl border border-emerald-500/20"
+              <div key={item.t} className="p-5 rounded-2xl border border-emerald-200"
                 style={{ background: "rgba(52,211,153,0.05)" }}>
                 <div className="text-2xl mb-3">{item.icon}</div>
-                <div className="text-emerald-300 font-bold text-sm mb-2">{item.t}</div>
-                <div className="text-white/50 text-xs leading-relaxed">{item.d}</div>
+                <div className="text-emerald-600 font-bold text-sm mb-2">{item.t}</div>
+                <div className="text-gray-500 text-xs leading-relaxed">{item.d}</div>
               </div>
             ))}
           </div>
@@ -360,23 +360,23 @@ function VisionTab() {
       label: "Imagine a World",
       content: (
         <div className="space-y-6">
-          <p className="text-2xl md:text-3xl text-white/80 leading-relaxed font-light">
+          <p className="text-2xl md:text-3xl text-gray-700 leading-relaxed font-light">
             "Imagine a world where help is{" "}
-            <em className="text-blue-300 not-italic font-bold">visible</em>… and anyone can step in."
+            <em className="text-blue-500 not-italic font-bold">visible</em>… and anyone can step in."
           </p>
           <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">
             {[["Mumbai","420"],["São Paulo","280"],["Manila","340"],["London","180"],["New York","240"]].map(([city, acts]) => (
-              <div key={city} className="p-3 rounded-xl border border-blue-500/20 text-center"
+              <div key={city} className="p-3 rounded-xl border border-blue-200 text-center"
                 style={{ background: "rgba(96,165,250,0.06)" }}>
-                <div className="text-blue-400 font-black text-lg">{acts}</div>
-                <div className="text-white/50 text-xs mt-0.5">{city}</div>
+                <div className="text-blue-500 font-black text-lg">{acts}</div>
+                <div className="text-gray-500 text-xs mt-0.5">{city}</div>
               </div>
             ))}
           </div>
           <div className="flex flex-wrap gap-3">
             {["📍 Find Help Near Me","🤝 Give Help","🗺️ See Near Me"].map(b => (
-              <button key={b} className="px-4 py-2 rounded-xl text-sm font-semibold text-white border border-white/[0.1] hover:border-white/[0.2] transition-colors"
-                style={{ background: "rgba(255,255,255,0.04)" }}>{b}</button>
+              <button key={b} className="px-4 py-2 rounded-xl text-sm font-semibold text-gray-600 border border-gray-200 hover:border-gray-300 transition-colors"
+                style={{ background: "#ffffff" }}>{b}</button>
             ))}
           </div>
         </div>
@@ -387,26 +387,26 @@ function VisionTab() {
       label: "The Connection Moment",
       content: (
         <div className="space-y-6">
-          <p className="text-xl text-white/70 leading-relaxed">
+          <p className="text-xl text-gray-600 leading-relaxed">
             "A stranger becomes a connection. A moment becomes meaning."
           </p>
           <div className="grid sm:grid-cols-2 gap-4">
-            <div className="p-5 rounded-2xl border border-white/[0.08]" style={{ background: "rgba(255,255,255,0.03)" }}>
-              <div className="text-white/40 text-sm font-semibold mb-3 uppercase tracking-widest">The Ask</div>
+            <div className="p-5 rounded-2xl border border-gray-200" style={{ background: "#f0f0ef" }}>
+              <div className="text-gray-400 text-sm font-semibold mb-3 uppercase tracking-widest">The Ask</div>
               {['"I need someone to talk to."','"Can anyone help me move next weekend?"','"My dog needs walking. I\'m recovering."'].map(r => (
-                <div key={r} className="py-2 border-b border-white/[0.06] text-white/70 text-sm last:border-0">{r}</div>
+                <div key={r} className="py-2 border-b border-gray-200 text-gray-600 text-sm last:border-0">{r}</div>
               ))}
             </div>
-            <div className="p-5 rounded-2xl border border-emerald-500/20" style={{ background: "rgba(52,211,153,0.05)" }}>
-              <div className="text-emerald-400 text-sm font-semibold mb-3 uppercase tracking-widest">The Answer</div>
+            <div className="p-5 rounded-2xl border border-emerald-200" style={{ background: "rgba(52,211,153,0.05)" }}>
+              <div className="text-emerald-600 text-sm font-semibold mb-3 uppercase tracking-widest">The Answer</div>
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-lg">🌿</div>
                 <div>
-                  <div className="text-white font-bold text-sm">Arjun K.</div>
-                  <div className="text-emerald-400 text-xs">0.4km away · Responding now</div>
+                  <div className="text-gray-900 font-bold text-sm">Arjun K.</div>
+                  <div className="text-emerald-600 text-xs">0.4km away · Responding now</div>
                 </div>
               </div>
-              <div className="px-4 py-3 rounded-xl bg-emerald-500/10 text-white/70 text-sm italic">
+              <div className="px-4 py-3 rounded-xl bg-emerald-500/10 text-gray-600 text-sm italic">
                 "I'll be there in 5 minutes. Happy to help."
               </div>
             </div>
@@ -420,23 +420,23 @@ function VisionTab() {
     <div className="space-y-8">
       <FadeIn className="text-center mb-10">
         <SectionLabel label="The Vision" color="violet" />
-        <h2 className="kw-heading text-3xl md:text-5xl font-black text-white leading-tight mb-4">
+        <h2 className="kw-heading text-3xl md:text-5xl font-black text-gray-900 leading-tight mb-4">
           Help Others.{" "}
           <span className="text-transparent bg-clip-text" style={{ backgroundImage: "linear-gradient(135deg, #a78bfa, #f43f5e)" }}>
             Heal Yourself.
           </span>
         </h2>
-        <p className="text-white/50 text-lg max-w-xl mx-auto">
+        <p className="text-gray-500 text-lg max-w-xl mx-auto">
           A movement disguised as an app. Built not for engagement — but for transformation.
         </p>
       </FadeIn>
 
       {scenes.map((scene, i) => (
         <FadeIn key={scene.num} delay={i * 0.05}>
-          <div className="rounded-3xl border border-white/[0.07] overflow-hidden" style={{ background: "rgba(255,255,255,0.02)" }}>
-            <div className="flex items-center gap-4 px-6 pt-6 pb-4 border-b border-white/[0.06]">
-              <span className="text-white/20 font-black text-2xl font-mono">{scene.num}</span>
-              <span className="text-white/60 text-sm font-bold uppercase tracking-widest">{scene.label}</span>
+          <div className="rounded-3xl border border-gray-200 overflow-hidden" style={{ background: "#ffffff" }}>
+            <div className="flex items-center gap-4 px-6 pt-6 pb-4 border-b border-gray-200">
+              <span className="text-gray-300 font-black text-2xl font-mono">{scene.num}</span>
+              <span className="text-gray-500 text-sm font-bold uppercase tracking-widest">{scene.label}</span>
             </div>
             <div className="p-6">{scene.content}</div>
           </div>
@@ -454,7 +454,7 @@ function FeaturesTab() {
       <div>
         <FadeIn className="text-center mb-12">
           <SectionLabel label="Platform Features" color="blue" />
-          <h2 className="kw-heading text-3xl md:text-4xl font-black text-white leading-tight">
+          <h2 className="kw-heading text-3xl md:text-4xl font-black text-gray-900 leading-tight">
             Built to{" "}
             <span className="text-transparent bg-clip-text" style={{ backgroundImage: "linear-gradient(135deg, #60a5fa, #a78bfa)" }}>
               scale
@@ -467,15 +467,15 @@ function FeaturesTab() {
             const Icon = f.icon;
             return (
               <FadeIn key={f.label} delay={i * 0.06}>
-                <div className="flex gap-4 p-5 rounded-2xl border border-white/[0.06] hover:border-white/[0.12] transition-all duration-300"
-                  style={{ background: "rgba(255,255,255,0.02)" }}>
+                <div className="flex gap-4 p-5 rounded-2xl border border-gray-200 hover:border-gray-300 transition-all duration-300"
+                  style={{ background: "#ffffff" }}>
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
                     style={{ background: `${f.color}18`, border: `1px solid ${f.color}25` }}>
                     <Icon style={{ color: f.color }} className="w-5 h-5" />
                   </div>
                   <div>
-                    <h4 className="text-sm font-bold text-white mb-1">{f.label}</h4>
-                    <p className="text-xs text-white/45 leading-relaxed">{f.desc}</p>
+                    <h4 className="text-sm font-bold text-gray-900 mb-1">{f.label}</h4>
+                    <p className="text-xs text-gray-500 leading-relaxed">{f.desc}</p>
                   </div>
                 </div>
               </FadeIn>
@@ -488,28 +488,28 @@ function FeaturesTab() {
       <div>
         <FadeIn className="text-center mb-12">
           <SectionLabel label="Safety & Trust" color="green" />
-          <h2 className="kw-heading text-3xl md:text-4xl font-black text-white leading-tight">
+          <h2 className="kw-heading text-3xl md:text-4xl font-black text-gray-900 leading-tight">
             Built with{" "}
             <span className="text-transparent bg-clip-text" style={{ backgroundImage: "linear-gradient(135deg, #34d399, #60a5fa)" }}>
               dignity
             </span>{" "}
             at the core.
           </h2>
-          <p className="text-white/45 mt-3 max-w-lg mx-auto">Safety, trust, and dignity — the foundation that makes mass adoption possible.</p>
+          <p className="text-gray-500 mt-3 max-w-lg mx-auto">Safety, trust, and dignity — the foundation that makes mass adoption possible.</p>
         </FadeIn>
         <div className="grid sm:grid-cols-2 gap-5">
           {safetyItems.map((item, i) => {
             const Icon = item.icon;
             return (
               <FadeIn key={item.label} delay={i * 0.08}>
-                <div className="flex gap-4 p-6 rounded-2xl border border-white/[0.07]" style={{ background: "rgba(255,255,255,0.025)" }}>
+                <div className="flex gap-4 p-6 rounded-2xl border border-gray-200" style={{ background: "#ffffff" }}>
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
                     style={{ background: `${item.color}18`, border: `1px solid ${item.color}30` }}>
                     <Icon style={{ color: item.color }} className="w-5 h-5" />
                   </div>
                   <div>
-                    <h4 className="text-sm font-bold text-white mb-1">{item.label}</h4>
-                    <p className="text-xs text-white/45 leading-relaxed">{item.desc}</p>
+                    <h4 className="text-sm font-bold text-gray-900 mb-1">{item.label}</h4>
+                    <p className="text-xs text-gray-500 leading-relaxed">{item.desc}</p>
                   </div>
                 </div>
               </FadeIn>
@@ -534,13 +534,13 @@ function JourneyTab() {
       <div>
         <FadeIn className="text-center mb-12">
           <SectionLabel label="Start Where You Are" color="rose" />
-          <h2 className="kw-heading text-3xl md:text-4xl font-black text-white leading-tight mb-3">
+          <h2 className="kw-heading text-3xl md:text-4xl font-black text-gray-900 leading-tight mb-3">
             No pressure.{" "}
             <span className="text-transparent bg-clip-text" style={{ backgroundImage: "linear-gradient(135deg, #f43f5e, #a78bfa)" }}>
               No expectations.
             </span>
           </h2>
-          <p className="text-white/50 text-lg max-w-xl mx-auto">
+          <p className="text-gray-500 text-lg max-w-xl mx-auto">
             We meet you exactly where you are today. Choose what resonates — you can always change.
           </p>
         </FadeIn>
@@ -551,13 +551,13 @@ function JourneyTab() {
                 onClick={() => setSelectedEntry(selectedEntry === i ? null : i)}
                 className="w-full p-6 rounded-2xl border text-left transition-all duration-300"
                 style={{
-                  background: selectedEntry === i ? `${e.color}12` : "rgba(255,255,255,0.03)",
-                  borderColor: selectedEntry === i ? `${e.color}40` : "rgba(255,255,255,0.07)",
+                  background: selectedEntry === i ? `${e.color}12` : "#ffffff",
+                  borderColor: selectedEntry === i ? `${e.color}40` : "#e5e7eb",
                 }}
               >
                 <div className="text-3xl mb-3">{e.emoji}</div>
-                <div className="text-white font-bold text-sm mb-1">{e.label}</div>
-                <div className="text-white/45 text-xs leading-relaxed">{e.desc}</div>
+                <div className="text-gray-900 font-bold text-sm mb-1">{e.label}</div>
+                <div className="text-gray-500 text-xs leading-relaxed">{e.desc}</div>
               </button>
             </FadeIn>
           ))}
@@ -566,13 +566,13 @@ function JourneyTab() {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mt-6 p-5 rounded-2xl border border-rose-500/20 text-center"
+            className="mt-6 p-5 rounded-2xl border border-rose-200 text-center"
             style={{ background: "rgba(244,63,94,0.06)" }}
           >
-            <p className="text-white/70 text-sm">
-              Great! We'll personalise your KindWave experience for: <span className="text-white font-bold">{entryPoints[selectedEntry].label}</span>
+            <p className="text-gray-600 text-sm">
+              Great! We'll personalise your KindWave experience for: <span className="text-gray-900 font-bold">{entryPoints[selectedEntry].label}</span>
             </p>
-            <p className="text-white/40 text-xs mt-1">
+            <p className="text-gray-400 text-xs mt-1">
               "We remove fear and resistance before anything else. You don't need to be ready. You just need to begin."
             </p>
           </motion.div>
@@ -583,32 +583,32 @@ function JourneyTab() {
       <div>
         <FadeIn className="text-center mb-12">
           <SectionLabel label="Your Journey" color="amber" />
-          <h2 className="kw-heading text-3xl md:text-4xl font-black text-white leading-tight mb-3">
+          <h2 className="kw-heading text-3xl md:text-4xl font-black text-gray-900 leading-tight mb-3">
             Your impact grows.{" "}
             <span className="text-transparent bg-clip-text" style={{ backgroundImage: "linear-gradient(135deg, #fbbf24, #f43f5e)" }}>
               And so do you.
             </span>
           </h2>
-          <p className="text-white/45 max-w-lg mx-auto">This is where most platforms fail. You won't.</p>
+          <p className="text-gray-500 max-w-lg mx-auto">This is where most platforms fail. You won't.</p>
         </FadeIn>
         <div className="relative">
           {/* Connector line */}
-          <div className="absolute left-6 top-0 bottom-0 w-px bg-white/[0.08] hidden sm:block" />
+          <div className="absolute left-6 top-0 bottom-0 w-px bg-gray-200 hidden sm:block" />
           <div className="space-y-4">
             {levels.map((l, i) => (
               <FadeIn key={l.level} delay={i * 0.1}>
-                <div className="flex gap-5 items-start p-5 rounded-2xl border border-white/[0.07] relative"
-                  style={{ background: "rgba(255,255,255,0.025)" }}>
+                <div className="flex gap-5 items-start p-5 rounded-2xl border border-gray-200 relative"
+                  style={{ background: "#ffffff" }}>
                   <div className="relative z-10 w-12 h-12 rounded-2xl flex items-center justify-center text-xl flex-shrink-0 font-black"
                     style={{ background: `${l.color}15`, border: `1px solid ${l.color}30` }}>
                     {l.icon}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="text-white/30 text-xs font-mono">Level {l.level}</span>
-                      <h4 className="text-white font-bold" style={{ color: l.color }}>{l.title}</h4>
+                      <span className="text-gray-400 text-xs font-mono">Level {l.level}</span>
+                      <h4 className="font-bold" style={{ color: l.color }}>{l.title}</h4>
                     </div>
-                    <p className="text-white/50 text-sm leading-relaxed">{l.desc}</p>
+                    <p className="text-gray-500 text-sm leading-relaxed">{l.desc}</p>
                   </div>
                 </div>
               </FadeIn>
@@ -621,29 +621,29 @@ function JourneyTab() {
       <div>
         <FadeIn className="text-center mb-12">
           <SectionLabel label="Reward System" color="violet" />
-          <h2 className="kw-heading text-3xl md:text-4xl font-black text-white leading-tight mb-3">
+          <h2 className="kw-heading text-3xl md:text-4xl font-black text-gray-900 leading-tight mb-3">
             The real reward is{" "}
             <span className="text-transparent bg-clip-text" style={{ backgroundImage: "linear-gradient(135deg, #a78bfa, #f43f5e)" }}>
               who you become.
             </span>
           </h2>
-          <p className="text-white/45 max-w-lg mx-auto">"Everything else is just support." — Three types of reward, in the right order.</p>
+          <p className="text-gray-500 max-w-lg mx-auto">"Everything else is just support." — Three types of reward, in the right order.</p>
         </FadeIn>
         <div className="grid md:grid-cols-3 gap-5">
           {rewards.map((r, i) => (
             <FadeIn key={r.title} delay={i * 0.1}>
-              <div className="p-6 rounded-2xl border border-white/[0.08] relative overflow-hidden"
-                style={{ background: "rgba(255,255,255,0.025)" }}>
+              <div className="p-6 rounded-2xl border border-gray-200 relative overflow-hidden"
+                style={{ background: "#ffffff" }}>
                 <div className="flex items-center gap-2 mb-4">
                   <span className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-black"
                     style={{ background: `${r.color}20`, color: r.color }}>
                     {r.rank}
                   </span>
-                  <span className="text-white/40 text-xs font-bold uppercase tracking-widest">{r.type}</span>
+                  <span className="text-gray-400 text-xs font-bold uppercase tracking-widest">{r.type}</span>
                 </div>
                 <div className="text-3xl mb-3">{r.icon}</div>
-                <h4 className="text-white font-bold mb-2">{r.title}</h4>
-                <p className="text-white/45 text-sm leading-relaxed">{r.desc}</p>
+                <h4 className="text-gray-900 font-bold mb-2">{r.title}</h4>
+                <p className="text-gray-500 text-sm leading-relaxed">{r.desc}</p>
               </div>
             </FadeIn>
           ))}
@@ -654,7 +654,7 @@ function JourneyTab() {
       <div>
         <FadeIn className="text-center mb-12">
           <SectionLabel label="Community Scale" color="blue" />
-          <h2 className="kw-heading text-3xl md:text-4xl font-black text-white leading-tight mb-3">
+          <h2 className="kw-heading text-3xl md:text-4xl font-black text-gray-900 leading-tight mb-3">
             What starts with one act{" "}
             <span className="text-transparent bg-clip-text" style={{ backgroundImage: "linear-gradient(135deg, #60a5fa, #34d399)" }}>
               transforms entire communities.
@@ -668,10 +668,10 @@ function JourneyTab() {
             { e: "🌍", t: "World",           d: "91 countries. 47,000 acts. A living proof that kindness is universal." },
           ].map((item, i) => (
             <FadeIn key={item.t} delay={i * 0.1}>
-              <div className="p-6 rounded-2xl border border-white/[0.08] text-center" style={{ background: "rgba(255,255,255,0.025)" }}>
+              <div className="p-6 rounded-2xl border border-gray-200 text-center" style={{ background: "#ffffff" }}>
                 <div className="text-4xl mb-3">{item.e}</div>
-                <h4 className="text-white font-bold mb-2">{item.t}</h4>
-                <p className="text-white/45 text-sm leading-relaxed">{item.d}</p>
+                <h4 className="text-gray-900 font-bold mb-2">{item.t}</h4>
+                <p className="text-gray-500 text-sm leading-relaxed">{item.d}</p>
               </div>
             </FadeIn>
           ))}
@@ -687,7 +687,7 @@ function AppPreview() {
     <div>
       <FadeIn className="text-center mb-12">
         <SectionLabel label="The App" color="rose" />
-        <h2 className="kw-heading text-3xl md:text-4xl font-black text-white leading-tight">
+        <h2 className="kw-heading text-3xl md:text-4xl font-black text-gray-900 leading-tight">
           Your kindness,{" "}
           <span className="text-transparent bg-clip-text" style={{ backgroundImage: "linear-gradient(135deg, #f43f5e, #ec4899)" }}>
             in your pocket.
@@ -708,8 +708,8 @@ function AppPreview() {
               <div className="flex items-start gap-3">
                 <CheckCircle className="w-5 h-5 text-rose-400 mt-0.5 flex-shrink-0" />
                 <div>
-                  <span className="text-white font-semibold text-sm">{item.title}</span>
-                  <p className="text-white/45 text-sm mt-0.5">{item.desc}</p>
+                  <span className="text-gray-900 font-semibold text-sm">{item.title}</span>
+                  <p className="text-gray-500 text-sm mt-0.5">{item.desc}</p>
                 </div>
               </div>
             </FadeIn>
@@ -797,18 +797,18 @@ export default function KindWave() {
   };
 
   return (
-    <div className="min-h-screen" style={{ background: "#030712", fontFamily: "'Inter', system-ui, sans-serif" }}>
+    <div className="min-h-screen" style={{ background: "#f0f0ef", fontFamily: "'Inter', system-ui, sans-serif" }}>
       <style>{`
         .kw-heading { font-family: 'Syne', 'Inter', system-ui, sans-serif; }
       `}</style>
       {/* Ambient bg */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[600px]"
-          style={{ background: "radial-gradient(ellipse, rgba(244,63,94,0.08) 0%, transparent 65%)" }} />
+          style={{ background: "radial-gradient(ellipse, rgba(244,63,94,0.04) 0%, transparent 65%)" }} />
         <div className="absolute top-1/3 right-0 w-[600px] h-[600px]"
-          style={{ background: "radial-gradient(ellipse, rgba(167,139,250,0.06) 0%, transparent 65%)" }} />
+          style={{ background: "radial-gradient(ellipse, rgba(167,139,250,0.03) 0%, transparent 65%)" }} />
         <div className="absolute bottom-0 left-0 w-[600px] h-[500px]"
-          style={{ background: "radial-gradient(ellipse, rgba(59,130,246,0.05) 0%, transparent 65%)" }} />
+          style={{ background: "radial-gradient(ellipse, rgba(59,130,246,0.02) 0%, transparent 65%)" }} />
       </div>
 
       <Header />
@@ -823,7 +823,7 @@ export default function KindWave() {
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px]"
             style={{ background: "radial-gradient(ellipse, rgba(244,63,94,0.10) 0%, transparent 70%)" }} />
           <div className="absolute bottom-0 inset-x-0 h-64"
-            style={{ background: "linear-gradient(to top, #030712 0%, transparent 100%)" }} />
+            style={{ background: "linear-gradient(to top, #f0f0ef 0%, transparent 100%)" }} />
         </div>
 
         <div className="max-w-4xl mx-auto text-center relative z-10">
@@ -907,7 +907,7 @@ export default function KindWave() {
         <div className="max-w-6xl mx-auto">
           {/* Sticky tab bar */}
           <div className="sticky top-0 z-30 py-4 mb-12"
-            style={{ background: "rgba(3,7,18,0.88)", backdropFilter: "blur(20px)", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+            style={{ background: "rgba(249,250,251,0.92)", backdropFilter: "blur(20px)", borderBottom: "1px solid rgba(0,0,0,0.07)" }}>
             <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide pb-1">
               {tabs.map((tab) => {
                 const Icon = tab.icon;
@@ -916,8 +916,9 @@ export default function KindWave() {
                   <button key={tab.id} onClick={() => setActiveTab(tab.id)}
                     className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold whitespace-nowrap transition-all duration-200 flex-shrink-0"
                     style={{
-                      background: isActive ? "linear-gradient(135deg, #f43f5e, #ec4899)" : "rgba(255,255,255,0.05)",
-                      color: isActive ? "#fff" : "rgba(255,255,255,0.45)",
+                      background: isActive ? "linear-gradient(135deg, #f43f5e, #ec4899)" : "#ffffff",
+                      color: isActive ? "#fff" : "#6b7280",
+                      border: isActive ? "none" : "1px solid #e5e7eb",
                     }}>
                     <Icon className="w-4 h-4" />
                     {tab.label}
@@ -945,8 +946,8 @@ export default function KindWave() {
         <div className="max-w-3xl mx-auto text-center">
           <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
             transition={{ duration: 0.7 }}
-            className="p-10 md:p-14 rounded-3xl border border-white/[0.08] relative overflow-hidden"
-            style={{ background: "rgba(255,255,255,0.02)" }}>
+            className="p-10 md:p-14 rounded-3xl border border-gray-200 relative overflow-hidden"
+            style={{ background: "#ffffff" }}>
             <div className="absolute inset-0 pointer-events-none"
               style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(244,63,94,0.12) 0%, transparent 65%)" }} />
             <div className="absolute top-0 left-0 right-0 h-px"
@@ -957,14 +958,14 @@ export default function KindWave() {
               <Heart className="w-8 h-8 text-rose-400" />
             </div>
 
-            <h2 className="kw-heading text-3xl md:text-5xl font-black text-white mb-4 relative z-10">
+            <h2 className="kw-heading text-3xl md:text-5xl font-black text-gray-900 mb-4 relative z-10">
               Every wave starts with{" "}
               <span className="text-transparent bg-clip-text"
                 style={{ backgroundImage: "linear-gradient(135deg, #f43f5e, #ec4899)" }}>
                 one small act.
               </span>
             </h2>
-            <p className="text-white/50 text-lg mb-10 relative z-10">
+            <p className="text-gray-500 text-lg mb-10 relative z-10">
               No sign-up required. No pressure. Start exactly where you are.
             </p>
 
@@ -974,8 +975,8 @@ export default function KindWave() {
                   className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto relative z-10">
                   <input type="email" value={emailInput} onChange={(e) => setEmailInput(e.target.value)}
                     placeholder="Enter your email..." required
-                    className="flex-1 px-5 py-3.5 rounded-xl text-white text-sm font-medium placeholder-white/30 outline-none border border-white/[0.1] focus:border-rose-500/50 transition-colors"
-                    style={{ background: "rgba(255,255,255,0.05)" }} />
+                    className="flex-1 px-5 py-3.5 rounded-xl text-gray-900 text-sm font-medium placeholder-gray-400 outline-none border border-gray-200 focus:border-rose-400 transition-colors"
+                    style={{ background: "#f0f0ef" }} />
                   <motion.button type="submit" whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}
                     className="px-6 py-3.5 rounded-xl font-bold text-white text-sm whitespace-nowrap"
                     style={{ background: "linear-gradient(135deg, #f43f5e, #ec4899)" }}>
@@ -991,7 +992,7 @@ export default function KindWave() {
               )}
             </AnimatePresence>
 
-            <p className="text-white/30 text-xs mt-5 relative z-10">
+            <p className="text-gray-400 text-xs mt-5 relative z-10">
               Join 9,240+ members spreading kindness worldwide.
             </p>
           </motion.div>
@@ -999,8 +1000,8 @@ export default function KindWave() {
       </section>
 
       {/* ── FOOTER ───────────────────────────────────────────────────────── */}
-      <div className="relative z-10 py-10 border-t border-white/[0.05] text-center px-4">
-        <p className="text-white/30 text-sm font-medium">
+      <div className="relative z-10 py-10 border-t border-gray-200 text-center px-4">
+        <p className="text-gray-400 text-sm font-medium">
           KindWave is an initiative of{" "}
           <button onClick={() => navigate("/")} className="text-rose-400/70 hover:text-rose-400 transition-colors">
             Kindness Community Foundation
