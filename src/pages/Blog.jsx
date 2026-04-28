@@ -6,6 +6,7 @@ import { ArrowLeft, Calendar, Clock, Tag, Heart, Globe, Users, Zap, Shield, Spar
 import Header from "@/components/kcf/Header";
 import Footer from "@/components/kcf/Footer";
 import { supabase } from "@/api/supabaseClient";
+import { STATIC_BLOG_POSTS } from "@/data/staticBlogPosts";
 
 const featuredPost = {
   id: 1,
@@ -466,15 +467,15 @@ export default function Blog() {
           ) : !viewPost ? (
             <motion.div key="card" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
 
-              {/* Dynamic DB posts — shown FIRST */}
-              {dbPosts.length > 0 && (
+              {/* Dynamic DB posts + static posts — shown FIRST */}
+              {(dbPosts.length > 0 || STATIC_BLOG_POSTS.length > 0) && (
                 <div className="mb-16">
                   <div className="flex items-center gap-3 mb-8">
                     <div className="w-1 h-6 rounded-full" style={{ background: "linear-gradient(180deg, #f43f5e, #ec4899)" }} />
                     <span className="text-gray-900 font-black text-xl">Latest Posts</span>
                   </div>
                   <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {dbPosts.map((post, i) => {
+                    {[...STATIC_BLOG_POSTS, ...dbPosts].map((post, i) => {
                       const tags = (() => { try { return JSON.parse(post.tags); } catch { return post.tags ? post.tags.split(',').map(t => t.trim()) : []; } })();
                       return (
                         <Link key={post.id} to={`/blog/${post.slug}`}>

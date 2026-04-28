@@ -6,6 +6,7 @@ import Header from "@/components/kcf/Header";
 import Footer from "@/components/kcf/Footer";
 import { supabase } from "@/api/supabaseClient";
 import { usePageMeta } from "@/hooks/usePageMeta";
+import { STATIC_BLOG_POSTS } from "@/data/staticBlogPosts";
 
 // Slug → curated Unsplash photo override (used when stored image is missing/SVG)
 const SLUG_IMAGES = {
@@ -99,6 +100,14 @@ export default function BlogPostPage() {
 
   useEffect(() => {
     if (!slug) return;
+    // Check static posts first
+    const staticPost = STATIC_BLOG_POSTS.find(p => p.slug === slug);
+    if (staticPost) {
+      setPost(staticPost);
+      setLoading(false);
+      return;
+    }
+    // Fall back to Supabase
     setLoading(true);
     supabase
       .from("blog_posts")
