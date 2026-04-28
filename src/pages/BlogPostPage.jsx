@@ -7,6 +7,35 @@ import Footer from "@/components/kcf/Footer";
 import { supabase } from "@/api/supabaseClient";
 import { usePageMeta } from "@/hooks/usePageMeta";
 
+// Slug → curated Unsplash photo override (used when stored image is missing/SVG)
+const SLUG_IMAGES = {
+  "kindness-community-personal-growth":
+    "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80",
+};
+
+// Category → fallback Unsplash photo
+const CATEGORY_IMAGES = {
+  "volunteering":    "https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=1200&q=80",
+  "mental wellness": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1200&q=80",
+  "giving":          "https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?auto=format&fit=crop&w=1200&q=80",
+  "learning":        "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80",
+  "personal growth": "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80",
+};
+const DEFAULT_BLOG_IMAGE =
+  "https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=1200&q=80";
+
+function resolveImage(post) {
+  if (!post) return DEFAULT_BLOG_IMAGE;
+  // Use slug override first
+  if (SLUG_IMAGES[post.slug]) return SLUG_IMAGES[post.slug];
+  // Skip SVG placeholders
+  const url = post.image_url || "";
+  if (url && !url.endsWith(".svg")) return url;
+  // Fall back by category
+  const cat = (post.category || "").toLowerCase();
+  return CATEGORY_IMAGES[cat] || DEFAULT_BLOG_IMAGE;
+}
+
 // Simple Markdown → JSX renderer
 function renderContent(text) {
   if (!text) return null;
@@ -195,25 +224,23 @@ export default function BlogPostPage() {
       </div>
 
       {/* Cover image */}
-      {post.image_url && (
-        <div className="max-w-4xl mx-auto px-6 lg:px-12 mb-0">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7 }}
-            className="rounded-3xl overflow-hidden shadow-xl"
-            style={{ boxShadow: "0 8px 40px rgba(0,0,0,0.10)" }}
-          >
-            <img
-              src={post.image_url}
-              alt={post.title}
-              className="w-full h-64 sm:h-80 lg:h-[420px] object-cover"
-              loading="eager"
-              decoding="async"
-            />
-          </motion.div>
-        </div>
-      )}
+      <div className="max-w-4xl mx-auto px-6 lg:px-12 mb-0">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.98 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.7 }}
+          className="rounded-3xl overflow-hidden shadow-xl"
+          style={{ boxShadow: "0 8px 40px rgba(0,0,0,0.10)" }}
+        >
+          <img
+            src={resolveImage(post)}
+            alt={post.title}
+            className="w-full h-64 sm:h-80 lg:h-[420px] object-cover"
+            loading="eager"
+            decoding="async"
+          />
+        </motion.div>
+      </div>
 
       {/* Content */}
       <div className="max-w-4xl mx-auto px-6 lg:px-12 py-16">
