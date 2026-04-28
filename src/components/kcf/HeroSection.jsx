@@ -1,101 +1,27 @@
 /**
- * HeroSection — Futuristic depth-map hero
- * Exact visual replica of larsen66/hero-futuristic:
- *  • Pre-rendered 3D blob image + depth map
- *  • Cell-noise (Worley) dot overlay that follows depth scan
- *  • Red glow scan line synced to shader progress
- *  • Depth-based mouse parallax
- *  • Word-by-word title reveal + subtitle fade
- *  • "Scroll to explore" bouncing button
- * Implemented with vanilla Three.js WebGL (no R3F needed)
+ * HeroSection — Centered light-theme hero
+ * Matches copy-of-kindness-community-foundation.base44.app design:
+ * • Warm #f0f0ef background + subtle grid overlay
+ * • Top-right rose glow accent
+ * • Centered large headline with rose accent line
+ * • Tags row, black primary CTA + outlined secondary
+ * • Stats row, marquee ticker
  */
 import { useEffect, useRef, useState } from 'react';
-import * as THREE from 'three';
 import { useNavigate } from 'react-router-dom';
-
-/* ─── Textures ────────────────────────────────────────────────────────────── */
-const TEXTURE_URL = 'https://i.postimg.cc/XYwvXN8D/img-4.png';
-const DEPTH_URL   = 'https://i.postimg.cc/2SHKQh2q/raw-4.webp';
 
 /* ─── Marquee ─────────────────────────────────────────────────────────────── */
 const MARQUEE = [
-  'Community Infrastructure','Ethical Technology','Volunteer Networks',
-  'Transparent Governance','Sustainable Impact','AI-Accelerated Kindness',
-  '47+ Nations','Revenue-Backed Model','Founded 2026','California Nonprofit',
+  'KindWave — Live Now','Serve — Join Today','KindLearn — Coming Soon',
+  'KindCalmUnity — Coming Soon','47+ Countries','12K+ Lives Impacted',
+  '100% Free Access','Contribution-Based Model','Founded 2026','US Nonprofit',
 ];
 
-/* ─── GLSL: Worley cell noise ─────────────────────────────────────────────── */
-const WORLEY_GLSL = /* glsl */`
-float hash21(vec2 p) {
-  p = fract(p * vec2(127.1, 311.7));
-  p += dot(p, p + 19.19);
-  return fract(p.x * p.y);
-}
-float cellNoise(vec2 uv) {
-  vec2 i = floor(uv);
-  vec2 f = fract(uv);
-  float minD = 1.0;
-  for (int y = -1; y <= 1; y++) {
-    for (int x = -1; x <= 1; x++) {
-      vec2 nb = vec2(float(x), float(y));
-      vec2 pt = fract(vec2(hash21(i + nb), hash21(i + nb + 31.41)));
-      float d = length(nb + pt - f);
-      minD = min(minD, d);
-    }
-  }
-  return minD;
-}
-`;
-
-/* ─── Vertex shader ───────────────────────────────────────────────────────── */
-const VERT = /* glsl */`
-varying vec2 vUv;
-void main() {
-  vUv = uv;
-  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-}`;
-
-/* ─── Fragment shader ─────────────────────────────────────────────────────── */
-const FRAG = /* glsl */`
-${WORLEY_GLSL}
-
-uniform sampler2D uMap;
-uniform sampler2D uDepth;
-uniform float     uProgress;   /* 0‒1 scan position */
-uniform vec2      uPointer;    /* normalised mouse */
-uniform float     uAspect;
-uniform float     uOpacity;
-
-varying vec2 vUv;
-
-/* Screen blend */
-vec3 screen(vec3 a, vec3 b) { return 1.0 - (1.0 - a) * (1.0 - b); }
-
-void main() {
-  /* depth parallax */
-  float dep  = texture2D(uDepth, vUv).r;
-  vec2  pUv  = vUv + dep * uPointer * 0.01;
-  vec4  col  = texture2D(uMap, pUv);
-
-  /* cell‑noise dot grid */
-  vec2  tUv    = vec2(vUv.x * uAspect, vUv.y);
-  float tiling = 120.0;
-  vec2  tiledUv = mod(tUv * tiling, 2.0) - 1.0;
-  float bright  = cellNoise(tUv * tiling / 2.0);
-  float dist    = length(tiledUv);
-  float dotMask = smoothstep(0.50, 0.49, dist) * bright;
-
-  /* depth scan flow */
-  float flow = 1.0 - smoothstep(0.0, 0.02, abs(dep - uProgress));
-
-  /* red dot mask */
-  vec3 mask = dotMask * flow * vec3(10.0, 0.0, 0.0);
-
-  /* screen blend image + dots */
-  vec3 final = screen(col.rgb, mask);
-
-  gl_FragColor = vec4(final, col.a * uOpacity);
-}`;
+/* ─── Tags ────────────────────────────────────────────────────────────────── */
+const TAGS = [
+  'Volunteering','Free Learning','Mental Wellness','Personal Growth',
+  'Community','Global Impact','Career Tools','AI-Powered',
+];
 
 /* ─── Cycling kinetic word ────────────────────────────────────────────────── */
 const CYCLE_WORDS = ['Communities', 'Futures', 'Ecosystems', 'Movements', 'Legacies'];
@@ -110,13 +36,7 @@ function KineticWord() {
     <span
       key={idx}
       className="kcf-cycle-word"
-      style={{
-        display: 'inline-block',
-        background: 'linear-gradient(135deg,#f43f5e 0%,#ec4899 50%,#f97316 100%)',
-        WebkitBackgroundClip: 'text',
-        WebkitTextFillColor: 'transparent',
-        backgroundClip: 'text',
-      }}
+      style={{ color: '#f43f5e', display: 'inline' }}
     >
       {CYCLE_WORDS[idx]}
     </span>
@@ -132,7 +52,7 @@ function Counter({ end, suffix = '' }) {
       if (!e.isIntersecting) return;
       ob.disconnect();
       const s = Date.now();
-      const dur = 2000;
+      const dur = 1800;
       const tick = () => {
         const p = Math.min((Date.now() - s) / dur, 1);
         const ease = 1 - Math.pow(1 - p, 4);
@@ -147,367 +67,228 @@ function Counter({ end, suffix = '' }) {
   return <span ref={ref}>{val}{suffix}</span>;
 }
 
-/* ─── Stats data ──────────────────────────────────────────────────────────── */
+/* ─── Stats ───────────────────────────────────────────────────────────────── */
 const STATS = [
-  { value: 6,   suffix: '+',  label: 'Strategic Initiatives' },
-  { value: 47,  suffix: '+',  label: 'Nations Reached'       },
-  { value: 100, suffix: '%',  label: 'Revenue-Backed'        },
   { value: 12,  suffix: 'K+', label: 'Lives Impacted'        },
+  { value: 47,  suffix: '+',  label: 'Countries'             },
+  { value: 6,   suffix: '+',  label: 'Active Programs'       },
+  { value: 100, suffix: '%',  label: 'Free Access'           },
 ];
 
 /* ─── Main Component ─────────────────────────────────────────────────────── */
 export default function HeroSection() {
-  const navigate    = useNavigate();
-  const canvasRef   = useRef(null);
-  const scanLineRef = useRef(null);
-  const opacityRef  = useRef(0);
+  const navigate = useNavigate();
 
-  /* ── 3-phase word-by-word reveal ──
-     Phase 1: reveal titleWords one by one (600ms each)
-     Phase 2: show KineticWord line after all line-1 words are visible
-     Phase 3: reveal titleWords2 one by one (500ms each)
-     Phase 4: show description + CTA + stats
-  */
-  const titleWords  = ['Building', 'Sustainable'];
-  const titleWords2 = ['for', 'Lasting', 'Impact'];
+  const [showContent, setShowContent] = useState(false);
 
-  const [visibleWords,    setVisibleWords]    = useState(0);
-  const [showCycle,       setShowCycle]       = useState(false);
-  const [visibleWords2,   setVisibleWords2]   = useState(0);
-  const [subtitleVisible, setSubtitleVisible] = useState(false);
-
-  /* Phase 1 — reveal line-1 words */
   useEffect(() => {
-    if (visibleWords < titleWords.length) {
-      const t = setTimeout(() => setVisibleWords(v => v + 1), 600);
-      return () => clearTimeout(t);
-    }
-    /* Phase 2 — show KineticWord */
-    const t = setTimeout(() => setShowCycle(true), 300);
+    const t = setTimeout(() => setShowContent(true), 120);
     return () => clearTimeout(t);
-  }, [visibleWords]);
-
-  /* Phase 3 — reveal line-3 words after KineticWord appears */
-  useEffect(() => {
-    if (!showCycle) return;
-    if (visibleWords2 < titleWords2.length) {
-      const t = setTimeout(() => setVisibleWords2(v => v + 1), 500);
-      return () => clearTimeout(t);
-    }
-    /* Phase 4 — show description / CTA / stats */
-    const t = setTimeout(() => setSubtitleVisible(true), 400);
-    return () => clearTimeout(t);
-  }, [showCycle, visibleWords2]);
-
-  /* ── Three.js scene ── */
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    /* renderer */
-    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setSize(window.innerWidth, window.innerHeight);
-
-    const scene  = new THREE.Scene();
-    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-
-    const aspect = window.innerWidth / window.innerHeight;
-
-    const mat = new THREE.ShaderMaterial({
-      uniforms: {
-        uMap:      { value: null },
-        uDepth:    { value: null },
-        uProgress: { value: 0 },
-        uPointer:  { value: new THREE.Vector2(0, 0) },
-        uAspect:   { value: aspect },
-        uOpacity:  { value: 0 },
-      },
-      vertexShader:   VERT,
-      fragmentShader: FRAG,
-      transparent: true,
-    });
-
-    /* plane sized to preserve blob image aspect (1:1) */
-    const planeAspect = 1.0;
-    let planeW, planeH;
-    if (aspect >= planeAspect) {
-      planeH = 1.0;
-      planeW = planeAspect / aspect;
-    } else {
-      planeW = 1.0;
-      planeH = aspect / planeAspect;
-    }
-    const scaleFactor = 0.82;
-    const mesh = new THREE.Mesh(
-      new THREE.PlaneGeometry(planeW * scaleFactor * 2, planeH * scaleFactor * 2),
-      mat,
-    );
-    scene.add(mesh);
-
-    /* load textures */
-    const loader = new THREE.TextureLoader();
-    loader.crossOrigin = 'anonymous';
-    loader.load(TEXTURE_URL, t => { t.colorSpace = THREE.SRGBColorSpace; mat.uniforms.uMap.value = t; });
-    loader.load(DEPTH_URL,   t => { mat.uniforms.uDepth.value = t; });
-
-    /* mouse */
-    let px = 0, py = 0;
-    const onMM = (e) => {
-      px = (e.clientX / window.innerWidth  - 0.5) * 2;
-      py = (e.clientY / window.innerHeight - 0.5) * 2;
-    };
-    window.addEventListener('mousemove', onMM, { passive: true });
-
-    /* animate */
-    let animId;
-    const clock = new THREE.Clock();
-    const tick = () => {
-      animId = requestAnimationFrame(tick);
-      const t = clock.getElapsedTime();
-
-      const progress = Math.sin(t * 0.5) * 0.5 + 0.5;
-      mat.uniforms.uProgress.value = progress;
-
-      mat.uniforms.uPointer.value.x += (px - mat.uniforms.uPointer.value.x) * 0.08;
-      mat.uniforms.uPointer.value.y += (py - mat.uniforms.uPointer.value.y) * 0.08;
-
-      if (mat.uniforms.uMap.value && mat.uniforms.uDepth.value) {
-        opacityRef.current = THREE.MathUtils.lerp(opacityRef.current, 1, 0.07);
-        mat.uniforms.uOpacity.value = opacityRef.current;
-      }
-
-      /* sync red scan line DOM element */
-      if (scanLineRef.current) {
-        const pct = progress * 100;
-        scanLineRef.current.style.top = `${pct}%`;
-        const glow = Math.max(0, Math.sin(progress * Math.PI));
-        scanLineRef.current.style.opacity = (0.5 + glow * 0.5).toString();
-      }
-
-      renderer.render(scene, camera);
-    };
-    tick();
-
-    /* resize */
-    const onResize = () => {
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      mat.uniforms.uAspect.value = window.innerWidth / window.innerHeight;
-    };
-    window.addEventListener('resize', onResize);
-
-    return () => {
-      cancelAnimationFrame(animId);
-      window.removeEventListener('mousemove', onMM);
-      window.removeEventListener('resize', onResize);
-      renderer.dispose();
-    };
   }, []);
-
 
   return (
     <>
       {/* ══ HERO ══════════════════════════════════════════════════════════ */}
-      <div style={{ height: '100svh', position: 'relative', background: '#000', overflow: 'hidden' }}>
-
-        {/* Three.js canvas */}
-        <canvas
-          ref={canvasRef}
-          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', zIndex: 10, pointerEvents: 'none' }}
-        />
-
-        {/* Red scan line — synced to shader progress via DOM ref */}
+      <section
+        id="home"
+        style={{
+          position: 'relative',
+          minHeight: '100svh',
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
+          background: '#f0f0ef',
+        }}
+      >
+        {/* Grid overlay */}
         <div
-          ref={scanLineRef}
+          aria-hidden="true"
           style={{
-            position: 'absolute', left: 0, right: 0,
-            height: 2, zIndex: 15, pointerEvents: 'none',
-            background: 'linear-gradient(90deg,transparent 0%,rgba(239,68,68,0.9) 20%,#ef4444 50%,rgba(239,68,68,0.9) 80%,transparent 100%)',
-            boxShadow: '0 0 12px 4px rgba(239,68,68,0.6), 0 0 40px 10px rgba(239,68,68,0.25)',
-            transform: 'translateY(-50%)',
+            position: 'absolute', inset: 0,
+            pointerEvents: 'none',
+            opacity: 0.04,
+            backgroundImage:
+              'linear-gradient(#0a0a0a 1px, transparent 1px), linear-gradient(90deg, #0a0a0a 1px, transparent 1px)',
+            backgroundSize: '60px 60px',
           }}
         />
 
-        {/* ── Text overlay ── */}
+        {/* Top-right rose glow */}
         <div
-          className="kcf-hero-text"
+          aria-hidden="true"
           style={{
-            position: 'absolute', inset: 0, zIndex: 20,
-            display: 'flex', flexDirection: 'column', justifyContent: 'center',
-            padding: 'clamp(4.5rem,8vw,6rem) clamp(1.5rem,5vw,3rem) clamp(4rem,6vw,5rem)',
+            position: 'absolute', top: 0, right: 0,
+            width: 600, height: 600,
+            borderRadius: '50%',
             pointerEvents: 'none',
-            maxWidth: 860,
+            background: 'radial-gradient(circle at 100% 0%, rgba(244,63,94,0.09) 0%, transparent 65%)',
+          }}
+        />
+
+        {/* ── Main content ── */}
+        <div
+          style={{
+            position: 'relative', zIndex: 10,
+            maxWidth: 900,
+            width: '100%',
+            margin: '0 auto',
+            padding: 'clamp(7rem,14vw,11rem) 1.5rem clamp(3rem,6vw,5rem)',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            textAlign: 'center',
+            opacity: showContent ? 1 : 0,
+            transform: showContent ? 'translateY(0)' : 'translateY(18px)',
+            transition: 'opacity 0.7s ease, transform 0.7s ease',
           }}
         >
           {/* Badge */}
           <div
-            className="kcf-badge-in"
             style={{
-              display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
-              marginBottom: '0.5rem',
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              padding: '0.45rem 1.1rem',
+              borderRadius: 999,
+              background: '#ffffff',
+              border: '1px solid rgba(0,0,0,0.08)',
+              boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
+              marginBottom: '1.8rem',
             }}
           >
-            <span style={{ position: 'relative', display: 'inline-flex' }}>
-              <span style={{
-                width: 8, height: 8, borderRadius: '50%',
-                background: '#f43f5e', display: 'inline-block',
-              }} />
-              <span className="kcf-ping" />
-            </span>
+            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#f43f5e', flexShrink: 0 }} />
             <span style={{
-              fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.18em',
-              textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)',
+              fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.16em',
+              textTransform: 'uppercase', color: 'rgba(0,0,0,0.55)',
             }}>
-              Building the Future of Kindness
+              A Contribution-Based Human Growth System
             </span>
           </div>
 
-          {/* ── Headline 3-line ── */}
-          <div className="kcf-headline" style={{
-            fontSize: 'clamp(1.45rem,4vw,4rem)',
-            fontWeight: 900, lineHeight: 1.05,
-            fontFamily: "'Inter',system-ui,sans-serif",
-          }}>
-
-            {/* Line 1: Building Sustainable */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.2em', color: '#fff', overflow: 'hidden' }}>
-              {titleWords.map((word, i) => (
-                <span
-                  key={i}
-                  className={i < visibleWords ? 'kcf-word-in' : ''}
-                  style={{
-                    display: 'inline-block',
-                    animationDelay: `${i * 0.13}s`,
-                    opacity: i < visibleWords ? undefined : 0,
-                  }}
-                >
-                  {word}
-                </span>
-              ))}
-            </div>
-
-            {/* Line 2: KineticWord (cycling) */}
-            <div style={{
-              overflow: 'hidden', lineHeight: 1.1,
-              opacity: showCycle ? 1 : 0,
-              transform: showCycle ? 'translateY(0)' : 'translateY(32px)',
-              transition: 'opacity 0.55s cubic-bezier(0.22,1,0.36,1), transform 0.55s cubic-bezier(0.22,1,0.36,1)',
-            }}>
-              {showCycle && <KineticWord />}
-            </div>
-
-            {/* Line 3: for Lasting Impact */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.2em', color: '#fff', overflow: 'hidden' }}>
-              {titleWords2.map((word, i) => (
-                <span
-                  key={i}
-                  className={i < visibleWords2 ? 'kcf-word-in' : ''}
-                  style={{
-                    display: 'inline-block',
-                    animationDelay: `${i * 0.13}s`,
-                    opacity: i < visibleWords2 ? undefined : 0,
-                  }}
-                >
-                  {word}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/* ── Description ── */}
-          <div style={{
-            marginTop: '0.6rem',
-            opacity: subtitleVisible ? 1 : 0,
-            transform: subtitleVisible ? 'translateY(0)' : 'translateY(14px)',
-            transition: 'opacity 0.65s ease, transform 0.65s ease',
-            maxWidth: 540,
-          }}>
-            <p className="kcf-desc" style={{
-              fontSize: 'clamp(0.85rem,1.6vw,1.05rem)',
-              color: 'rgba(255,255,255,0.62)',
-              lineHeight: 1.6,
-              fontWeight: 400,
-              margin: 0,
-            }}>
-              Kindness Community Foundation reinventing giving through kindness and helping others,
-              empowering communities with technology, ethical commerce, and structured opportunities
-              to amplify humanity.
-            </p>
-          </div>
-
-          {/* ── CTA Buttons ── */}
-          <div
+          {/* Headline */}
+          <h1
+            className="kcf-hero-h1"
             style={{
-              display: 'flex', flexWrap: 'wrap', gap: '0.6rem',
-              marginTop: '0.85rem', pointerEvents: 'auto',
-              opacity: subtitleVisible ? 1 : 0,
-              transform: subtitleVisible ? 'translateY(0)' : 'translateY(14px)',
-              transition: 'opacity 0.65s ease 0.1s, transform 0.65s ease 0.1s',
+              fontSize: 'clamp(2.6rem, 7vw, 5rem)',
+              fontWeight: 900,
+              lineHeight: 1.03,
+              letterSpacing: '-0.025em',
+              color: '#0d0d0d',
+              margin: '0 0 1.4rem',
+              fontFamily: "'Inter', system-ui, sans-serif",
             }}
           >
+            Building Sustainable<br />
+            <KineticWord /><br />
+            for Lasting Impact
+          </h1>
+
+          {/* Description */}
+          <p
+            style={{
+              fontSize: 'clamp(0.9rem, 1.7vw, 1.1rem)',
+              color: 'rgba(0,0,0,0.48)',
+              lineHeight: 1.7,
+              maxWidth: 560,
+              margin: '0 0 1.6rem',
+            }}
+          >
+            A unified ecosystem for learning, volunteering, mental wellbeing, and life tools —
+            built around contribution, not access barriers.
+          </p>
+
+          {/* Tags */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center', marginBottom: '1.8rem' }}>
+            {TAGS.map(tag => (
+              <span
+                key={tag}
+                style={{
+                  padding: '0.35rem 0.85rem',
+                  borderRadius: 999,
+                  fontSize: '0.72rem',
+                  fontWeight: 600,
+                  background: '#ffffff',
+                  border: '1px solid rgba(0,0,0,0.08)',
+                  color: 'rgba(0,0,0,0.5)',
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+                }}
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+
+          {/* CTAs */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center', marginBottom: '2.4rem' }}>
             <button
               onClick={() => navigate('/volunteer')}
               style={{
-                display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
-                padding: '0.7rem 1.5rem', borderRadius: 999,
+                display: 'inline-flex', alignItems: 'center', gap: 6,
+                padding: '0.8rem 1.8rem',
+                borderRadius: 999,
                 background: 'linear-gradient(135deg,#f43f5e,#ec4899)',
-                color: '#fff', fontWeight: 700, fontSize: '0.875rem',
-                border: 'none', cursor: 'pointer', transition: 'opacity 0.2s',
+                color: '#ffffff',
+                fontWeight: 700,
+                fontSize: '0.9rem',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'opacity 0.2s, transform 0.15s',
               }}
-              onMouseEnter={e => e.currentTarget.style.opacity = '0.85'}
-              onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+              onMouseEnter={e => { e.currentTarget.style.opacity = '0.85'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+              onMouseLeave={e => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.transform = 'translateY(0)'; }}
             >
               Volunteer With Us →
             </button>
             <button
               onClick={() => navigate('/hub')}
               style={{
-                display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
-                padding: '0.7rem 1.5rem', borderRadius: 999,
-                background: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(12px)',
-                color: '#fff', fontWeight: 600, fontSize: '0.875rem',
-                border: '1.5px solid rgba(255,255,255,0.3)', cursor: 'pointer',
-                transition: 'border-color 0.2s',
+                display: 'inline-flex', alignItems: 'center', gap: 6,
+                padding: '0.8rem 1.8rem',
+                borderRadius: 999,
+                background: 'rgba(0,0,0,0.08)',
+                color: '#0d0d0d',
+                fontWeight: 600,
+                fontSize: '0.9rem',
+                border: '1.5px solid rgba(0,0,0,0.15)',
+                cursor: 'pointer',
+                transition: 'border-color 0.2s, transform 0.15s',
               }}
-              onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(255,255,255,0.6)'}
-              onMouseLeave={e => e.currentTarget.style.borderColor = 'rgba(255,255,255,0.3)'}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.35)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.15)'; e.currentTarget.style.transform = 'translateY(0)'; }}
             >
               Explore Team Portal ↗
             </button>
           </div>
 
-          {/* ── Stats ── */}
-          <div
-            style={{
-              display: 'flex', flexWrap: 'wrap', gap: '0.65rem',
-              marginTop: '0.9rem',
-              opacity: subtitleVisible ? 1 : 0,
-              transform: subtitleVisible ? 'translateY(0)' : 'translateY(14px)',
-              transition: 'opacity 0.65s ease 0.2s, transform 0.65s ease 0.2s',
-            }}
-          >
-            {STATS.map(({ value, suffix, label }) => (
+          {/* Trust line */}
+          <p style={{ fontSize: '0.72rem', color: 'rgba(0,0,0,0.35)', marginBottom: '2rem', fontWeight: 500 }}>
+            47+ countries • 12K+ lives impacted • 100% free
+          </p>
+
+          {/* Stats */}
+          <div style={{
+            display: 'flex', flexWrap: 'wrap', gap: 0,
+            justifyContent: 'center',
+            borderRadius: 16,
+            background: '#ffffff',
+            border: '1px solid rgba(0,0,0,0.07)',
+            boxShadow: '0 1px 6px rgba(0,0,0,0.05)',
+            overflow: 'hidden',
+          }}>
+            {STATS.map(({ value, suffix, label }, i) => (
               <div
                 key={label}
                 style={{
-                  padding: '0.55rem 0.9rem',
-                  borderRadius: 10,
-                  background: 'rgba(255,255,255,0.05)',
-                  backdropFilter: 'blur(12px)',
-                  border: '1px solid rgba(255,255,255,0.1)',
-                  minWidth: 80,
+                  padding: '1.2rem 2rem',
+                  borderRight: i < STATS.length - 1 ? '1px solid rgba(0,0,0,0.06)' : 'none',
+                  minWidth: 110,
+                  textAlign: 'center',
                 }}
               >
-                <div style={{
-                  fontSize: 'clamp(1.25rem,2.5vw,1.9rem)',
-                  fontWeight: 800, color: '#fff', lineHeight: 1,
-                }}>
+                <div style={{ fontSize: 'clamp(1.4rem,3vw,2rem)', fontWeight: 800, color: '#0d0d0d', lineHeight: 1 }}>
                   <Counter end={value} suffix={suffix} />
                 </div>
                 <div style={{
-                  fontSize: '0.7rem', fontWeight: 600, letterSpacing: '0.1em',
-                  textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)',
-                  marginTop: '0.3rem',
+                  fontSize: '0.65rem', fontWeight: 600, letterSpacing: '0.1em',
+                  textTransform: 'uppercase', color: 'rgba(0,0,0,0.38)', marginTop: 4,
                 }}>
                   {label}
                 </div>
@@ -516,34 +297,46 @@ export default function HeroSection() {
           </div>
         </div>
 
-        {/* ── Scroll-down arrow ── */}
+        {/* Scroll arrow */}
         <button
           className="kcf-scroll-arrow"
           onClick={() => window.scrollBy({ top: window.innerHeight, behavior: 'smooth' })}
           style={{
-            position: 'absolute', bottom: '1.75rem', left: '50%', transform: 'translateX(-50%)',
-            zIndex: 30, background: 'rgba(244,63,94,0.85)', border: 'none', cursor: 'pointer',
-            width: 44, height: 44, borderRadius: '50%',
+            position: 'absolute', bottom: '1.5rem', left: '50%', transform: 'translateX(-50%)',
+            zIndex: 20,
+            background: '#0d0d0d',
+            border: 'none', cursor: 'pointer',
+            width: 40, height: 40, borderRadius: '50%',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: '0 0 0 0 rgba(244,63,94,0.5)',
-            pointerEvents: 'auto',
           }}
           aria-label="Scroll down"
         >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M12 5v14M5 12l7 7 7-7" />
           </svg>
         </button>
-
-      </div>
+      </section>
 
       {/* ══ Marquee ticker ════════════════════════════════════════════════ */}
-      <div style={{ background: '#000', borderTop: '1px solid rgba(255,255,255,0.06)', overflow: 'hidden', padding: '1rem 0', position: 'relative', zIndex: 10 }}>
+      <div style={{
+        background: '#f0f0ef',
+        borderTop: '1px solid rgba(0,0,0,0.07)',
+        borderBottom: '1px solid rgba(0,0,0,0.07)',
+        overflow: 'hidden',
+        padding: '0.8rem 0',
+        position: 'relative', zIndex: 10,
+      }}>
         <div className="kcf-marquee-track">
           {[...MARQUEE, ...MARQUEE, ...MARQUEE].map((item, i) => (
-            <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: '1rem', margin: '0 1rem', fontSize: '0.75rem', fontWeight: 600, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', whiteSpace: 'nowrap' }}>
+            <span key={i} style={{
+              display: 'inline-flex', alignItems: 'center', gap: '1rem',
+              margin: '0 1rem',
+              fontSize: '0.68rem', fontWeight: 700, letterSpacing: '0.16em',
+              textTransform: 'uppercase', color: 'rgba(0,0,0,0.35)',
+              whiteSpace: 'nowrap',
+            }}>
               {item}
-              <span style={{ color: 'rgba(244,63,94,0.4)' }}>◆</span>
+              <span style={{ color: 'rgba(244,63,94,0.5)' }}>◆</span>
             </span>
           ))}
         </div>
@@ -551,71 +344,35 @@ export default function HeroSection() {
 
       {/* ══ Styles ════════════════════════════════════════════════════════ */}
       <style>{`
-        /* mobile compact overrides */
         @media (max-width: 640px) {
-          .kcf-hero-text { padding: 4rem 1.25rem 4.5rem !important; }
-          .kcf-headline  { font-size: clamp(1.6rem,7.5vw,2.4rem) !important; }
-          .kcf-desc      { font-size: 0.8rem !important; }
+          .kcf-hero-h1 { font-size: clamp(2.2rem, 9vw, 3rem) !important; }
         }
 
-        /* badge fade-in */
-        @keyframes kcf-badge-in {
-          from { opacity:0; transform:translateY(-8px); }
-          to   { opacity:1; transform:translateY(0); }
-        }
-        .kcf-badge-in {
-          animation: kcf-badge-in 0.7s ease forwards;
-        }
-
-        /* animated ping dot on badge */
-        .kcf-ping {
-          position: absolute;
-          inset: 0;
-          border-radius: 50%;
-          background: #f43f5e;
-          animation: kcf-ping 1.5s ease-out infinite;
-        }
-        @keyframes kcf-ping {
-          0%   { transform: scale(1); opacity: 0.7; }
-          100% { transform: scale(2.5); opacity: 0; }
-        }
-
-        /* word entrance */
-        @keyframes kcf-word-in {
-          from { opacity:0; transform:translateY(42px); clip-path:inset(0 0 100% 0); }
-          to   { opacity:1; transform:translateY(0);    clip-path:inset(0 0 0%   0); }
-        }
-        .kcf-word-in {
-          animation: kcf-word-in 0.55s cubic-bezier(0.22,1,0.36,1) forwards;
-        }
-
-        /* kinetic cycling word */
         @keyframes kcf-cycle-word {
-          from { opacity:0; transform:translateY(32px) scaleY(0.8); clip-path:inset(0 0 100% 0); }
-          to   { opacity:1; transform:translateY(0)    scaleY(1);   clip-path:inset(0 0 0%   0); }
+          from { opacity: 0; transform: translateY(20px); }
+          to   { opacity: 1; transform: translateY(0); }
         }
         .kcf-cycle-word {
-          animation: kcf-cycle-word 0.5s cubic-bezier(0.22,1,0.36,1) forwards;
+          animation: kcf-cycle-word 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+          display: inline-block;
         }
 
-        /* scroll arrow pulse */
         @keyframes kcf-arrow-pulse {
-          0%, 100% { box-shadow: 0 0 0 0 rgba(244,63,94,0.45); transform: translateX(-50%) translateY(0); }
-          50%       { box-shadow: 0 0 0 10px rgba(244,63,94,0); transform: translateX(-50%) translateY(4px); }
+          0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.8; }
+          50%       { transform: translateX(-50%) translateY(5px); opacity: 1; }
         }
         .kcf-scroll-arrow {
           animation: kcf-arrow-pulse 2s ease-in-out infinite !important;
         }
 
-        /* marquee */
         .kcf-marquee-track {
           display: flex;
           white-space: nowrap;
-          animation: kcf-marquee 28s linear infinite;
+          animation: kcf-marquee 32s linear infinite;
         }
         @keyframes kcf-marquee {
-          from { transform:translateX(0); }
-          to   { transform:translateX(-33.333%); }
+          from { transform: translateX(0); }
+          to   { transform: translateX(-33.333%); }
         }
       `}</style>
     </>

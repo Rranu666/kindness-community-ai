@@ -113,13 +113,14 @@ export default function Header() {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-[999] transition-all duration-500`}
+        className={`fixed top-0 left-0 right-0 z-[999] transition-all duration-300`}
         style={{
           background: scrolled
-            ? "rgba(3, 7, 18, 0.85)"
-            : "transparent",
-          backdropFilter: scrolled ? "blur(20px) saturate(180%)" : "none",
-          borderBottom: scrolled ? "1px solid rgba(255,255,255,0.06)" : "none",
+            ? "rgba(240,240,239,0.97)"
+            : "rgba(240,240,239,0.92)",
+          backdropFilter: "blur(20px) saturate(180%)",
+          borderBottom: scrolled ? "1px solid rgba(0,0,0,0.07)" : "1px solid rgba(0,0,0,0.04)",
+          boxShadow: scrolled ? "0 1px 12px rgba(0,0,0,0.06)" : "none",
         }}
       >
         <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-12 flex items-center justify-between h-16 md:h-20">
@@ -172,13 +173,35 @@ export default function Header() {
                       href={link.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="relative px-3 py-2 text-sm font-semibold text-white/60 hover:text-white transition-colors duration-200"
+                      className="relative px-3 py-2 text-sm font-semibold text-gray-600 hover:text-gray-900 transition-colors duration-200"
                     >
                       {link.label}
                     </a>
                   );
                 }
                 if (link.external) {
+                  // KindWave LIVE badge
+                  if (link.livebadge) {
+                    return (
+                      <Link
+                        key={link.href}
+                        to={link.href}
+                        className="relative flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-semibold transition-all duration-200 hover:bg-rose-100"
+                        style={{
+                          background: "rgb(255,241,242)",
+                          border: "1px solid rgb(254,205,211)",
+                          color: "rgb(225,29,72)",
+                        }}
+                      >
+                        <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
+                        {link.label}
+                        <span className="text-[9px] font-black tracking-widest uppercase px-1.5 py-0.5 rounded-full"
+                          style={{ background: "rgb(244,63,94)", color: "#fff" }}>
+                          LIVE
+                        </span>
+                      </Link>
+                    );
+                  }
                   if (link.highlightBlue) {
                     return (
                       <Link
@@ -252,7 +275,7 @@ export default function Header() {
                       <a
                         key={link.href}
                         href={link.href}
-                        className="relative px-3 py-2 text-sm font-semibold text-white/60 hover:text-white transition-colors duration-200"
+                        className="relative px-3 py-2 text-sm font-semibold text-gray-600 hover:text-gray-900 transition-colors duration-200"
                       >
                         {link.label}
                       </a>
@@ -262,7 +285,7 @@ export default function Header() {
                     <Link
                       key={link.href}
                       to={link.href}
-                      className="relative px-3 py-2 text-sm font-semibold text-white/60 hover:text-white transition-colors duration-200"
+                      className="relative px-3 py-2 text-sm font-semibold text-gray-600 hover:text-gray-900 transition-colors duration-200"
                     >
                       {link.label}
                     </Link>
@@ -275,7 +298,7 @@ export default function Header() {
                     onMouseEnter={() => setActiveLink(link.href)}
                     onMouseLeave={() => setActiveLink(null)}
                     onClick={(e) => { e.preventDefault(); scrollTo(link.href); }}
-                    className="relative px-3 py-2 text-sm font-semibold text-white/60 hover:text-white transition-colors duration-200"
+                    className="relative px-3 py-2 text-sm font-semibold text-gray-600 hover:text-gray-900 transition-colors duration-200"
                   >
                     {isActive && (
                       <motion.span
@@ -298,7 +321,7 @@ export default function Header() {
                 >
                   <button
                     onClick={() => setOpenSubmenu(openSubmenu === link.label ? null : link.label)}
-                    className="relative px-3 py-2 text-sm font-semibold text-white/60 hover:text-white transition-colors duration-200 flex items-center gap-1"
+                    className="relative px-3 py-2 text-sm font-semibold text-gray-600 hover:text-gray-900 transition-colors duration-200 flex items-center gap-1"
                   >
                     {link.label}
                     <ChevronDown className={`w-4 h-4 transition-transform ${openSubmenu === link.label ? "rotate-180" : "group-hover:rotate-180"}`} />
@@ -310,25 +333,43 @@ export default function Header() {
                         initial={{ opacity: 0, y: -8 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -8 }}
-                        className="absolute top-full left-0 mt-2 w-56 rounded-2xl border border-white/[0.08] overflow-hidden z-50"
-                        style={{ background: "rgba(3,7,18,0.95)", backdropFilter: "blur(20px)" }}
+                        className="absolute top-full left-0 mt-2 w-56 rounded-2xl overflow-hidden z-50"
+                        style={{ background: "#ffffff", border: "1px solid rgba(0,0,0,0.08)", boxShadow: "0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06)" }}
                       >
-                        {link.submenu.map((item, idx) => 
+                        {link.submenu.map((item, idx) =>
                           item.external ? (
-                            <Link
-                              key={item.href}
-                              to={item.href}
-                              onClick={() => setOpenSubmenu(null)}
-                              className="block px-5 py-3 text-sm font-medium text-white/70 hover:text-white hover:bg-white/8 transition-all border-b border-white/[0.05] last:border-b-0"
-                            >
-                              {item.label}
-                            </Link>
+                            item.native ? (
+                              <a
+                                key={item.href}
+                                href={item.href}
+                                onClick={() => setOpenSubmenu(null)}
+                                className="flex items-center gap-2 px-5 py-3 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all border-b border-gray-100 last:border-b-0"
+                              >
+                                {item.label}
+                              </a>
+                            ) : (
+                              <Link
+                                key={item.href}
+                                to={item.href}
+                                onClick={() => setOpenSubmenu(null)}
+                                className="flex items-center gap-2 px-5 py-3 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all border-b border-gray-100 last:border-b-0"
+                              >
+                                {item.label}
+                                {item.livebadge && (
+                                  <span className="ml-auto flex items-center gap-1 text-[9px] font-black tracking-widest uppercase px-1.5 py-0.5 rounded-full"
+                                    style={{ background: "rgb(244,63,94)", color: "#fff" }}>
+                                    <span className="w-1 h-1 rounded-full bg-white animate-pulse inline-block" />
+                                    LIVE
+                                  </span>
+                                )}
+                              </Link>
+                            )
                           ) : (
                             <a
                               key={item.href}
                               href={item.href}
                               onClick={(e) => { e.preventDefault(); scrollTo(item.href); setOpenSubmenu(null); }}
-                              className="block px-5 py-3 text-sm font-medium text-white/70 hover:text-white hover:bg-white/8 transition-all border-b border-white/[0.05] last:border-b-0"
+                              className="block px-5 py-3 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all border-b border-gray-100 last:border-b-0"
                             >
                               {item.label}
                             </a>
@@ -343,21 +384,19 @@ export default function Header() {
 
             <button
               onClick={() => setSearchOpen(true)}
-              className="p-2 rounded-full text-white/40 hover:text-white hover:bg-white/8 transition-all duration-200"
+              className="p-2 rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-all duration-200"
             >
               <Search className="w-4 h-4" />
             </button>
 
             <motion.button
-              onClick={() => navigate('/hub')}
-              className="ml-1 px-4 py-1.5 text-sm font-bold rounded-full text-white relative overflow-hidden group"
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.96 }}
-              style={{ background: "linear-gradient(135deg, #f43f5e, #ec4899)" }}
+              onClick={() => navigate('/volunteer')}
+              className="ml-1 px-5 py-2 text-sm font-bold rounded-full text-white"
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              style={{ background: "#0d0d0d" }}
             >
-              <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                style={{ background: "linear-gradient(135deg, #fb7185, #f472b6)" }} />
-              <span className="relative z-10">Team Portal</span>
+              Join Free 🤝
             </motion.button>
           </nav>
 
@@ -365,13 +404,13 @@ export default function Header() {
           <div className="flex items-center gap-2 lg:hidden">
             <button
               onClick={() => setSearchOpen(true)}
-              className="p-2 rounded-xl text-white/60 hover:text-white"
+              className="p-2 rounded-xl text-gray-500 hover:text-gray-900"
             >
               <Search className="w-5 h-5" />
             </button>
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="p-2 rounded-xl text-white/60 hover:text-white"
+              className="p-2 rounded-xl text-gray-500 hover:text-gray-900"
             >
               {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -387,9 +426,9 @@ export default function Header() {
               exit={{ opacity: 0, height: 0 }}
               className="lg:hidden overflow-hidden"
               style={{
-                background: "rgba(3,7,18,0.96)",
+                background: "rgba(240,240,239,0.99)",
                 backdropFilter: "blur(20px)",
-                borderTop: "1px solid rgba(255,255,255,0.06)"
+                borderTop: "1px solid rgba(0,0,0,0.06)"
               }}
             >
               <nav className="px-4 py-4 space-y-1">
@@ -408,7 +447,7 @@ export default function Header() {
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={() => setMobileOpen(false)}
-                            className={`block px-4 py-3 rounded-xl text-base font-semibold transition-all ${link.highlightBlue ? "font-bold flex items-center gap-2" : "text-white/60 hover:text-white hover:bg-white/5"}`}
+                            className={`block px-4 py-3 rounded-xl text-base font-semibold transition-all ${link.highlightBlue ? "font-bold flex items-center gap-2" : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"}`}
                             style={link.highlightBlue ? {
                               background: "linear-gradient(135deg, rgba(99,102,241,0.12), rgba(139,92,246,0.12))",
                               border: "1px solid rgba(99,102,241,0.25)",
@@ -423,7 +462,7 @@ export default function Header() {
                           <a
                             href={link.href}
                             onClick={() => setMobileOpen(false)}
-                            className="block px-4 py-3 rounded-xl text-base font-semibold transition-all text-white/60 hover:text-white hover:bg-white/5"
+                            className="block px-4 py-3 rounded-xl text-base font-semibold transition-all text-gray-600 hover:text-gray-900 hover:bg-gray-50"
                           >
                             {link.label}
                           </a>
@@ -431,7 +470,7 @@ export default function Header() {
                           <Link
                             to={link.href}
                             onClick={() => setMobileOpen(false)}
-                            className={`block px-4 py-3 rounded-xl text-base font-semibold transition-all ${(link.highlight || link.highlightGreen || link.highlightBlue) ? "font-bold flex items-center gap-2" : "text-white/60 hover:text-white hover:bg-white/5"}`}
+                            className={`block px-4 py-3 rounded-xl text-base font-semibold transition-all ${(link.highlight || link.highlightGreen || link.highlightBlue) ? "font-bold flex items-center gap-2" : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"}`}
                             style={link.highlight ? {
                               background: "linear-gradient(135deg, rgba(244,63,94,0.12), rgba(167,139,250,0.12))",
                               border: "1px solid rgba(244,63,94,0.25)",
@@ -458,7 +497,7 @@ export default function Header() {
                           <a
                             href={link.href}
                             onClick={(e) => { e.preventDefault(); scrollTo(link.href); setMobileOpen(false); }}
-                            className="block px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 rounded-xl text-base font-semibold transition-all"
+                            className="block px-4 py-3 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-xl text-base font-semibold transition-all"
                           >
                             {link.label}
                           </a>
@@ -476,7 +515,7 @@ export default function Header() {
                     >
                       <button
                         onClick={() => setOpenSubmenu(openSubmenu === link.label ? null : link.label)}
-                        className="w-full flex items-center justify-between px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 rounded-xl text-base font-semibold transition-all"
+                        className="w-full flex items-center justify-between px-4 py-3 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-xl text-base font-semibold transition-all"
                       >
                         {link.label}
                         <ChevronDown className={`w-4 h-4 transition-transform ${openSubmenu === link.label ? "rotate-180" : ""}`} />
@@ -489,22 +528,40 @@ export default function Header() {
                             exit={{ opacity: 0, height: 0 }}
                             className="overflow-hidden pl-4"
                           >
-                            {link.submenu.map((item) => 
+                            {link.submenu.map((item) =>
                               item.external ? (
-                                <Link
-                                  key={item.href}
-                                  to={item.href}
-                                  onClick={() => { setMobileOpen(false); setOpenSubmenu(null); }}
-                                  className="block px-4 py-2.5 text-white/50 hover:text-white hover:bg-white/5 rounded-lg text-sm font-medium transition-all mt-1"
-                                >
-                                  {item.label}
-                                </Link>
+                                item.native ? (
+                                  <a
+                                    key={item.href}
+                                    href={item.href}
+                                    onClick={() => { setMobileOpen(false); setOpenSubmenu(null); }}
+                                    className="flex items-center gap-2 px-4 py-2.5 text-gray-500 hover:text-gray-900 hover:bg-gray-50 rounded-lg text-sm font-medium transition-all mt-1"
+                                  >
+                                    {item.label}
+                                  </a>
+                                ) : (
+                                  <Link
+                                    key={item.href}
+                                    to={item.href}
+                                    onClick={() => { setMobileOpen(false); setOpenSubmenu(null); }}
+                                    className="flex items-center gap-2 px-4 py-2.5 text-gray-500 hover:text-gray-900 hover:bg-gray-50 rounded-lg text-sm font-medium transition-all mt-1"
+                                  >
+                                    {item.label}
+                                    {item.livebadge && (
+                                      <span className="ml-auto flex items-center gap-1 text-[9px] font-black tracking-widest uppercase px-1.5 py-0.5 rounded-full"
+                                        style={{ background: "rgb(244,63,94)", color: "#fff" }}>
+                                        <span className="w-1 h-1 rounded-full bg-white animate-pulse inline-block" />
+                                        LIVE
+                                      </span>
+                                    )}
+                                  </Link>
+                                )
                               ) : (
                                 <a
                                   key={item.href}
                                   href={item.href}
                                   onClick={(e) => { e.preventDefault(); scrollTo(item.href); setMobileOpen(false); setOpenSubmenu(null); }}
-                                  className="block px-4 py-2.5 text-white/50 hover:text-white hover:bg-white/5 rounded-lg text-sm font-medium transition-all mt-1"
+                                  className="block px-4 py-2.5 text-gray-500 hover:text-gray-900 hover:bg-gray-50 rounded-lg text-sm font-medium transition-all mt-1"
                                 >
                                   {item.label}
                                 </a>
@@ -518,11 +575,11 @@ export default function Header() {
                 })}
                 <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.35 }}>
                   <button
-                    onClick={() => { navigate('/hub'); setMobileOpen(false); }}
+                    onClick={() => { navigate('/volunteer'); setMobileOpen(false); }}
                     className="w-full text-left px-4 py-3 text-white rounded-xl text-sm font-bold mt-2"
-                    style={{ background: "linear-gradient(135deg, #f43f5e, #ec4899)" }}
+                    style={{ background: "#0d0d0d" }}
                   >
-                    Team Portal →
+                    Join Free 🤝
                   </button>
                 </motion.div>
               </nav>
