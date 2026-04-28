@@ -118,10 +118,10 @@ export function KindraAvatar({ size = 36, glow = false }) {
     <div className="flex-shrink-0 rounded-2xl flex items-center justify-center font-black text-white select-none relative"
       style={{
         width: size, height: size, fontSize: size * 0.4,
-        background: 'linear-gradient(135deg, #059669 0%, #10b981 60%, #34d399 100%)',
+        background: 'linear-gradient(135deg, #f43f5e 0%, #ec4899 60%, #fb7185 100%)',
         boxShadow: glow
-          ? `0 0 0 2px rgba(16,185,129,0.3), 0 0 30px rgba(16,185,129,0.4), 0 0 60px rgba(16,185,129,0.15)`
-          : `0 0 0 1.5px rgba(16,185,129,0.25)`,
+          ? `0 0 0 2px rgba(244,63,94,0.3), 0 0 30px rgba(244,63,94,0.4), 0 0 60px rgba(244,63,94,0.15)`
+          : `0 0 0 1.5px rgba(244,63,94,0.25)`,
       }}>
       K
     </div>
